@@ -4,64 +4,88 @@
     <div class="left">
         <div class="input">
             <label>Title</label>
-            <input type="text" nbInput fullWidth status="basic" placeholder="Title">
+            <input type="text" nbInput fullWidth status="basic" placeholder="Title" [(ngModel)]="title">
         </div>
 
         <div class="input">
             <label>Description</label>
-            <input type="text" nbInput fullWidth status="basic" placeholder="Title">
+            <textarea type="text" nbInput fullWidth status="basic" placeholder="Description"
+                [(ngModel)]="description"></textarea>
+        </div>
+        <div class="input">
+            <label>Tags (comma delimiter)</label>
+            <input type="text" nbInput fullWidth status="basic" placeholder="Tags" (change)="changeTag()"
+                [(ngModel)]="tags">
+        </div>
+        <div class="input">
+            <label>Problem statement</label>
+            <md-editor [(ngModel)]="problemStatement"></md-editor>
         </div>
 
+
         <div class="input">
-            <label>Example</label>
-            <div class="testcase-parent">
-                <input class="input-testcase" type="text" nbInput fullWidth status="basic" placeholder="Input">
-                <input class="input-testcase" type="text" nbInput fullWidth status="basic"
-                    placeholder="Expected Output">
+            <label>Samples</label>
+            <div *ngFor="let sample of samples; let i=index;" class="testcase-parent">
+                <textarea class="input-testcase" type="text" nbInput fullWidth status="basic" placeholder="Input"
+                    [(ngModel)]="sample.input"></textarea>
+                <textarea class="input-testcase" type="text" nbInput fullWidth status="basic"
+                    placeholder="Expected Output" [(ngModel)]="sample.output"></textarea>
+                <button nbButton (click)="removeSample(i)">Remove</button>
             </div>
+            <button nbButton (click)="addSample()">Add</button>
         </div>
 
         <div class="input">
             <label>Test cases</label>
-            <div class="testcase-parent">
-                <input class="input-testcase" type="text" nbInput fullWidth status="basic" placeholder="Input">
-                <input class="input-testcase" type="text" nbInput fullWidth status="basic"
-                    placeholder="Expected Output">
-                <input class="input-testcase" type="text" nbInput fullWidth status="basic" placeholder="Time Limit">
-                <input class="input-testcase" type="text" nbInput fullWidth status="basic" placeholder="Memory Limit">
-                <input class="input-testcase" type="text" nbInput fullWidth status="basic" placeholder="Score">
-            </div>
+            <nb-accordion>
+                <nb-accordion-item *ngFor="let testcase of testcases; let i= index">
+                    <nb-accordion-item-header>Test #{{i+1}}</nb-accordion-item-header>
+                    <nb-accordion-item-body>
+                        Input
+                        <textarea class="input-testcase" type="text" nbInput fullWidth status="basic"
+                            placeholder="Input" [(ngModel)]="testcase.input"></textarea>
+                        <br>
+                        Output
+                        <textarea class="input-testcase" type="text" nbInput fullWidth status="basic"
+                            placeholder="Expected Output" [(ngModel)]="testcase.output"></textarea>
+                        <br>
+                        Time limit (second)
+                        <input class="input-testcase" type="number" nbInput fullWidth status="basic"
+                            placeholder="Time Limit" [(ngModel)]="testcase.timeLimit">
+                        <br>
+                        Memory limit (kB)
+                        <input class="input-testcase" type="number" nbInput fullWidth status="basic"
+                            placeholder="Memory Limit" [(ngModel)]="testcase.memoryLimit">
+                        <br>
+                        Score
+                        <input class="input-testcase" type="number" nbInput fullWidth status="basic" placeholder="Score"
+                            [(ngModel)]="testcase.score">
+                        <br>
+                        <nb-toggle [(checked)]="testcase.allowViewOnFailed">Allow view test on failed</nb-toggle>
+                        <br>
+                        <button style="float: right;" nbButton status="danger" (click)="removeTest(i)">Delete</button>
+                    </nb-accordion-item-body>
+                </nb-accordion-item>
+            </nb-accordion>
+            <button nbButton (click)="addTest()">Add new test</button>
         </div>
-        <div style="display: flex;">
-            <nb-select selected=false placeholder="Tags">
-                <nb-option value="1">Nhập môn lập trình</nb-option>
-                <nb-option value="2">Cấu trúc dữ liệu</nb-option>
-                <nb-option value="3">Code thiếu nhi</nb-option>
-            </nb-select>
 
-            <nb-select placeholder="NgModel">
-                <nb-option value="1">1</nb-option>
-                <nb-option value="2">2</nb-option>
-                <nb-option value="3">3</nb-option>
-                <nb-option value="4">4</nb-option>
-                <nb-option value="5">5</nb-option>
-            </nb-select>
-        </div>
-
-        <markdown id="markdown" lineNumbers>
-        </markdown>
-
-        <Button class="submit">Add New Problem</Button>
     </div>
     <div class="right">
-        <nb-card class="card" status="success">
-            <nb-card-header>Nebula</nb-card-header>
+        Preview
+        <nb-card class="card">
+            <nb-card-header>
+                <p>{{title}}</p>
+                <nb-tag-list *ngIf="tagArray.length!=0">
+                    <nb-tag *ngFor="let tag of tagArray" status="basic" appearance="filled" [text]="tag"></nb-tag>
+                </nb-tag-list>
+            </nb-card-header>
             <nb-card-body>
-                A nebula is an interstellar cloud of dust, hydrogen, helium and other ionized gases.
-                Originally, nebula was a name for any diffuse astronomical object,
-                including galaxies beyond the Milky Way.
+                {{description}}
             </nb-card-body>
-            <nb-card-footer>By Wikipedia</nb-card-footer>
+
         </nb-card>
+
+        <button nbButton status="primary" class="submit">Create problem</button>
     </div>
 </div>

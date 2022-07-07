@@ -36,7 +36,6 @@ select {
 }
 
 .submit {
-    width: 90%;
     display: block;
     padding: 15px;
     box-sizing: border-box;
@@ -67,7 +66,9 @@ nb-select {
     margin-top: 1em;
 }
 
-.input-testcase {}
+.input-testcase {
+    margin:5px;
+}
 
 .testcase-parent {
     display: grid;
