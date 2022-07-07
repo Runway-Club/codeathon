@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "codeathon-standalone",
+  "private_key_id": "068b16d3126b6ada7b965f7bfc650efeadbbca3d",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQCRqf2vZt2VYIro\nZf8ttFewOiZMPYjWwBgVlj0m32f0ZcxgOT1j+D1HGek16cUWMRqHWpCKq9r9fdJG\ng4A9ZW4rEK8UcPo8IBT/9pBOosZSdflrFCEvta0BOY1MnHa4N4sQq+X069i1nwNG\nqEuREDKVDy9McdjbvtmjoyXUEHex2p63vf9UxGXg9fsOo9ao/acSwNgEr16pDwxm\np/v07vheRoK2bHEiH+XKVZ3YUBh7fJKa+xYt2sqZ8nxQq11+TBWJF2t8enn5S9YE\nTr8m9Vg8tGZFrYVjH4cAv2kaun6KNEwCenMLwlqUgP5Qv3sD3KKVaBPeao9+bZ75\nmuvQ0HuJAgMBAAECggEAAn11xmjWGDaf8/HCbKVCQSiip6JUU4TRzz9T6PU1Zrp9\ncED/k/+WCerJz3p2kbbh2Dcryg2+tEn8ApPpk6MclgSL/v0gxKRbwjW/KR5OkPGk\nA45C3vjrwzNDqhqb9kbkzAfUP4fvRXOOxRzIEJZxTEEH3aEDRFu9MWHu70gfc7KI\nHKNohZTzA6HGOu6DNjK9D5S8ZX20vYmCt+94mkTtBz8UiXHspBWp0P4wzvK4zxJJ\nQbktNhZmK9/O2+z6v09G0fH/VqjBoOrCsAYRfsCSKKQbGC1JYWPqpbPoYTDy8VVV\n21MzNGQfsziu3GKewtvy9vv7XI26OiQq7gxOQ/4JAQKBgQDGOWLSU8gtWb9EAYWc\naA8VY9eb/b9S16VHXjmndSgpGjCnh3eUi+lGl4eVRW9q39nyLgKipzUiQ2zgAXUJ\nFE65JuTK1RS46MKOKnmeZ/5PlETz20OB1/fhoZoPtMkhxHPZNPh55g6HGH1kvegP\nUqV4+R0cBbGd1qBNpLWuNO5p4QKBgQC8HsyNlj4fQo8GaLsGOJCYUCDrFcRZYKCg\n09T1HsU34ZNapPzDcwfNIUjchFxaodv7cauJZuXiULzkp0yRvTxSblmjBHPuiQVf\nSKLkFMp++Wrcc+yXJ4kh1zY9WInR2qJlGBAiOA9b5fO8+dzfDZjZksi35UUREQ1I\nS2WWgTtWqQKBgQCZZj2IoRevqN1wZnEcqhbKKdroOAWAuauJQG0Dn5G1xTPT4ezz\ngxbC728YYISpw5Qpa9vUPevLmTw/WkFVBmcpt+Sk5yNDObWeSVaW9MmEkiyOPqfO\navDEpsfP0cs5G4u/ktObmiKx/4zCkohsmzu9E6OoVOuwRzEFBSsoJoQ+YQKBgGEC\ncPHCvJ5aMG9Zqrh2ivpAt/kC7JI6phrJolQVXhaHGPnxgvc3Zpp9w5kUGJwUQ+DS\nqWbdzUZ75Cz1qSKut2C6zzaloTMtLbwJNRbxMctwy46LqUH5fVoaJTpVYhz55izD\nz+4VgrYdSyf0odXUqTHp4+ARNyCp7nONjgGi+vqhAoGBAJybVYIuY7VDrlrUFwRs\nsMQdggmlAJVXiF+vl1PZX+hvNOxNQdNd02JbJpVCubRuvqpbk3rOgCug/XEFedwk\n5Em8E/csNWn/YL1Un6jnQzVxLN3+bGEmJH64XlqMieThjElp+EcJ0P4HIxlfVQ2h\nK9I2YYt9QREMC3StXAJr136F\n-----END PRIVATE KEY-----\n",
+  "client_email": "firebase-adminsdk-kkh2x@codeathon-standalone.iam.gserviceaccount.com",
+  "client_id": "108353653460259497616",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-kkh2x%40codeathon-standalone.iam.gserviceaccount.com"
+}
