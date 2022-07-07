@@ -2,7 +2,6 @@ import { ProblemSample } from "./sample.model";
 import { Testcase } from "./testcase.model";
 
 export interface Problem {
-    id: string;
     title: string;
     description: string;
     content: string;
@@ -12,5 +11,5 @@ export interface Problem {
     memoryLimit: number;
     samples: ProblemSample[];
     testcases: Testcase[];
-    createdAt: Date;
+    createdAt: number;
 }

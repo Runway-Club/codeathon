@@ -10,7 +10,7 @@ import { provideAuth, getAuth } from '@angular/fire/auth';
 import { provideFirestore, getFirestore } from '@angular/fire/firestore';
 import { providePerformance, getPerformance } from '@angular/fire/performance';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { NbThemeModule, NbLayoutModule } from '@nebular/theme';
+import { NbThemeModule, NbLayoutModule, NbToastrModule } from '@nebular/theme';
 import { NbEvaIconsModule } from '@nebular/eva-icons';
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
@@ -18,6 +18,8 @@ import { authReducer } from 'src/reducers/auth.reducer';
 import { problemCreationReducer } from '../reducers/problem.reducer';
 import { MarkdownModule, MarkdownService } from 'ngx-markdown';
 import { LMarkdownEditorModule } from 'ngx-markdown-editor';
+import { AuthEffects } from 'src/effects/auth.effect';
+import { ProblemCreationEffects } from 'src/effects/problem-creation.effect';
 
 @NgModule({
   declarations: [
@@ -35,11 +37,15 @@ import { LMarkdownEditorModule } from 'ngx-markdown-editor';
     NbThemeModule.forRoot({ name: 'corporate' }),
     NbLayoutModule,
     NbEvaIconsModule,
+    NbToastrModule.forRoot(),
     StoreModule.forRoot({
       auth: authReducer,
       problemCreation: problemCreationReducer
     }, {}),
-    EffectsModule.forRoot([]),
+    EffectsModule.forRoot([
+      AuthEffects,
+      ProblemCreationEffects
+    ]),
     MarkdownModule.forRoot(),
     LMarkdownEditorModule
   ],
