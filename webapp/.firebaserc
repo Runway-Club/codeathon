@@ -1,0 +1,14 @@
+{
+  "targets": {
+    "codeathon-standalone": {
+      "hosting": {
+        "webapp": [
+          "codeathon-standalone"
+        ]
+      }
+    }
+  },
+  "projects": {
+    "default": "codeathon-standalone"
+  }
+}
