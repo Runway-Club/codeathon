@@ -1,0 +1,24 @@
+<div id="top">
+    <input type="text" placeholder="Tìm kiếm">
+</div>
+<div id="body">
+    <div class="list">
+        <nb-card *ngFor="let card of cards" class="card" style="position: relative;">
+
+            <nb-card-header>
+                <nb-badge text="99+" status="danger" position="top right"></nb-badge>
+                <p class="title">{{card.title}}</p>
+                <nb-tag-list>
+                    <nb-tag *ngFor="let tag of card.tags" status="basic" appearance="filled" [text]="tag"></nb-tag>
+                </nb-tag-list>
+            </nb-card-header>
+
+            <nb-card-body>
+                {{card.description}}
+            </nb-card-body>
+            <nb-card-footer>
+                <p>{{card.author}}</p>
+            </nb-card-footer>
+        </nb-card>
+    </div>
+</div>

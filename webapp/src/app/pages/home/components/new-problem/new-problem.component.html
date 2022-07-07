@@ -1,0 +1,67 @@
+<h1>New Problem</h1>
+
+<div id="body">
+    <div class="left">
+        <div class="input">
+            <label>Title</label>
+            <input type="text" nbInput fullWidth status="basic" placeholder="Title">
+        </div>
+
+        <div class="input">
+            <label>Description</label>
+            <input type="text" nbInput fullWidth status="basic" placeholder="Title">
+        </div>
+
+        <div class="input">
+            <label>Example</label>
+            <div class="testcase-parent">
+                <input class="input-testcase" type="text" nbInput fullWidth status="basic" placeholder="Input">
+                <input class="input-testcase" type="text" nbInput fullWidth status="basic"
+                    placeholder="Expected Output">
+            </div>
+        </div>
+
+        <div class="input">
+            <label>Test cases</label>
+            <div class="testcase-parent">
+                <input class="input-testcase" type="text" nbInput fullWidth status="basic" placeholder="Input">
+                <input class="input-testcase" type="text" nbInput fullWidth status="basic"
+                    placeholder="Expected Output">
+                <input class="input-testcase" type="text" nbInput fullWidth status="basic" placeholder="Time Limit">
+                <input class="input-testcase" type="text" nbInput fullWidth status="basic" placeholder="Memory Limit">
+                <input class="input-testcase" type="text" nbInput fullWidth status="basic" placeholder="Score">
+            </div>
+        </div>
+        <div style="display: flex;">
+            <nb-select selected=false placeholder="Tags">
+                <nb-option value="1">Nhập môn lập trình</nb-option>
+                <nb-option value="2">Cấu trúc dữ liệu</nb-option>
+                <nb-option value="3">Code thiếu nhi</nb-option>
+            </nb-select>
+
+            <nb-select placeholder="NgModel">
+                <nb-option value="1">1</nb-option>
+                <nb-option value="2">2</nb-option>
+                <nb-option value="3">3</nb-option>
+                <nb-option value="4">4</nb-option>
+                <nb-option value="5">5</nb-option>
+            </nb-select>
+        </div>
+
+        <markdown id="markdown" lineNumbers>
+        </markdown>
+
+        <Button class="submit">Add New Problem</Button>
+    </div>
+    <div class="right">
+        <nb-card class="card" status="success">
+            <nb-card-header>Nebula</nb-card-header>
+            <nb-card-body>
+                A nebula is an interstellar cloud of dust, hydrogen, helium and other ionized gases.
+                Originally, nebula was a name for any diffuse astronomical object,
+                including galaxies beyond the Milky Way.
+            </nb-card-body>
+            <nb-card-footer>By Wikipedia</nb-card-footer>
+        </nb-card>
+    </div>
+</div>

@@ -15,6 +15,7 @@ import { NbEvaIconsModule } from '@nebular/eva-icons';
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { authReducer } from 'src/reducers/auth.reducer';
+import { MarkdownModule, MarkdownService } from 'ngx-markdown'
 
 @NgModule({
   declarations: [
@@ -35,10 +36,13 @@ import { authReducer } from 'src/reducers/auth.reducer';
     StoreModule.forRoot({
       auth: authReducer,
     }, {}),
-    EffectsModule.forRoot([])
+    EffectsModule.forRoot([]),
+    MarkdownModule.forRoot()
   ],
   providers: [
-    ScreenTrackingService, UserTrackingService
+    ScreenTrackingService,
+    UserTrackingService,
+    MarkdownService
   ],
   bootstrap: [AppComponent]
 })
