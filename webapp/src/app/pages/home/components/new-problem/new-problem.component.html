@@ -19,7 +19,9 @@
         </div>
         <div class="input">
             <label>Problem statement</label>
-            <md-editor [(ngModel)]="problemStatement"></md-editor>
+            <br>
+            <textarea style="width: 100%;" nbInput [(ngModel)]="problemStatement"></textarea>
+
         </div>
 
 
@@ -82,6 +84,11 @@
             </nb-card-header>
             <nb-card-body>
                 {{description}}
+            </nb-card-body>
+            <nb-card-body>
+                <hr>
+                <p><strong>Problem statement:</strong></p>
+                <markdown [data]="problemStatement"></markdown>
             </nb-card-body>
 
         </nb-card>

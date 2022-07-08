@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
-
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { MonacoEditorComponent, MonacoEditorConstructionOptions, MonacoEditorLoaderService } from '@materia-ui/ngx-monaco-editor';
+import { filter, take } from 'rxjs';
 @Component({
   selector: 'app-problem',
   templateUrl: './problem.component.html',
@@ -7,9 +8,53 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ProblemComponent implements OnInit {
 
-  constructor() { }
+  constructor(private monacoService: MonacoEditorLoaderService) { }
+
+  code: string = 'function x() {\nconsole.log("Hello world!");\n}';
+  originalCode: string = 'function x() { // TODO }';
+
+  // @ViewChild(MonacoEditorComponent, { static: false })
+  // monacoComponent: MonacoEditorComponent;
+
+  editorOptions: MonacoEditorConstructionOptions = {
+    theme: 'codeathon-theme',
+    language: 'javascript',
+    roundedSelection: true,
+    autoIndent: 'full',
+    minimap: {
+      enabled: true,
+      renderCharacters: false
+    },
+    fontSize: 15,
+  };
 
   ngOnInit(): void {
+    this.monacoService.isMonacoLoaded$
+      .pipe(
+        filter(isLoaded => !!isLoaded),
+        take(1)
+      )
+      .subscribe(() => {
+        this.registerMonacoCustomTheme();
+      });
+  }
+
+  registerMonacoCustomTheme() {
+    monaco.editor.defineTheme('codeathon-theme', {
+      base: 'vs-dark', // can also be vs or hc-black
+      inherit: true, // can also be false to completely replace the builtin rules
+      rules: [
+      ],
+      colors: {},
+
+    });
+  }
+
+  mergeOptions(partialOptions: any) {
+    return {
+      ...this.editorOptions,
+      ...partialOptions
+    };
   }
 
   public problem = {

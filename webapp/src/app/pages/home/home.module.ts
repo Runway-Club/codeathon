@@ -5,7 +5,7 @@ import { HomeRoutingModule } from './home-routing.module';
 import { HomeComponent } from './home.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { MainComponent } from './components/main/main.component';
-import { NbAccordionModule, NbBadgeModule, NbButtonModule, NbCardModule, NbIconModule, NbInputModule, NbLayoutModule, NbPopoverModule, NbSearchModule, NbSelectModule, NbTabsetModule, NbTagModule, NbToastrModule, NbToastrService, NbToggleModule, NbUserModule } from '@nebular/theme';
+import { NbAccordionModule, NbActionsModule, NbBadgeModule, NbButtonModule, NbCardModule, NbIconModule, NbInputModule, NbLayoutModule, NbPopoverModule, NbSearchModule, NbSelectModule, NbTabsetModule, NbTagModule, NbToastrModule, NbToastrService, NbToggleModule, NbUserModule } from '@nebular/theme';
 import { NewProblemComponent } from './components/new-problem/new-problem.component';
 import { MarkdownModule, MarkdownService } from 'ngx-markdown'
 import { LMarkdownEditorModule } from 'ngx-markdown-editor';
@@ -14,7 +14,7 @@ import { ProblemComponent } from './components/problem/problem.component';
 import { HistoryComponent } from './components/problem/components/history/history.component';
 import { NbEvaIconsModule } from '@nebular/eva-icons';
 import { SubmissionComponent } from './components/problem/components/submission/submission.component';
-
+import { MonacoEditorModule } from '@materia-ui/ngx-monaco-editor';
 @NgModule({
   declarations: [
     HomeComponent,
@@ -46,7 +46,9 @@ import { SubmissionComponent } from './components/problem/components/submission/
     NbIconModule,
     NbSearchModule,
     NbUserModule,
-    NbPopoverModule
+    NbPopoverModule,
+    MonacoEditorModule,
+    NbActionsModule,
   ],
   providers: [
     NbToastrService

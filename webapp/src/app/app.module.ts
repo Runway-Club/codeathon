@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, SecurityContext } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -18,6 +18,7 @@ import { authReducer } from 'src/reducers/auth.reducer';
 import { deleteProblemReducer, problemCreationReducer, problemRetrievalReducer, problemUpdationReducer, resetSubmissionsReducer } from '../reducers/problem.reducer';
 import { MarkdownModule, MarkdownService } from 'ngx-markdown';
 import { LMarkdownEditorModule } from 'ngx-markdown-editor';
+import { MonacoEditorModule, MONACO_PATH } from '@materia-ui/ngx-monaco-editor';
 import { AuthEffects } from 'src/effects/auth.effect';
 import { ProblemEffects } from 'src/effects/problem.effect';
 import { profileReducer } from 'src/reducers/profile.reducer';
@@ -54,13 +55,20 @@ import { ProfileEffects } from 'src/effects/profile.effect';
       ProblemEffects,
       ProfileEffects
     ]),
-    MarkdownModule.forRoot(),
-    LMarkdownEditorModule
+    MarkdownModule.forRoot({
+      sanitize: SecurityContext.NONE
+    }),
+    LMarkdownEditorModule,
+    MonacoEditorModule
   ],
   providers: [
     ScreenTrackingService,
     UserTrackingService,
-    MarkdownService
+    MarkdownService,
+    {
+      provide: MONACO_PATH,
+      useValue: 'https://unpkg.com/monaco-editor@0.31.1/min/vs',
+    },
   ],
   bootstrap: [AppComponent]
 })
