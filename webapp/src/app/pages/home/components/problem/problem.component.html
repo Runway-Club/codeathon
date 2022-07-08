@@ -1,42 +1,43 @@
 <div id="parent">
     <div class="left">
-        <nb-card>
+        <nb-card style="height: 100%;">
             <nb-card-body>
                 <nb-tabset>
                     <nb-tab tabTitle="PROBLEM" tabIcon="alert-triangle-outline" responsive>
-                        <h1 class="title">
-                            <strong>{{problem.title}}</strong>
-                        </h1>
-                        <p class="date">{{problem.createDate | date: "medium"}}</p>
-                        <div class="tags">
-                            <nb-tag *ngFor="let tag of problem.tags" class="tag" status="primary" appearance="filled"
-                                [text]="tag"></nb-tag>
-                        </div>
-                        <div class="description">
-                            <p style="line-height: 35px;"><strong>Description:</strong>{{problem.description}}</p>
-                        </div>
-                        <hr>
-                        <div class="content">
-                            <p><strong>Problem statement:</strong></p>
-                            <markdown>
-                                This is really ***very*** important text.
-                            </markdown>
-                        </div>
-                        <hr>
-                        <p><strong>Samples:</strong> </p>
-                        <div *ngFor="let sample of problem.samples, index as i">
-                            <p style="margin-top: 10px; font-weight: bold;">case# {{i + 1}}</p>
-                            <div class="example">
-                                <div class="example-left">
-                                    <textarea disabled [value]="sample.input" class="input-ex" type="text" name=""
-                                        id=""></textarea>
-                                </div>
-                                <div class="example-right">
-                                    <textarea disabled [value]="sample.output" class="input-ex" type="text" name=""
-                                        id=""></textarea>
+                        <div class="tab-problem">
+                            <h1 class="title">
+                                <strong>{{problem.title}}</strong>
+                            </h1>
+                            <p class="date">{{problem.createDate | date: "medium"}}</p>
+                            <div class="tags">
+                                <nb-tag *ngFor="let tag of problem.tags" class="tag" status="primary"
+                                    appearance="filled" [text]="tag"></nb-tag>
+                            </div>
+                            <div class="description">
+                                <p style="line-height: 35px;"><strong>Description:</strong>{{problem.description}}</p>
+                            </div>
+                            <hr>
+                            <div class="content">
+                                <p><strong>Problem statement:</strong></p>
+                                <markdown>
+                                    This is really ***very*** important text.
+                                </markdown>
+                            </div>
+                            <hr>
+                            <p><strong>Samples:</strong> </p>
+                            <div *ngFor="let sample of problem.samples, index as i">
+                                <p style="margin-top: 10px; font-weight: bold;">case# {{i + 1}}</p>
+                                <div class="example">
+                                    <div class="example-left">
+                                        <textarea disabled [value]="sample.input" class="input-ex" type="text" name=""
+                                            id=""></textarea>
+                                    </div>
+                                    <div class="example-right">
+                                        <textarea disabled [value]="sample.output" class="input-ex" type="text" name=""
+                                            id=""></textarea>
+                                    </div>
                                 </div>
                             </div>
-
                         </div>
                     </nb-tab>
                     <nb-tab tabTitle="submission" tabIcon="award-outline" responsive>
@@ -49,5 +50,7 @@
             </nb-card-body>
         </nb-card>
     </div>
-    <div class="right"></div>
+    <div class="right">
+
+    </div>
 </div>

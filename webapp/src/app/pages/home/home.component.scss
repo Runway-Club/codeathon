@@ -1,5 +1,8 @@
 nb-layout-header {
     background-color: #426EF0;
+    // position: fixed;
+    // top: 0;
+    width: 100%;
 }
 
 #title {
@@ -11,4 +14,8 @@ nb-layout-header {
 .login {
     color: white;
     font-weight: bold;
+}
+
+.space {
+    margin-top: 100px;
 }

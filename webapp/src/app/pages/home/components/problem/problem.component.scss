@@ -1,17 +1,25 @@
 #parent {
     display: flex;
     width: 100%;
-    gap: 1em;
+    // gap: 1em;
+    height: 100%;
+    flex-direction: row;
+    align-items: stretch;
+
 }
 
+.tab-problem {}
+
 .left {
-    width: 50%;
+    // width: 50%;
+    flex-grow: 1;
 }
 
 .right {
-    width: 50%;
-    height: 770px;
-    background-color: rgb(25, 33, 112);
+    // width: 50%;
+    // height: 770px;
+    // background-color: rgb(25, 33, 112);
+    flex-grow: 1;
 }
 
 .title {
