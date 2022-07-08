@@ -1,0 +1,44 @@
+<div id="parent">
+    <div class="left">
+        <nb-card>
+            <nb-card-body>
+                <nb-tabset>
+                    <nb-tab tabTitle="PROBLEM" tabIcon="alert-triangle-outline" responsive>
+                        <h1>
+                            <strong>{{problem.title}}</strong>
+                        </h1>
+                        <p class="date">{{problem.createDate | date: "medium"}}</p>
+                        <div class="tags">
+                            <nb-tag *ngFor="let tag of problem.tags" class="tag" status="primary" appearance="filled"
+                                [text]="tag"></nb-tag>
+                        </div>
+                        <div class="description">
+                            <p><strong>Description:</strong>{{problem.description}}</p>
+                        </div>
+                        <hr>
+                        <div class="content">
+                            <p><strong>Content:</strong>{{problem.content}}</p>
+                        </div>
+                        <hr>
+                        <p><strong>Example:</strong> </p>
+                        <div *ngFor="let sample of problem.samples" class="example">
+                            <div class="example-left">
+                                <input disabled [value]="sample.input" class="input-ex" type="text" name="" id="">
+                            </div>
+                            <div class="example-right">
+                                <input disabled [value]="sample.output" class="input-ex" type="text" name="" id="">
+                            </div>
+                        </div>
+                    </nb-tab>
+                    <nb-tab tabTitle="submission" tabIcon="award-outline" responsive>
+                        <p>List of <strong>Submission</strong>.</p>
+                    </nb-tab>
+                    <nb-tab tabTitle="HISTORY" tabIcon="email-outline" responsive>
+                        <p>List of <strong>transactions</strong>.</p>
+                    </nb-tab>
+                </nb-tabset>
+            </nb-card-body>
+        </nb-card>
+    </div>
+    <div class="right"></div>
+</div>

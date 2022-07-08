@@ -1,0 +1,55 @@
+#parent {
+    display: flex;
+    width: 100%;
+}
+
+.left {
+    width: 50%;
+}
+
+.right {
+    width: 50%;
+    height: 1000px;
+    background-color: rgb(25, 33, 112);
+}
+
+h1 {
+    font-size: 2rem;
+}
+
+.tags {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1em;
+}
+
+.description,
+.content {
+    margin-top: 10px;
+}
+
+.example {
+    width: 100%;
+    display: flex;
+}
+
+.example-left {
+    width: 50%;
+}
+
+.example-right {
+    width: 50%;
+
+}
+
+.input-ex {
+    width: 90%;
+    display: block;
+    margin: 0 auto;
+    margin-top: 10px;
+    padding: 10px;
+}
+
+.date {
+    margin: 10px 0 10px 0;
+}
