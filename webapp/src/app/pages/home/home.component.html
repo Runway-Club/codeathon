@@ -1,6 +1,14 @@
 <nb-layout>
-    <nb-layout-header fixed>
-        <app-navbar></app-navbar>
+    <nb-layout-header>
+        <span id="title">Codeathon</span>
+        <span style="flex: 1 1 auto;"></span>
+        <nb-search placeholder="Search problems..."
+            style="background-color: white; border-radius: 5px; margin-right: 20px;" type="rotate-layout">
+        </nb-search>
+        <span class="login">
+            <button style="background-color: white; border-radius: 5px;" nbButton shape="rectangle">Login with
+                Google</button>
+        </span>
     </nb-layout-header>
     <nb-layout-column class="colored-column-basic">
         <router-outlet></router-outlet>

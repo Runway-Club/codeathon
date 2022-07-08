@@ -10,7 +10,6 @@ export class ProblemComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
-    console.log(Date.now().toString())
   }
 
   public problem = {

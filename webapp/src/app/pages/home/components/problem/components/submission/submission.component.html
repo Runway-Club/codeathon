@@ -1,0 +1,42 @@
+<div id="row-info">
+    <div class="user">
+        <p class="text">Submit By</p>
+    </div>
+    <div class="time">
+        <p class="text">Time Limit <nb-icon style="margin-left: 5px; transform: rotate(90deg);" icon="swap-outline">
+            </nb-icon>
+        </p>
+    </div>
+    <div class="memory">
+        <p class="text">Memory Limit <nb-icon style="margin-left: 5px; transform: rotate(90deg);" icon="swap-outline">
+            </nb-icon>
+        </p>
+    </div>
+    <div class="language">
+        <p class="text">Language</p>
+    </div>
+    <div class="score">
+        <p class="text">Score <nb-icon style="margin-left: 5px; transform: rotate(90deg);" icon="swap-outline">
+            </nb-icon>
+        </p>
+    </div>
+
+</div>
+
+<div *ngFor="let submission of submissions" id="row-info">
+    <div class="user">
+        <p>{{submission.submitBy}}</p>
+    </div>
+    <div class="time">
+        <p>{{submission.timeLimit}} ms</p>
+    </div>
+    <div class="memory">
+        <p>{{submission.memoryLimit}} KB</p>
+    </div>
+    <div class="language">
+        <p>{{submission.language}}</p>
+    </div>
+    <div class="score">
+        <p>{{submission.score}}</p>
+    </div>
+</div>

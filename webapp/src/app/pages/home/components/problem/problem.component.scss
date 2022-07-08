@@ -1,6 +1,7 @@
 #parent {
     display: flex;
     width: 100%;
+    gap: 1em;
 }
 
 .left {
@@ -9,23 +10,23 @@
 
 .right {
     width: 50%;
-    height: 1000px;
+    height: 770px;
     background-color: rgb(25, 33, 112);
 }
 
-h1 {
-    font-size: 2rem;
+.title {
+    font-size: 1.2rem;
+    margin: 20px 0 10px 0;
 }
 
 .tags {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    gap: 1em;
+    display: flex;
+    gap: 20px 5px;
 }
 
 .description,
 .content {
-    margin-top: 10px;
+    margin-top: 20px;
 }
 
 .example {
@@ -46,8 +47,9 @@ h1 {
     width: 90%;
     display: block;
     margin: 0 auto;
-    margin-top: 10px;
     padding: 10px;
+    border-radius: 5px;
+    background-color: rgba(200, 200, 200, 0.5);
 }
 
 .date {

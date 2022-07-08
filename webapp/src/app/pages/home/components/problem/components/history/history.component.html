@@ -1,0 +1,74 @@
+<div class="parent">
+    <nb-accordion *ngFor="let history of histories">
+        <nb-accordion-item>
+            <nb-accordion-item-header>
+                <div id="info">
+                    <div class="time-submit">
+                        <div style="display: flex;">
+                            <p style="margin-top: 3px;">{{date | date: "short"}}
+                            </p>
+                        </div>
+                    </div>
+                    <div class="timelimit">
+                        <div style="display: flex;">
+                            <p style="margin-top: 3px;">3,99 ms
+                            </p>
+                            <nb-icon style="margin-left: 5px;" class="icon" icon="clock-outline">
+                            </nb-icon>
+                        </div>
+                    </div>
+                    <div class="memlimit">
+                        <div style="display: flex;">
+                            <p style="margin-top: 4.5px;">300 KB
+                            </p>
+                            <nb-icon style="margin-left: 5px;" class="icon" icon="save-outline">
+                            </nb-icon>
+                        </div>
+                    </div>
+                    <div class="score">
+                        <div style="display: flex;">
+                            <p style="margin-top: 4.5px;">80/100
+                            </p>
+                            <nb-icon style="margin-left: 5px;" class="icon" icon="star-outline">
+                            </nb-icon>
+                        </div>
+                    </div>
+                </div>
+            </nb-accordion-item-header>
+            <nb-accordion-item-body>
+                <div class="body">
+                    <h1 class="score-heading">Your score: 80/100</h1>
+                    <p class="view-code">View Source Code</p>
+                    <hr>
+                    <!-- <p><strong>#tests</strong></p> -->
+                    <div class="testcase">
+                        <div *ngFor="let case of history.testcases, index as i">
+                            <p style="margin-top: 10px; font-weight: bold;">#test {{i + 1}}</p>
+                            <div class="detail-testcase">
+                                <div class="input-testcase">
+                                    <textarea [value]="case.inputProblem" disabled class="input-case"
+                                        type="text"></textarea>
+                                </div>
+                                <div class="output-testcase">
+                                    <textarea [value]="case.outPut" disabled class="input-case" type="text"></textarea>
+                                </div>
+                                <div class="check">
+                                    <nb-icon style="color: green;" *ngIf="case.isTrue" class="icon-testcase"
+                                        icon="checkmark-circle-2-outline"></nb-icon>
+                                    <nb-icon style="color: red;" *ngIf="!case.isTrue" class="icon-testcase"
+                                        icon="close-outline">
+                                    </nb-icon>
+                                </div>
+                                <div class="score">
+                                    <p class="score-case">{{case.score}}</p>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </nb-accordion-item-body>
+        </nb-accordion-item>
+    </nb-accordion>
+
+</div>

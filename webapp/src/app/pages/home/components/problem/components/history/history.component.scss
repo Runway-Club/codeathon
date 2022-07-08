@@ -1,0 +1,76 @@
+#info {
+    width: 100%;
+    display: flex;
+
+    .time-submit,
+    .timelimit,
+    .memlimit,
+    .score {
+        width: 25%;
+        display: flex;
+    }
+
+}
+
+.score-heading {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.detail-testcase {
+    width: 100%;
+    display: flex;
+
+    .input-testcase {
+        width: 35%;
+
+    }
+
+    .output-testcase {
+        width: 35%;
+    }
+
+    .check {
+        width: 15%;
+    }
+
+    .score {
+        width: 15%;
+
+        p {
+            text-align: center;
+        }
+    }
+}
+
+.input-case {
+    width: 95%;
+    display: block;
+    margin: 0 auto;
+    padding: 10px;
+}
+
+.icon {
+    display: block;
+    margin: 0 auto;
+    margin-top: 5px;
+}
+
+.score-case {
+    margin-top: 20px;
+}
+
+.view-code:hover {
+    cursor: pointer;
+}
+
+.view-code {
+    font-style: italic;
+    color: rgb(0, 98, 244);
+}
+
+.icon-testcase {
+    display: block;
+    margin: 0 auto;
+    margin-top: 20px;
+}

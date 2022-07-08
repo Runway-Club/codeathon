@@ -1,12 +1,12 @@
-<div id="top">
-    <input type="text" placeholder="Tìm kiếm">
-</div>
 <div id="body">
     <div class="list">
         <nb-card *ngFor="let card of cards" class="card" style="position: relative;">
-
             <nb-card-header>
-                <p class="title">{{card.title}}</p>
+                <div style="display: flex;">
+                    <p class="title">{{card.title}}</p>
+                    <span style="flex: 1 1 auto;"></span>
+                    <nb-icon style="margin: 5px 0 0 0;" icon="edit-outline"></nb-icon>
+                </div>
                 <nb-tag-list>
                     <nb-tag *ngFor="let tag of card.tags" status="basic" appearance="filled" [text]="tag"></nb-tag>
                 </nb-tag-list>

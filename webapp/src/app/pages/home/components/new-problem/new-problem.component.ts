@@ -79,6 +79,7 @@ export class NewProblemComponent implements OnInit {
   }
 
   createProblem() {
+    console.log(this.problemStatement)
     if (this.problemStatement.length == 0) {
       this.store.dispatch(createProblemFailure({ error: "Problem statement must be filled" }));
       return;
