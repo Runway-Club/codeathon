@@ -1,25 +1,26 @@
 #parent {
-    // display: flex;
-    // width: 100%;
+    display: flex;
+    width: 100%;
     // gap: 1em;
-    display: grid;
-    grid-template-columns: minmax(700px, 25%) 1fr;
+    height: 100%;
+    flex-direction: row;
+    align-items: stretch;
+
 }
 
-// .left {
-//     // width: 50%;
-//     flex: 1 1 300px; /*  Stretching: */
-//     flex: 0 1 300px; /*  No stretching: */
-//     margin: 5px;
-// }
+.tab-problem {}
 
-// .right {
-//     // width: 50%;
-//     // height: 75vh;
-//     flex: 1 1 300px; /*  Stretching: */
-//     flex: 0 1 300px; /*  No stretching: */
-//     margin: 5px;
-// }
+.left {
+    // width: 50%;
+    flex-grow: 1;
+}
+
+.right {
+    // width: 50%;
+    // height: 770px;
+    // background-color: rgb(25, 33, 112);
+    flex-grow: 1;
+}
 
 .title {
     font-size: 1.2rem;
