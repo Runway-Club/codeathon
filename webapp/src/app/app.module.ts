@@ -21,6 +21,7 @@ import { LMarkdownEditorModule } from 'ngx-markdown-editor';
 import { AuthEffects } from 'src/effects/auth.effect';
 import { ProblemEffects } from 'src/effects/problem.effect';
 import { profileReducer } from 'src/reducers/profile.reducer';
+import { ProfileEffects } from 'src/effects/profile.effect';
 
 @NgModule({
   declarations: [
@@ -50,7 +51,8 @@ import { profileReducer } from 'src/reducers/profile.reducer';
     }, {}),
     EffectsModule.forRoot([
       AuthEffects,
-      ProblemEffects
+      ProblemEffects,
+      ProfileEffects
     ]),
     MarkdownModule.forRoot(),
     LMarkdownEditorModule
