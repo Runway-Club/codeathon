@@ -12,7 +12,7 @@ const routes: Routes = [
         path: '', component: MainComponent
       },
       {
-        path: 'new-problem', component: NewProblemComponent
+        path: 'problem-editor', component: NewProblemComponent
       },
       {
         path: 'problem/:id', component: ProblemComponent
