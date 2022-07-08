@@ -1,4 +1,4 @@
-<h1>New Problem</h1>
+<h1>{{editorTitle}}</h1>
 
 <div id="body">
     <div class="left">
@@ -61,7 +61,7 @@
                         <input class="input-testcase" type="number" nbInput fullWidth status="basic" placeholder="Score"
                             [(ngModel)]="testcase.score">
                         <br>
-                        <nb-toggle [(checked)]="testcase.allowViewOnFailed">Allow view test on failed</nb-toggle>
+                        <nb-toggle [(ngModel)]="testcase.allowViewOnFailed">Allow view test on failed</nb-toggle>
                         <br>
                         <button style="float: right;" nbButton status="danger" (click)="removeTest(i)">Delete</button>
                     </nb-accordion-item-body>
@@ -75,7 +75,7 @@
         Preview
         <nb-card class="card">
             <nb-card-header>
-                <p>{{title}}</p>
+                <p class="title">{{title}}</p>
                 <nb-tag-list *ngIf="tagArray.length!=0">
                     <nb-tag *ngFor="let tag of tagArray" status="basic" appearance="filled" [text]="tag"></nb-tag>
                 </nb-tag-list>
@@ -86,6 +86,13 @@
 
         </nb-card>
 
-        <button nbButton status="primary" class="submit" (click)="createProblem()">Create problem</button>
+        <button *ngIf="allowCreateProblem" nbButton status="primary" class="submit" (click)="createProblem()">Create
+            problem</button>
+        <button *ngIf="allowUpdateProblem" nbButton status="primary" class="submit" (click)="updateProblem()">Update
+            problem</button>
+        <button *ngIf="allowResetSubmit" nbButton status="warning" class="submit" (click)="resetSubmissions()">Reset
+            submissions</button>
+        <button *ngIf="allowDeleteProblem" nbButton status="danger" class="submit" (click)="deleteProblem()">Delete
+            problem</button>
     </div>
 </div>

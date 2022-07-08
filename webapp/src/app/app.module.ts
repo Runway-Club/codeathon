@@ -15,11 +15,12 @@ import { NbEvaIconsModule } from '@nebular/eva-icons';
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { authReducer } from 'src/reducers/auth.reducer';
-import { problemCreationReducer } from '../reducers/problem.reducer';
+import { deleteProblemReducer, problemCreationReducer, problemRetrievalReducer, problemUpdationReducer, resetSubmissionsReducer } from '../reducers/problem.reducer';
 import { MarkdownModule, MarkdownService } from 'ngx-markdown';
 import { LMarkdownEditorModule } from 'ngx-markdown-editor';
 import { AuthEffects } from 'src/effects/auth.effect';
-import { ProblemCreationEffects } from 'src/effects/problem-creation.effect';
+import { ProblemEffects } from 'src/effects/problem.effect';
+import { profileReducer } from 'src/reducers/profile.reducer';
 
 @NgModule({
   declarations: [
@@ -40,11 +41,16 @@ import { ProblemCreationEffects } from 'src/effects/problem-creation.effect';
     NbToastrModule.forRoot(),
     StoreModule.forRoot({
       auth: authReducer,
-      problemCreation: problemCreationReducer
+      problemCreation: problemCreationReducer,
+      problemUpdation: problemUpdationReducer,
+      problemRetrieval: problemRetrievalReducer,
+      problemDeletion: deleteProblemReducer,
+      problemResetSubmissions: resetSubmissionsReducer,
+      profile: profileReducer
     }, {}),
     EffectsModule.forRoot([
       AuthEffects,
-      ProblemCreationEffects
+      ProblemEffects
     ]),
     MarkdownModule.forRoot(),
     LMarkdownEditorModule

@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { Firestore } from "@angular/fire/firestore";
-import { Actions, ofType } from "@ngrx/effects";
+import { Actions, createEffect, ofType } from "@ngrx/effects";
 import { fetchAuth, login, loginFailure, loginSuccess, logout, logoutFailure, logoutSuccess } from "src/actions/auth.action";
 import { catchError, map, of, switchMap } from 'rxjs';
 import { GoogleAuthProvider, signInWithPopup } from "@firebase/auth";
@@ -11,7 +11,7 @@ import { AuthState } from "src/states/auth.state";
 export class AuthEffects {
     constructor(private action$: Actions, private db: Firestore, private auth: Auth) { }
 
-    login$ = this.action$.pipe(
+    login$ = createEffect(() => this.action$.pipe(
         ofType(login),
         switchMap(action => signInWithPopup(this.auth, new GoogleAuthProvider())),
         map(action => loginSuccess({
@@ -25,15 +25,15 @@ export class AuthEffects {
                 isLoggedIn: true
             }
         })),
-        catchError(error => of(loginFailure({ error: error.message }))));
+        catchError(error => of(loginFailure({ error: error.message })))));
 
-    logout$ = this.action$.pipe(
+    logout$ = createEffect(() => this.action$.pipe(
         ofType(logout),
         switchMap(() => signOut(this.auth)),
         map(() => logoutSuccess()),
-        catchError(error => of(logoutFailure({ error: error.message }))));
+        catchError(error => of(logoutFailure({ error: error.message })))));
 
-    fetchAuth$ = this.action$.pipe(
+    fetchAuth$ = createEffect(() => this.action$.pipe(
         ofType(fetchAuth),
         switchMap(() => authState(this.auth)),
         map(user => {
@@ -51,7 +51,7 @@ export class AuthEffects {
                     isLoggedIn: true
                 }
             });
-        }));
+        })));
 
 
 }
