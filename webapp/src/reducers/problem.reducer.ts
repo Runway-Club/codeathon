@@ -6,14 +6,14 @@ export const problemCreationReducer = createReducer(<ProblemCreation>{},
     on(createProblemSuccess, state => {
         return {
             ...state,
-            isSuccess: true,
+            success: true,
             error: ''
         };
     }),
     on(createProblemFailure, (state, { error }) => {
         return {
             ...state,
-            isSuccess: false,
+            success: false,
             error: error
         };
     }));

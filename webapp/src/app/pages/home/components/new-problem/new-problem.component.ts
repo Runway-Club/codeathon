@@ -29,6 +29,8 @@ export class NewProblemComponent implements OnInit {
   memoryLimit = 100;
   difficulty = 1;
 
+  allowCreateProblem = true;
+
   problemCreation$: Observable<ProblemCreation>;
 
   ngOnInit(): void {
@@ -37,10 +39,14 @@ export class NewProblemComponent implements OnInit {
         this.toast.success("200 OK!", "Problem created successfully");
       }
       else {
+        if (state.error == undefined) {
+          return;
+        }
         if (state.error.length > 0) {
           this.toast.danger(state.error, "Cannot create new problem");
         }
       }
+      this.allowCreateProblem = true;
     });
   }
 
@@ -79,6 +85,7 @@ export class NewProblemComponent implements OnInit {
   }
 
   createProblem() {
+    this.allowCreateProblem = false;
     if (this.problemStatement.length == 0) {
       this.store.dispatch(createProblemFailure({ error: "Problem statement must be filled" }));
       return;
@@ -87,19 +94,21 @@ export class NewProblemComponent implements OnInit {
       this.store.dispatch(createProblemFailure({ error: "No testcase is added" }));
       return;
     }
+    let problem = {
+      title: this.title,
+      description: this.description,
+      content: this.problemStatement,
+      tags: this.tagArray,
+      samples: this.samples,
+      testcases: this.testcases,
+      difficulty: this.difficulty,
+      timeLimit: this.timeLimit,
+      memoryLimit: this.memoryLimit,
+      createdAt: Date.now()
+    }
+    console.log(problem);
     this.store.dispatch(createProblem({
-      problem: {
-        title: this.title,
-        description: this.description,
-        content: this.problemStatement,
-        tags: this.tagArray,
-        samples: this.samples,
-        testcases: this.testcases,
-        difficulty: this.difficulty,
-        timeLimit: this.timeLimit,
-        memoryLimit: this.memoryLimit,
-        createdAt: Date.now()
-      }
+      problem: problem
     }));
   }
 

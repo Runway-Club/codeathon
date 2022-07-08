@@ -86,6 +86,7 @@
 
         </nb-card>
 
-        <button nbButton status="primary" class="submit" (click)="createProblem()">Create problem</button>
+        <button *ngIf="allowCreateProblem" nbButton status="primary" class="submit" (click)="createProblem()">Create
+            problem</button>
     </div>
 </div>
