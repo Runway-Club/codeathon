@@ -1,4 +1,11 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import { DocumentSnapshot } from '@angular/fire/firestore';
+import { Router } from '@angular/router';
+import { Store } from '@ngrx/store';
+import { Observable } from 'rxjs';
+import { listingProblem } from 'src/actions/problem.action';
+import { Problem } from 'src/models/problem.model';
+import { ProblemListing } from 'src/states/problem.state';
 @Component({
   selector: 'app-main',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -7,9 +14,32 @@ import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 })
 export class MainComponent implements OnInit {
 
-  constructor() { }
+  listing$: Observable<ProblemListing>;
+
+  problems: Problem[] = [];
+  prevDoc: DocumentSnapshot | undefined = undefined;
+
+  constructor(private store: Store<{ problemListing: ProblemListing }>, private cd: ChangeDetectorRef, private router: Router) {
+    this.listing$ = this.store.select('problemListing');
+  }
 
   ngOnInit(): void {
+    this.listing$.subscribe(listing => {
+      this.problems.splice(0, this.problems.length);
+      if (listing.list != undefined) {
+        for (let i = 0; i < listing.list.length; i++) {
+          this.problems.push(listing.list[i]);
+        }
+      }
+      console.log(this.problems);
+      this.cd.detectChanges();
+    });
+    this.store.dispatch(listingProblem({ prevDoc: this.prevDoc }));
+  }
+
+  viewProblem(problem: Problem) {
+    console.log(problem);
+    this.router.navigate(['problem', problem.id]);
   }
 
   public cards = [

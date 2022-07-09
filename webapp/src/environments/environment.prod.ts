@@ -11,5 +11,6 @@ export const environment = {
     apiKey: "515e04efc9msh90cb0e1f01e697bp1a73e6jsn3346c5abc487",
     host: "judge0-ce.p.rapidapi.com"
   },
+  api: "https://server.codeathon.runwayclub.dev/api/v1",
   production: true
 };

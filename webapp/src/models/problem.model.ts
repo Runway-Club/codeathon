@@ -2,6 +2,7 @@ import { ProblemSample } from "./sample.model";
 import { Testcase } from "./testcase.model";
 
 export interface Problem {
+    id?: string;
     title: string;
     description: string;
     content: string;

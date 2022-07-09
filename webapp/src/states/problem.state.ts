@@ -26,3 +26,10 @@ export interface ProblemResetSubmissions {
     success: boolean;
     error: string;
 }
+
+export interface ProblemListing {
+    list: Problem[];
+    isLoading: boolean;
+    error: string;
+    success: boolean;
+}

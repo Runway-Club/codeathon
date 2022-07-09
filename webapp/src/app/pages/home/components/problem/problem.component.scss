@@ -16,7 +16,7 @@
 }
 
 .right {
-    // width: 50%;
+    min-width: 50%;
     // height: 770px;
     // background-color: rgb(25, 33, 112);
     flex-grow: 1;
@@ -63,3 +63,4 @@
 .date {
     margin: 10px 0 10px 0;
 }
+

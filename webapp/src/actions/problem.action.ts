@@ -1,3 +1,4 @@
+import { DocumentSnapshot } from "@angular/fire/firestore";
 import { createAction, props } from "@ngrx/store";
 import { Problem } from "src/models/problem.model";
 
@@ -21,3 +22,11 @@ export const deleteProblemFailure = createAction("[Problem] Delete Problem Failu
 export const resetSubmissions = createAction("[Problem] Reset Submissions", props<{ id: string }>());
 export const resetSubmissionsSuccess = createAction("[Problem] Reset Submissions Success");
 export const resetSubmissionsFailure = createAction("[Problem] Reset Submissions Failure", props<{ error: string }>());
+
+export const listingProblem = createAction("[Problem] List Problem", props<{ prevDoc?: DocumentSnapshot }>());
+export const listingProblemSuccess = createAction("[Problem] List Problem Success", props<{ problems: Problem[] }>());
+export const listingProblemFailure = createAction("[Problem] List Problem Failure", props<{ error: string }>());
+
+export const searchProblem = createAction("[Problem] Search Problem", props<{ query: string }>());
+export const searchProblemSuccess = createAction("[Problem] Search Problem Success", props<{ problems: Problem[] }>());
+export const searchProblemFailure = createAction("[Problem] Search Problem Failure", props<{ error: string }>());

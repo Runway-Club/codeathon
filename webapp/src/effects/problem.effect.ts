@@ -1,19 +1,23 @@
+import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { addDoc, collection, deleteDoc, doc, Firestore, getDoc, getDocs, query, setDoc, where } from "@angular/fire/firestore";
+import { addDoc, collection, deleteDoc, doc, Firestore, getDoc, getDocs, limit, query, setDoc, startAt, where } from "@angular/fire/firestore";
 import { Actions, createEffect, ofType } from "@ngrx/effects";
 import { from, switchMap, map, catchError, of } from "rxjs";
+import { environment } from "src/environments/environment.prod";
 import { Problem } from "src/models/problem.model";
 import {
     createProblem, createProblemSuccess, createProblemFailure,
     updateProblem, updateProblemFailure, updateProblemSuccess,
     getProblem, getProblemSuccess, getProblemFailure,
     deleteProblem, deleteProblemSuccess, deleteProblemFailure,
-    resetSubmissions, resetSubmissionsSuccess, resetSubmissionsFailure
+    resetSubmissions, resetSubmissionsSuccess, resetSubmissionsFailure,
+    listingProblem, listingProblemSuccess, listingProblemFailure,
+    searchProblem, searchProblemSuccess, searchProblemFailure
 } from "../actions/problem.action";
 
 @Injectable()
 export class ProblemEffects {
-    constructor(private db: Firestore, private action$: Actions) { }
+    constructor(private db: Firestore, private action$: Actions, private http: HttpClient) { }
 
     createProblem$ = createEffect(() => this.action$.pipe(
         ofType(createProblem),
@@ -68,5 +72,35 @@ export class ProblemEffects {
         }),
         map(() => resetSubmissionsSuccess()),
         catchError(error => of(resetSubmissionsFailure({ error: error.message })))));
+
+    listingProblems$ = createEffect(() => this.action$.pipe(
+        ofType(listingProblem),
+        switchMap(action => {
+            console.log("Listing");
+            var q;
+            if (action.prevDoc == undefined) {
+                q = query(collection(this.db, 'problems'), limit(20));
+            } else {
+                q = query(collection(this.db, 'problems'), startAt(action.prevDoc), limit(20));
+            }
+
+            return getDocs(q);
+        }),
+        map((snapshot) => {
+            let problems = [];
+            for (let d of snapshot.docs) {
+                problems.push({ ...<Problem>d.data(), id: d.id });
+            }
+            return listingProblemSuccess({ problems: problems });
+        }),
+        catchError(error => of(listingProblemFailure({ error: error.message })))));
+
+    searchProblems$ = createEffect(() => this.action$.pipe(
+        ofType(searchProblem),
+        switchMap(action => this.http.post(environment.api + "/search?q=" + action.query, {})),
+        map((response: any) => {
+            return searchProblemSuccess({ problems: <Problem[]>response.result });
+        }),
+        catchError(error => of(searchProblemFailure({ error: error.message })))));
 
 }

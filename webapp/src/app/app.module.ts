@@ -15,7 +15,7 @@ import { NbEvaIconsModule } from '@nebular/eva-icons';
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { authReducer } from 'src/reducers/auth.reducer';
-import { deleteProblemReducer, problemCreationReducer, problemRetrievalReducer, problemUpdationReducer, resetSubmissionsReducer } from '../reducers/problem.reducer';
+import { deleteProblemReducer, listingProblemReducer, problemCreationReducer, problemRetrievalReducer, problemUpdationReducer, resetSubmissionsReducer } from '../reducers/problem.reducer';
 import { MarkdownModule, MarkdownService } from 'ngx-markdown';
 import { LMarkdownEditorModule } from 'ngx-markdown-editor';
 import { MonacoEditorModule, MONACO_PATH } from '@materia-ui/ngx-monaco-editor';
@@ -23,6 +23,7 @@ import { AuthEffects } from 'src/effects/auth.effect';
 import { ProblemEffects } from 'src/effects/problem.effect';
 import { profileReducer } from 'src/reducers/profile.reducer';
 import { ProfileEffects } from 'src/effects/profile.effect';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -48,6 +49,7 @@ import { ProfileEffects } from 'src/effects/profile.effect';
       problemRetrieval: problemRetrievalReducer,
       problemDeletion: deleteProblemReducer,
       problemResetSubmissions: resetSubmissionsReducer,
+      problemListing: listingProblemReducer,
       profile: profileReducer
     }, {}),
     EffectsModule.forRoot([
@@ -59,7 +61,8 @@ import { ProfileEffects } from 'src/effects/profile.effect';
       sanitize: SecurityContext.NONE
     }),
     LMarkdownEditorModule,
-    MonacoEditorModule
+    MonacoEditorModule,
+    HttpClientModule
   ],
   providers: [
     ScreenTrackingService,
