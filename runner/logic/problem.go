@@ -112,7 +112,7 @@ func (l *ProblemLogic) Evaluate(submissionId string) error {
 		return err
 	}
 
-	println(waitingSubmission)
+	println(*waitingSubmission)
 
 	// get problem from firestore
 	problem, err := l.Get(waitingSubmission.ProblemId)
