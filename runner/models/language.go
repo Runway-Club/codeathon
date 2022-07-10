@@ -1,6 +1,6 @@
 package models
 
 type Language struct {
-	Id   string `json:"id"`
+	Id   int    `json:"id"`
 	Name string `json:"name"`
 }
