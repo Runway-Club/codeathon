@@ -4,6 +4,8 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"errors"
+	"io/ioutil"
 	"net/http"
 	"time"
 
@@ -68,7 +70,12 @@ func (l *ProblemLogic) RequestEvaluate(submission *models.Submission) error {
 			return err
 		}
 		if res.StatusCode != http.StatusCreated {
-			print(res.Body)
+			// print body
+			body, err := ioutil.ReadAll(res.Body)
+			if err != nil {
+				return err
+			}
+			return errors.New(string(body))
 		}
 		defer res.Body.Close()
 		// parse response to judgeSubmissionResponse
