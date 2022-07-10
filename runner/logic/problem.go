@@ -7,6 +7,7 @@ import (
 	"errors"
 	"io/ioutil"
 	"net/http"
+	"strconv"
 	"time"
 
 	"cloud.google.com/go/firestore"
@@ -141,10 +142,11 @@ func (l *ProblemLogic) Evaluate(submissionId string) error {
 		if err := json.NewDecoder(res.Body).Decode(judgeSubmissionResponse); err != nil {
 			return err
 		}
+		parsedTime, _ := strconv.ParseFloat(judgeSubmissionResponse.Time, 64)
 		if testcase.ExpectedOutput == judgeSubmissionResponse.Stdout {
 			actualScore += testcase.Score
 			totalMemory += float64(judgeSubmissionResponse.Memory)
-			totalTime += float64(judgeSubmissionResponse.Time)
+			totalTime += parsedTime
 			testResult.Message = "PASS"
 			testResult.Input = testcase.Input
 			testResult.ExpectedOutput = testcase.ExpectedOutput
