@@ -19,7 +19,7 @@ type JudgeSubmissionRequest struct {
 type JudgeSubmissionResponse struct {
 	Stdout        string  `json:"stdout"`
 	Stderr        string  `json:"stderr"`
-	Time          int64   `json:"time"`
+	Time          float64 `json:"time"`
 	Memory        float32 `json:"memory"`
 	Token         string  `json:"token"`
 	Message       string  `json:"message"`
