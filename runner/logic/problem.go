@@ -75,6 +75,7 @@ func (l *ProblemLogic) RequestEvaluate(submission *models.Submission) error {
 			if err != nil {
 				return err
 			}
+
 			return errors.New(string(body))
 		}
 		defer res.Body.Close()
@@ -110,6 +111,8 @@ func (l *ProblemLogic) Evaluate(submissionId string) error {
 	if err := doc.DataTo(waitingSubmission); err != nil {
 		return err
 	}
+
+	println(waitingSubmission)
 
 	// get problem from firestore
 	problem, err := l.Get(waitingSubmission.ProblemId)

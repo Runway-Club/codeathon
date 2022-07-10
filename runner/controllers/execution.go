@@ -32,6 +32,7 @@ func NewExecutionController(endpoint string, s *core.Server) *echo.Group {
 
 	api.GET("/:id", func(c echo.Context) error {
 		id := c.Param("id")
+		print(id)
 		err := problemLogic.Evaluate(id)
 		if err != nil {
 			return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
