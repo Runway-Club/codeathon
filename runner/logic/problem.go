@@ -142,7 +142,7 @@ func (l *ProblemLogic) Evaluate(submissionId string) error {
 			return err
 		}
 		parsedTime, _ := strconv.ParseFloat(judgeSubmissionResponse.Time, 64)
-		println(judgeSubmissionResponse)
+		println(judgeSubmissionResponse.Stdout)
 		if testcase.ExpectedOutput == judgeSubmissionResponse.Stdout {
 			actualScore += testcase.Score
 			totalMemory += float64(judgeSubmissionResponse.Memory)
