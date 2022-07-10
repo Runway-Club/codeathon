@@ -163,12 +163,14 @@ func (l *ProblemLogic) Evaluate(submissionId string) error {
 	}
 	// save result to firestore
 	_, err = l.db.Collection("submissions").Doc(submissionId).Set(context.Background(), &models.EvaluateResult{
-		Score:       actualScore,
-		TotalScore:  totalScore,
-		TotalTime:   totalTime,
-		TotalMemory: totalMemory,
-		Testcases:   testResults,
-		Evaluated:   true,
+		Score:        actualScore,
+		TotalScore:   totalScore,
+		TotalTime:    totalTime,
+		TotalMemory:  totalMemory,
+		Testcases:    testResults,
+		Evaluated:    true,
+		SubmissionId: submissionId,
+		UserId:       waitingSubmission.UserId,
 	})
 	if err != nil {
 		return err

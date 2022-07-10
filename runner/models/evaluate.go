@@ -16,4 +16,5 @@ type EvaluateResult struct {
 	TotalTime    float64          `json:"total_time"`
 	Testcases    []TestcaseResult `json:"testcases"`
 	Evaluated    bool             `json:"evaluated"`
+	UserId       string           `json:"user_id"`
 }
