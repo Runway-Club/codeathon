@@ -108,15 +108,11 @@ func (l *ProblemLogic) Evaluate(submissionId string) error {
 	}
 	// parse data to submission
 	waitingSubmission := &models.WaitingSubmission{}
-	test, _ := json.Marshal(doc.Data())
+	waitingSubmissionData, _ := json.Marshal(doc.Data())
 	// parse to waitingSubmission
-	if err := json.Unmarshal(test, waitingSubmission); err != nil {
+	if err := json.Unmarshal(waitingSubmissionData, waitingSubmission); err != nil {
 		return err
 	}
-
-	// if err := doc.DataTo(waitingSubmission); err != nil {
-	// 	return err
-	// }
 
 	println(waitingSubmission.ProblemId)
 
