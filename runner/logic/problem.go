@@ -67,6 +67,9 @@ func (l *ProblemLogic) RequestEvaluate(submission *models.Submission) error {
 		if err != nil {
 			return err
 		}
+		if res.StatusCode != http.StatusCreated {
+			return err
+		}
 		defer res.Body.Close()
 		// parse response to judgeSubmissionResponse
 		judgeSubmissionResponse := &models.JudgeSubmissionAsyncResponse{}
