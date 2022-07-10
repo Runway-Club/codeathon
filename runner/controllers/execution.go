@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/labstack/echo/v4"
@@ -19,6 +20,8 @@ func NewExecutionController(endpoint string, s *core.Server) *echo.Group {
 		if err := c.Bind(submission); err != nil {
 			return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 		}
+
+		fmt.Println(submission)
 
 		err := problemLogic.RequestEvaluate(submission)
 		if err != nil {

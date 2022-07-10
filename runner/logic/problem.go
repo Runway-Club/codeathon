@@ -72,6 +72,7 @@ func (l *ProblemLogic) RequestEvaluate(submission *models.Submission) error {
 		if err := json.NewDecoder(res.Body).Decode(judgeSubmissionResponse); err != nil {
 			return err
 		}
+		println(judgeSubmissionResponse.Token)
 		tokens = append(tokens, judgeSubmissionResponse.Token)
 	}
 	currentTime := time.Now().UnixMilli()
