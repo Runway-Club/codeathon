@@ -107,8 +107,8 @@ func (l *ProblemLogic) Evaluate(submissionId string) error {
 		return err
 	}
 	// parse data to submission
-	waitingSubmission := &models.WaitingSubmission{}
-	if err := doc.DataTo(*waitingSubmission); err != nil {
+	waitingSubmission := new(models.WaitingSubmission)
+	if err := doc.DataTo(waitingSubmission); err != nil {
 		return err
 	}
 
