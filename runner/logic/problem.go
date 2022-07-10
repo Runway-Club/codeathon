@@ -63,6 +63,7 @@ func (l *ProblemLogic) RequestEvaluate(submission *models.Submission) error {
 			return err
 		}
 		res, err := http.Post(l.config.Judge0+"/submissions/", "application/json", bytes.NewBuffer(judgeSubmitionRequestByte))
+		println(res.StatusCode)
 		if err != nil {
 			return err
 		}
