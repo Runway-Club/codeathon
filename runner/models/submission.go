@@ -32,7 +32,7 @@ type JudgeSubmissionAsyncResponse struct {
 
 type WaitingSubmission struct {
 	ProblemId string   `json:"problem_id"`
-	UserId    int      `json:"user_id"`
+	UserId    string   `json:"user_id"`
 	Tokens    []string `json:"tokens"`
 	Time      int64    `json:"time"`
 	Evaluated bool     `json:"evaluated"`
