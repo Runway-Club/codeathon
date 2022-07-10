@@ -9,7 +9,7 @@ import (
 func NewInfoController(path string, server *core.Server) {
 	infoLogic := logic.NewInfoLogic(server)
 	api := server.Echo.Group(path)
-	api.GET("languages/", func(c echo.Context) error {
+	api.GET("/languages/", func(c echo.Context) error {
 		languages, err := infoLogic.GetLanguages()
 		if err != nil {
 			return err
