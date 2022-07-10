@@ -8,12 +8,11 @@ type Submission struct {
 }
 
 type JudgeSubmissionRequest struct {
-	SourceCode     string `json:"source_code"`
-	LanguageId     int    `json:"language_id"`
-	Stdin          string `json:"stdin"`
-	ExpectedOutput string `json:"expected_output"`
-	CpuTimeLimit   int    `json:"cpu_time_limit"`
-	MemoryLimit    int    `json:"memory_limit"`
+	SourceCode   string `json:"source_code"`
+	LanguageId   int    `json:"language_id"`
+	Stdin        string `json:"stdin"`
+	CpuTimeLimit int    `json:"cpu_time_limit"`
+	MemoryLimit  int    `json:"memory_limit"`
 }
 
 type JudgeSubmissionResponse struct {

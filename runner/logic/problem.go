@@ -55,12 +55,11 @@ func (l *ProblemLogic) RequestEvaluate(submission *models.Submission) error {
 	tokens := make([]string, 0)
 	for _, testcase := range problem.TestCases {
 		judgeSubmitionRequestByte, err := json.Marshal(&models.JudgeSubmissionRequest{
-			SourceCode:     submission.Source,
-			LanguageId:     submission.LanguageId,
-			Stdin:          testcase.Input,
-			ExpectedOutput: testcase.ExpectedOutput,
-			CpuTimeLimit:   testcase.TimeLimit,
-			MemoryLimit:    testcase.MemoryLimit,
+			SourceCode:   submission.Source,
+			LanguageId:   submission.LanguageId,
+			Stdin:        testcase.Input,
+			CpuTimeLimit: testcase.TimeLimit,
+			MemoryLimit:  testcase.MemoryLimit,
 		})
 		if err != nil {
 			return err
@@ -143,6 +142,7 @@ func (l *ProblemLogic) Evaluate(submissionId string) error {
 			return err
 		}
 		parsedTime, _ := strconv.ParseFloat(judgeSubmissionResponse.Time, 64)
+		println(judgeSubmissionResponse)
 		if testcase.ExpectedOutput == judgeSubmissionResponse.Stdout {
 			actualScore += testcase.Score
 			totalMemory += float64(judgeSubmissionResponse.Memory)
