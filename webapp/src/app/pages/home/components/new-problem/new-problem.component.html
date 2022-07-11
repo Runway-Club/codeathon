@@ -52,11 +52,11 @@
                             placeholder="Expected Output" [(ngModel)]="testcase.expected_output"></textarea>
                         <br>
                         Time limit (second)
-                        <input class="input-testcase" type="number" nbInput fullWidth status="basic"
+                        <input min="1" max="15" class="input-testcase" type="number" nbInput fullWidth status="basic"
                             placeholder="Time Limit" [(ngModel)]="testcase.time_limit">
                         <br>
-                        Memory limit (kB)
-                        <input class="input-testcase" type="number" nbInput fullWidth status="basic"
+                        Memory limit (bytes)
+                        <input min="2048" class="input-testcase" type="number" nbInput fullWidth status="basic"
                             placeholder="Memory Limit" [(ngModel)]="testcase.memory_limit">
                         <br>
                         Score

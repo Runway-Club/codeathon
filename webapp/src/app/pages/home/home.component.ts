@@ -30,6 +30,10 @@ export class HomeComponent implements OnInit {
     this.store.dispatch(login());
   }
 
+  createNewProblem() {
+    window.location.href = '/problem-editor';
+  }
+
   signout() {
     this.store.dispatch(logout());
   }

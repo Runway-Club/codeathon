@@ -19,6 +19,9 @@
         <router-outlet></router-outlet>
     </nb-layout-column>
     <ng-template #signoutPopover>
+        <div style="padding: 10px;">
+            <button nbButton status="primary" (click)="createNewProblem()">New problem</button>
+        </div>
         <div style="padding:10px;">
             <button nbButton status="primary" (click)="signout()">Sign out</button>
         </div>

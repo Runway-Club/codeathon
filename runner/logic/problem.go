@@ -200,6 +200,7 @@ func (l *ProblemLogic) Evaluate(submissionId string) error {
 		"user_id":       waitingSubmission.UserId,
 		"language_id":   waitingSubmission.LanguageId,
 		"source":        waitingSubmission.Source,
+		"time":          waitingSubmission.Time,
 	})
 	if err != nil {
 		return err

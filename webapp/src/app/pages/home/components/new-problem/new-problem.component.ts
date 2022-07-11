@@ -81,6 +81,7 @@ export class NewProblemComponent implements OnInit {
     this.problemCreation$.subscribe(state => {
       if (state.success) {
         this.toast.success("200 OK!", "Problem created successfully");
+        window.location.href = "/";
       }
       else {
         if (state.error == undefined) {
