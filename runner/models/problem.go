@@ -20,5 +20,5 @@ type Problem struct {
 	Tags      []string        `json:"tags"`
 	Content   string          `json:"content"`
 	Samples   []ProblemSample `json:"samples"`
-	TestCases []TestCase      `json:"test_cases"`
+	TestCases []TestCase      `json:"testcases"`
 }
