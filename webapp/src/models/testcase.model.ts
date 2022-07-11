@@ -1,6 +1,6 @@
 export interface Testcase {
     input: string;
-    output: string;
+    expected_output: string;
     timeLimit: number;
     memoryLimit: number;
     score: number;

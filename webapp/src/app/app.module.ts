@@ -70,7 +70,7 @@ import { HttpClientModule } from '@angular/common/http';
     MarkdownService,
     {
       provide: MONACO_PATH,
-      useValue: 'https://unpkg.com/monaco-editor@0.31.1/min/vs',
+      useValue: 'https://cdn.jsdelivr.net/npm/monaco-editor@0.32.0/min/vs',
     },
   ],
   bootstrap: [AppComponent]

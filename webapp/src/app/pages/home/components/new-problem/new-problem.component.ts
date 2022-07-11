@@ -195,7 +195,7 @@ export class NewProblemComponent implements OnInit {
   addTest() {
     this.testcases.push({
       input: "",
-      output: "",
+      expected_output: "",
       timeLimit: 60,
       memoryLimit: 100,
       score: 0,
