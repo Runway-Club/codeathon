@@ -135,7 +135,11 @@ func (l *ProblemLogic) Evaluate(submissionId string) error {
 		if res.StatusCode != http.StatusOK {
 			// response body
 			body, err := ioutil.ReadAll(res.Body)
+			if err != nil {
+				return err
+			}
 			return errors.New(string(body))
+		}
 		if err != nil {
 			return err
 		}
