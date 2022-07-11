@@ -146,7 +146,9 @@ func (l *ProblemLogic) Evaluate(submissionId string) error {
 		defer res.Body.Close()
 		// parse response to judgeSubmissionResponse
 		judgeSubmissionResponse := &models.JudgeSubmissionResponse{}
-		if err := json.NewDecoder(res.Body).Decode(judgeSubmissionResponse); err != nil {
+		// unmarshal response to judgeSubmissionResponse
+		resData, _ := ioutil.ReadAll(res.Body)
+		if err := json.Unmarshal(resData, judgeSubmissionResponse); err != nil {
 			return err
 		}
 		parsedTime, _ := strconv.ParseFloat(judgeSubmissionResponse.Time, 64)
@@ -170,15 +172,15 @@ func (l *ProblemLogic) Evaluate(submissionId string) error {
 		testResults = append(testResults, *testResult)
 	}
 	// save result to firestore
-	_, err = l.db.Collection("submissions").Doc(submissionId).Set(context.Background(), &models.EvaluateResult{
-		Score:        actualScore,
-		TotalScore:   totalScore,
-		TotalTime:    totalTime,
-		TotalMemory:  totalMemory,
-		Testcases:    testResults,
-		Evaluated:    true,
-		SubmissionId: submissionId,
-		UserId:       waitingSubmission.UserId,
+	_, err = l.db.Collection("submissions").Doc(submissionId).Set(context.Background(), map[string]interface{}{
+		"score":         actualScore,
+		"total_score":   totalScore,
+		"total_time":    totalTime,
+		"total_memory":  totalMemory,
+		"testcases":     testResults,
+		"evaluated":     true,
+		"submission_id": submissionId,
+		"user_id":       waitingSubmission.UserId,
 	})
 	if err != nil {
 		return err
