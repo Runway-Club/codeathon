@@ -148,6 +148,7 @@ func (l *ProblemLogic) Evaluate(submissionId string) error {
 		judgeSubmissionResponse := &models.JudgeSubmissionResponse{}
 		// unmarshal response to judgeSubmissionResponse
 		resData, _ := ioutil.ReadAll(res.Body)
+		println(string(resData))
 		if err := json.Unmarshal(resData, judgeSubmissionResponse); err != nil {
 			return err
 		}
