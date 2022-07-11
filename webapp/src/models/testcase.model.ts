@@ -1,8 +1,8 @@
 export interface Testcase {
     input: string;
     expected_output: string;
-    timeLimit: number;
-    memoryLimit: number;
+    time_limit: number;
+    memory_limit: number;
     score: number;
-    allowViewOnFailed: boolean;
+    allow_view_on_failed: boolean;
 }

@@ -11,7 +11,7 @@ type TestCase struct {
 	TimeLimit      int    `json:"time_limit"`
 	MemoryLimit    int    `json:"memory_limit"`
 	Score          int    `json:"score"`
-	ViewOnFailure  bool   `json:"view_on_failure"`
+	ViewOnFailure  bool   `json:"allow_view_on_failed"`
 }
 
 type Problem struct {

@@ -40,7 +40,12 @@ func (l *ProblemLogic) Get(id string) (*models.Problem, error) {
 	}
 	// parse data to problem
 	problem := &models.Problem{}
-	if err := doc.DataTo(problem); err != nil {
+	docData, err := json.Marshal(doc.Data())
+	if err != nil {
+		return nil, err
+	}
+	// marshal data to problem
+	if err := json.Unmarshal(docData, problem); err != nil {
 		return nil, err
 	}
 	return problem, nil

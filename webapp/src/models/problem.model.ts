@@ -8,8 +8,8 @@ export interface Problem {
     content: string;
     tags: string[];
     difficulty: number;
-    timeLimit: number;
-    memoryLimit: number;
+    time_limit: number;
+    memory_limit: number;
     samples: ProblemSample[];
     testcases: Testcase[];
     createdAt: number;

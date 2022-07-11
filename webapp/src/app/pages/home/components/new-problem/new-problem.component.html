@@ -53,17 +53,17 @@
                         <br>
                         Time limit (second)
                         <input class="input-testcase" type="number" nbInput fullWidth status="basic"
-                            placeholder="Time Limit" [(ngModel)]="testcase.timeLimit">
+                            placeholder="Time Limit" [(ngModel)]="testcase.time_limit">
                         <br>
                         Memory limit (kB)
                         <input class="input-testcase" type="number" nbInput fullWidth status="basic"
-                            placeholder="Memory Limit" [(ngModel)]="testcase.memoryLimit">
+                            placeholder="Memory Limit" [(ngModel)]="testcase.memory_limit">
                         <br>
                         Score
                         <input class="input-testcase" type="number" nbInput fullWidth status="basic" placeholder="Score"
                             [(ngModel)]="testcase.score">
                         <br>
-                        <nb-toggle [(ngModel)]="testcase.allowViewOnFailed">Allow view test on failed</nb-toggle>
+                        <nb-toggle [(ngModel)]="testcase.allow_view_on_failed">Allow view test on failed</nb-toggle>
                         <br>
                         <button style="float: right;" nbButton status="danger" (click)="removeTest(i)">Delete</button>
                     </nb-accordion-item-body>
