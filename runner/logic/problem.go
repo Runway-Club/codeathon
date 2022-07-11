@@ -188,6 +188,7 @@ func (l *ProblemLogic) Evaluate(submissionId string) error {
 	}
 	// save result to firestore
 	_, err = l.db.Collection("submissions").Doc(submissionId).Set(context.Background(), map[string]interface{}{
+		"problem_id":    waitingSubmission.ProblemId,
 		"score":         actualScore,
 		"total_score":   totalScore,
 		"total_time":    totalTime,
