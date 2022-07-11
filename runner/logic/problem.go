@@ -132,6 +132,10 @@ func (l *ProblemLogic) Evaluate(submissionId string) error {
 		testResult := &models.TestcaseResult{}
 		// get judgeSubmissionResponse
 		res, err := http.Get(l.config.Judge0 + "/submissions/" + waitingSubmission.Tokens[i])
+		if res.StatusCode != http.StatusOK {
+			// response body
+			body, err := ioutil.ReadAll(res.Body)
+			return errors.New(string(body))
 		if err != nil {
 			return err
 		}
