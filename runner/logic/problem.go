@@ -163,14 +163,15 @@ func (l *ProblemLogic) Evaluate(submissionId string) error {
 		parsedTime, _ := strconv.ParseFloat(judgeSubmissionResponse.Time, 64)
 		println(judgeSubmissionResponse.Stdout)
 		expectedOutput := strings.TrimSpace(testcase.ExpectedOutput)
-		if expectedOutput == judgeSubmissionResponse.Stdout {
+		actualOutput := strings.TrimSpace(judgeSubmissionResponse.Stdout)
+		if expectedOutput == actualOutput {
 			actualScore += testcase.Score
 			totalMemory += float64(judgeSubmissionResponse.Memory)
 			totalTime += parsedTime
 			testResult.Message = "PASS"
 			testResult.Input = testcase.Input
 			testResult.ExpectedOutput = testcase.ExpectedOutput
-			testResult.Output = judgeSubmissionResponse.Stdout
+			testResult.Output = actualOutput
 		} else {
 			if judgeSubmissionResponse.Stderr == "" {
 				testResult.Message = "FAIL"
