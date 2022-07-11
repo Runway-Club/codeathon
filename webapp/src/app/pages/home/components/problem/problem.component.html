@@ -53,12 +53,13 @@
     <div class="right">
         <nb-card style="margin-bottom: 0;">
             <nb-card-body>
-                <nb-select placeholder="Language">
+                <nb-select placeholder="Language" [(selected)]="selectedItem">
                     <nb-option>C#</nb-option>
                     <nb-option>C++</nb-option>
                     <nb-option>Javascript</nb-option>
                 </nb-select>
-                <button nbButton status="primary">
+
+                <button (click)="run()" nbButton status="primary">
                     <nb-icon icon="arrow-right-outline"></nb-icon>Run
                 </button>
             </nb-card-body>

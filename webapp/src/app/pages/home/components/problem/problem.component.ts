@@ -75,4 +75,10 @@ export class ProblemComponent implements OnInit {
     };
   }
 
+  selectedItem = "Language"
+
+  run() {
+    console.log(this.selectedItem)
+  }
+
 }
