@@ -4,7 +4,10 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"errors"
+	"io/ioutil"
 	"net/http"
+	"strconv"
 	"time"
 
 	"cloud.google.com/go/firestore"
@@ -52,19 +55,28 @@ func (l *ProblemLogic) RequestEvaluate(submission *models.Submission) error {
 	tokens := make([]string, 0)
 	for _, testcase := range problem.TestCases {
 		judgeSubmitionRequestByte, err := json.Marshal(&models.JudgeSubmissionRequest{
-			SourceCode:     submission.Source,
-			LanguageId:     submission.LanguageId,
-			Stdin:          testcase.Input,
-			ExpectedOutput: testcase.ExpectedOutput,
-			CpuTimeLimit:   testcase.TimeLimit,
-			MemoryLimit:    testcase.MemoryLimit,
+			SourceCode:   submission.Source,
+			LanguageId:   submission.LanguageId,
+			Stdin:        testcase.Input,
+			CpuTimeLimit: testcase.TimeLimit,
+			MemoryLimit:  testcase.MemoryLimit,
 		})
 		if err != nil {
 			return err
 		}
 		res, err := http.Post(l.config.Judge0+"/submissions/", "application/json", bytes.NewBuffer(judgeSubmitionRequestByte))
+		println(res.StatusCode)
 		if err != nil {
 			return err
+		}
+		if res.StatusCode != http.StatusCreated {
+			// print body
+			body, err := ioutil.ReadAll(res.Body)
+			if err != nil {
+				return err
+			}
+
+			return errors.New(string(body))
 		}
 		defer res.Body.Close()
 		// parse response to judgeSubmissionResponse
@@ -72,6 +84,7 @@ func (l *ProblemLogic) RequestEvaluate(submission *models.Submission) error {
 		if err := json.NewDecoder(res.Body).Decode(judgeSubmissionResponse); err != nil {
 			return err
 		}
+		println(judgeSubmissionResponse.Token)
 		tokens = append(tokens, judgeSubmissionResponse.Token)
 	}
 	currentTime := time.Now().UnixMilli()
@@ -95,9 +108,13 @@ func (l *ProblemLogic) Evaluate(submissionId string) error {
 	}
 	// parse data to submission
 	waitingSubmission := &models.WaitingSubmission{}
-	if err := doc.DataTo(waitingSubmission); err != nil {
+	waitingSubmissionData, _ := json.Marshal(doc.Data())
+	// parse to waitingSubmission
+	if err := json.Unmarshal(waitingSubmissionData, waitingSubmission); err != nil {
 		return err
 	}
+
+	println(waitingSubmission.ProblemId)
 
 	// get problem from firestore
 	problem, err := l.Get(waitingSubmission.ProblemId)
@@ -124,10 +141,12 @@ func (l *ProblemLogic) Evaluate(submissionId string) error {
 		if err := json.NewDecoder(res.Body).Decode(judgeSubmissionResponse); err != nil {
 			return err
 		}
+		parsedTime, _ := strconv.ParseFloat(judgeSubmissionResponse.Time, 64)
+		println(judgeSubmissionResponse.Stdout)
 		if testcase.ExpectedOutput == judgeSubmissionResponse.Stdout {
 			actualScore += testcase.Score
 			totalMemory += float64(judgeSubmissionResponse.Memory)
-			totalTime += float64(judgeSubmissionResponse.Time)
+			totalTime += parsedTime
 			testResult.Message = "PASS"
 			testResult.Input = testcase.Input
 			testResult.ExpectedOutput = testcase.ExpectedOutput
@@ -144,12 +163,14 @@ func (l *ProblemLogic) Evaluate(submissionId string) error {
 	}
 	// save result to firestore
 	_, err = l.db.Collection("submissions").Doc(submissionId).Set(context.Background(), &models.EvaluateResult{
-		Score:       actualScore,
-		TotalScore:  totalScore,
-		TotalTime:   totalTime,
-		TotalMemory: totalMemory,
-		Testcases:   testResults,
-		Evaluated:   true,
+		Score:        actualScore,
+		TotalScore:   totalScore,
+		TotalTime:    totalTime,
+		TotalMemory:  totalMemory,
+		Testcases:    testResults,
+		Evaluated:    true,
+		SubmissionId: submissionId,
+		UserId:       waitingSubmission.UserId,
 	})
 	if err != nil {
 		return err

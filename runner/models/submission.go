@@ -8,18 +8,17 @@ type Submission struct {
 }
 
 type JudgeSubmissionRequest struct {
-	SourceCode     string `json:"source_code"`
-	LanguageId     int    `json:"language_id"`
-	Stdin          string `json:"stdin"`
-	ExpectedOutput string `json:"expected_output"`
-	CpuTimeLimit   int    `json:"cpu_time_limit"`
-	MemoryLimit    int    `json:"memory_limit"`
+	SourceCode   string `json:"source_code"`
+	LanguageId   int    `json:"language_id"`
+	Stdin        string `json:"stdin"`
+	CpuTimeLimit int    `json:"cpu_time_limit"`
+	MemoryLimit  int    `json:"memory_limit"`
 }
 
 type JudgeSubmissionResponse struct {
 	Stdout        string  `json:"stdout"`
 	Stderr        string  `json:"stderr"`
-	Time          float32 `json:"time"`
+	Time          string  `json:"time"`
 	Memory        float32 `json:"memory"`
 	Token         string  `json:"token"`
 	Message       string  `json:"message"`
@@ -32,7 +31,7 @@ type JudgeSubmissionAsyncResponse struct {
 
 type WaitingSubmission struct {
 	ProblemId string   `json:"problem_id"`
-	UserId    int      `json:"user_id"`
+	UserId    string   `json:"user_id"`
 	Tokens    []string `json:"tokens"`
 	Time      int64    `json:"time"`
 	Evaluated bool     `json:"evaluated"`
