@@ -8,6 +8,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"strconv"
+	"strings"
 	"time"
 
 	"cloud.google.com/go/firestore"
@@ -95,11 +96,13 @@ func (l *ProblemLogic) RequestEvaluate(submission *models.Submission) error {
 	currentTime := time.Now().UnixMilli()
 	// save tokens to firestore
 	l.db.Collection("submissions").Add(context.Background(), map[string]interface{}{
-		"problem_id": submission.ProblemId,
-		"user_id":    submission.UserId,
-		"tokens":     tokens,
-		"time":       currentTime,
-		"evaluated":  false,
+		"problem_id":  submission.ProblemId,
+		"user_id":     submission.UserId,
+		"tokens":      tokens,
+		"time":        currentTime,
+		"evaluated":   false,
+		"source":      submission.Source,
+		"language_id": submission.LanguageId,
 	})
 	return nil
 }
@@ -159,7 +162,8 @@ func (l *ProblemLogic) Evaluate(submissionId string) error {
 		}
 		parsedTime, _ := strconv.ParseFloat(judgeSubmissionResponse.Time, 64)
 		println(judgeSubmissionResponse.Stdout)
-		if testcase.ExpectedOutput == judgeSubmissionResponse.Stdout {
+		expectedOutput := strings.TrimSpace(testcase.ExpectedOutput)
+		if expectedOutput == judgeSubmissionResponse.Stdout {
 			actualScore += testcase.Score
 			totalMemory += float64(judgeSubmissionResponse.Memory)
 			totalTime += parsedTime
@@ -168,7 +172,11 @@ func (l *ProblemLogic) Evaluate(submissionId string) error {
 			testResult.ExpectedOutput = testcase.ExpectedOutput
 			testResult.Output = judgeSubmissionResponse.Stdout
 		} else {
-			testResult.Message = judgeSubmissionResponse.Stderr
+			if judgeSubmissionResponse.Stderr == "" {
+				testResult.Message = "FAIL"
+			} else {
+				testResult.Message = judgeSubmissionResponse.Stderr
+			}
 			if testcase.ViewOnFailure {
 				testResult.Input = testcase.Input
 				testResult.ExpectedOutput = testcase.ExpectedOutput
@@ -187,6 +195,8 @@ func (l *ProblemLogic) Evaluate(submissionId string) error {
 		"evaluated":     true,
 		"submission_id": submissionId,
 		"user_id":       waitingSubmission.UserId,
+		"language_id":   waitingSubmission.LanguageId,
+		"source":        waitingSubmission.Source,
 	})
 	if err != nil {
 		return err
