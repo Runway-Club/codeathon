@@ -53,8 +53,9 @@
     <div class="right">
         <nb-card *ngIf="info" style="margin-bottom: 0;">
             <nb-card-body>
-                <nb-select placeholder="Language">
-                    <nb-option *ngFor="let language of info.programmingLanguages" [value]="language">{{language}}
+                <nb-select [placeholder]="selectedItem" (selectedChange)="selectLanguage($event.name)">
+                    <nb-option *ngFor="let language of info.programmingLanguages" [value]="language">
+                        {{language.name}}
                     </nb-option>
                 </nb-select>
 

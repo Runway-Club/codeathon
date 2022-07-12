@@ -8,6 +8,7 @@ import { Info, ProgrammingLanguage } from 'src/models/info.model';
 import { Problem } from 'src/models/problem.model';
 import { InfoState } from 'src/states/info.state';
 import { ProblemRetrieval } from 'src/states/problem.state';
+
 @Component({
   selector: 'app-problem',
   templateUrl: './problem.component.html',
@@ -45,6 +46,7 @@ export class ProblemComponent implements OnInit {
   ngOnInit(): void {
     this.problem$.subscribe(problem => {
       if (problem.success) {
+        console.log(problem)
         this.problem = problem.problem;
       }
     });
@@ -89,6 +91,12 @@ export class ProblemComponent implements OnInit {
 
   run() {
     console.log(this.selectedItem)
+    console.log(this.code)
+    // this.store.dispatch()
   }
 
+  selectLanguage(selected: string): void {
+    console.log(selected)
+    this.selectedItem = selected;
+  }
 }
