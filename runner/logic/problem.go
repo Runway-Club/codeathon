@@ -8,6 +8,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"strconv"
+	"strings"
 	"time"
 
 	"cloud.google.com/go/firestore"
@@ -40,7 +41,12 @@ func (l *ProblemLogic) Get(id string) (*models.Problem, error) {
 	}
 	// parse data to problem
 	problem := &models.Problem{}
-	if err := doc.DataTo(problem); err != nil {
+	docData, err := json.Marshal(doc.Data())
+	if err != nil {
+		return nil, err
+	}
+	// marshal data to problem
+	if err := json.Unmarshal(docData, problem); err != nil {
 		return nil, err
 	}
 	return problem, nil
@@ -90,11 +96,13 @@ func (l *ProblemLogic) RequestEvaluate(submission *models.Submission) error {
 	currentTime := time.Now().UnixMilli()
 	// save tokens to firestore
 	l.db.Collection("submissions").Add(context.Background(), map[string]interface{}{
-		"problem_id": submission.ProblemId,
-		"user_id":    submission.UserId,
-		"tokens":     tokens,
-		"time":       currentTime,
-		"evaluated":  false,
+		"problem_id":  submission.ProblemId,
+		"user_id":     submission.UserId,
+		"tokens":      tokens,
+		"time":        currentTime,
+		"evaluated":   false,
+		"source":      submission.Source,
+		"language_id": submission.LanguageId,
 	})
 	return nil
 }
@@ -132,27 +140,44 @@ func (l *ProblemLogic) Evaluate(submissionId string) error {
 		testResult := &models.TestcaseResult{}
 		// get judgeSubmissionResponse
 		res, err := http.Get(l.config.Judge0 + "/submissions/" + waitingSubmission.Tokens[i])
+		if res.StatusCode != http.StatusOK {
+			// response body
+			body, err := ioutil.ReadAll(res.Body)
+			if err != nil {
+				return err
+			}
+			return errors.New(string(body))
+		}
 		if err != nil {
 			return err
 		}
 		defer res.Body.Close()
 		// parse response to judgeSubmissionResponse
 		judgeSubmissionResponse := &models.JudgeSubmissionResponse{}
-		if err := json.NewDecoder(res.Body).Decode(judgeSubmissionResponse); err != nil {
+		// unmarshal response to judgeSubmissionResponse
+		resData, _ := ioutil.ReadAll(res.Body)
+		println(string(resData))
+		if err := json.Unmarshal(resData, judgeSubmissionResponse); err != nil {
 			return err
 		}
 		parsedTime, _ := strconv.ParseFloat(judgeSubmissionResponse.Time, 64)
 		println(judgeSubmissionResponse.Stdout)
-		if testcase.ExpectedOutput == judgeSubmissionResponse.Stdout {
+		expectedOutput := strings.TrimSpace(testcase.ExpectedOutput)
+		actualOutput := strings.TrimSpace(judgeSubmissionResponse.Stdout)
+		if expectedOutput == actualOutput {
 			actualScore += testcase.Score
 			totalMemory += float64(judgeSubmissionResponse.Memory)
 			totalTime += parsedTime
 			testResult.Message = "PASS"
 			testResult.Input = testcase.Input
 			testResult.ExpectedOutput = testcase.ExpectedOutput
-			testResult.Output = judgeSubmissionResponse.Stdout
+			testResult.Output = actualOutput
 		} else {
-			testResult.Message = judgeSubmissionResponse.Stderr
+			if judgeSubmissionResponse.Stderr == "" {
+				testResult.Message = "FAIL"
+			} else {
+				testResult.Message = judgeSubmissionResponse.Stderr
+			}
 			if testcase.ViewOnFailure {
 				testResult.Input = testcase.Input
 				testResult.ExpectedOutput = testcase.ExpectedOutput
@@ -162,15 +187,20 @@ func (l *ProblemLogic) Evaluate(submissionId string) error {
 		testResults = append(testResults, *testResult)
 	}
 	// save result to firestore
-	_, err = l.db.Collection("submissions").Doc(submissionId).Set(context.Background(), &models.EvaluateResult{
-		Score:        actualScore,
-		TotalScore:   totalScore,
-		TotalTime:    totalTime,
-		TotalMemory:  totalMemory,
-		Testcases:    testResults,
-		Evaluated:    true,
-		SubmissionId: submissionId,
-		UserId:       waitingSubmission.UserId,
+	_, err = l.db.Collection("submissions").Doc(submissionId).Set(context.Background(), map[string]interface{}{
+		"problem_id":    waitingSubmission.ProblemId,
+		"tokens":        waitingSubmission.Tokens,
+		"score":         actualScore,
+		"total_score":   totalScore,
+		"total_time":    totalTime,
+		"total_memory":  totalMemory,
+		"testcases":     testResults,
+		"evaluated":     true,
+		"submission_id": submissionId,
+		"user_id":       waitingSubmission.UserId,
+		"language_id":   waitingSubmission.LanguageId,
+		"source":        waitingSubmission.Source,
+		"time":          waitingSubmission.Time,
 	})
 	if err != nil {
 		return err

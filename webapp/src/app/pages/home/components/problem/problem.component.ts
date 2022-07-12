@@ -4,7 +4,9 @@ import { MonacoEditorComponent, MonacoEditorConstructionOptions, MonacoEditorLoa
 import { Store } from '@ngrx/store';
 import { filter, Observable, take } from 'rxjs';
 import { getProblem } from 'src/actions/problem.action';
+import { Info, ProgrammingLanguage } from 'src/models/info.model';
 import { Problem } from 'src/models/problem.model';
+import { InfoState } from 'src/states/info.state';
 import { ProblemRetrieval } from 'src/states/problem.state';
 @Component({
   selector: 'app-problem',
@@ -14,9 +16,12 @@ import { ProblemRetrieval } from 'src/states/problem.state';
 export class ProblemComponent implements OnInit {
 
   problem$: Observable<ProblemRetrieval>;
+  info$: Observable<InfoState>;
   problem?: Problem;
-  constructor(private store: Store<{ problemRetrieval: ProblemRetrieval }>, private monacoService: MonacoEditorLoaderService, private activatedRoute: ActivatedRoute) {
+  info?: Info;
+  constructor(private store: Store<{ problemRetrieval: ProblemRetrieval, info: InfoState }>, private monacoService: MonacoEditorLoaderService, private activatedRoute: ActivatedRoute) {
     this.problem$ = this.store.select('problemRetrieval');
+    this.info$ = this.store.select('info');
   }
 
   code: string = 'function x() {\nconsole.log("Hello world!");\n}';
@@ -55,6 +60,11 @@ export class ProblemComponent implements OnInit {
       .subscribe(() => {
         this.registerMonacoCustomTheme();
       });
+    this.info$.subscribe(info => {
+      if (info.fetched) {
+        this.info = info.info;
+      }
+    });
   }
 
   registerMonacoCustomTheme() {

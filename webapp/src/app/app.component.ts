@@ -3,9 +3,11 @@ import { NbToastrService } from '@nebular/theme';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { fetchAuth } from 'src/actions/auth.action';
+import { fetchProgrammingLanguages } from 'src/actions/info.action';
 import { createProfile, fetchProfile } from 'src/actions/profile.action';
 import { UserProfile } from 'src/models/profile.model';
 import { AuthState } from 'src/states/auth.state';
+import { InfoState } from 'src/states/info.state';
 import { UserProfileState } from 'src/states/profile.state';
 
 @Component({
@@ -19,10 +21,11 @@ export class AppComponent implements OnInit {
   profile$: Observable<UserProfileState>;
   authState?: AuthState
 
-  constructor(private store: Store<{ auth: AuthState, profile: UserProfileState }>, private toast: NbToastrService) {
+  constructor(private store: Store<{ auth: AuthState, profile: UserProfileState, info: InfoState }>, private toast: NbToastrService) {
     this.fetchAuth$ = this.store.select('auth');
     this.profile$ = this.store.select('profile');
     this.store.dispatch(fetchAuth());
+    this.store.dispatch(fetchProgrammingLanguages());
   }
   ngOnInit(): void {
     this.fetchAuth$.subscribe(auth => {

@@ -14,11 +14,11 @@
                                     appearance="filled" [text]="tag"></nb-tag>
                             </div>
                             <div class="description">
-                                <p style="line-height: 35px;"><strong>Description:</strong>{{problem.description}}</p>
+                                <p style="line-height: 35px;"><strong>Description: </strong>{{problem.description}}</p>
                             </div>
                             <hr>
                             <div class="content">
-                                <p><strong>Problem statement:</strong></p>
+                                <p><strong>Problem statement: </strong></p>
                                 <markdown [data]="problem.content">
 
                                 </markdown>
@@ -51,12 +51,11 @@
         </nb-card>
     </div>
     <div class="right">
-        <nb-card style="margin-bottom: 0;">
+        <nb-card *ngIf="info" style="margin-bottom: 0;">
             <nb-card-body>
-                <nb-select placeholder="Language" [(selected)]="selectedItem">
-                    <nb-option>C#</nb-option>
-                    <nb-option>C++</nb-option>
-                    <nb-option>Javascript</nb-option>
+                <nb-select placeholder="Language">
+                    <nb-option *ngFor="let language of info.programmingLanguages" [value]="language">{{language}}
+                    </nb-option>
                 </nb-select>
 
                 <button (click)="run()" nbButton status="primary">
@@ -64,6 +63,7 @@
                 </button>
             </nb-card-body>
         </nb-card>
-        <ngx-monaco-editor style="height:100%;" [options]="editorOptions" [(ngModel)]="code"></ngx-monaco-editor>
+        <ngx-monaco-editor style="height:100%; width: 100%;" [options]="editorOptions" [(ngModel)]="code">
+        </ngx-monaco-editor>
     </div>
 </div>

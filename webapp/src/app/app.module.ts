@@ -24,6 +24,8 @@ import { ProblemEffects } from 'src/effects/problem.effect';
 import { profileReducer } from 'src/reducers/profile.reducer';
 import { ProfileEffects } from 'src/effects/profile.effect';
 import { HttpClientModule } from '@angular/common/http';
+import { infoReducer } from 'src/reducers/info.reducer';
+import { InfoEffects } from 'src/effects/info.effect';
 
 @NgModule({
   declarations: [
@@ -50,12 +52,14 @@ import { HttpClientModule } from '@angular/common/http';
       problemDeletion: deleteProblemReducer,
       problemResetSubmissions: resetSubmissionsReducer,
       problemListing: listingProblemReducer,
-      profile: profileReducer
+      profile: profileReducer,
+      info: infoReducer
     }, {}),
     EffectsModule.forRoot([
       AuthEffects,
       ProblemEffects,
-      ProfileEffects
+      ProfileEffects,
+      InfoEffects
     ]),
     MarkdownModule.forRoot({
       sanitize: SecurityContext.NONE
@@ -70,7 +74,7 @@ import { HttpClientModule } from '@angular/common/http';
     MarkdownService,
     {
       provide: MONACO_PATH,
-      useValue: 'https://unpkg.com/monaco-editor@0.31.1/min/vs',
+      useValue: 'https://cdn.jsdelivr.net/npm/monaco-editor@0.32.0/min/vs',
     },
   ],
   bootstrap: [AppComponent]

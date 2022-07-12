@@ -81,6 +81,7 @@ export class NewProblemComponent implements OnInit {
     this.problemCreation$.subscribe(state => {
       if (state.success) {
         this.toast.success("200 OK!", "Problem created successfully");
+        window.location.href = "/";
       }
       else {
         if (state.error == undefined) {
@@ -137,7 +138,7 @@ export class NewProblemComponent implements OnInit {
       for (let testcase of state.problem.testcases) {
         this.testcases.push({ ...testcase });
       }
-      this.timeLimit = state.problem.timeLimit;
+      this.timeLimit = state.problem.time_limit;
     });
 
     this.problemDeletion$.subscribe(state => {
@@ -195,11 +196,11 @@ export class NewProblemComponent implements OnInit {
   addTest() {
     this.testcases.push({
       input: "",
-      output: "",
-      timeLimit: 60,
-      memoryLimit: 100,
+      expected_output: "",
+      time_limit: 60,
+      memory_limit: 100,
       score: 0,
-      allowViewOnFailed: false
+      allow_view_on_failed: false
     });
   }
 
@@ -229,8 +230,8 @@ export class NewProblemComponent implements OnInit {
       samples: this.samples,
       testcases: this.testcases,
       difficulty: this.difficulty,
-      timeLimit: this.timeLimit,
-      memoryLimit: this.memoryLimit,
+      time_limit: this.timeLimit,
+      memory_limit: this.memoryLimit,
       createdAt: Date.now()
     }
     console.log(problem);
@@ -259,8 +260,8 @@ export class NewProblemComponent implements OnInit {
       samples: this.samples,
       testcases: this.testcases,
       difficulty: this.difficulty,
-      timeLimit: this.timeLimit,
-      memoryLimit: this.memoryLimit,
+      time_limit: this.timeLimit,
+      memory_limit: this.memoryLimit,
       createdAt: Date.now()
     }
     console.log(problem);
