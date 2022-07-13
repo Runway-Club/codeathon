@@ -29,8 +29,9 @@ input[type=text] {
 
 .list {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(150px, 250px));
     gap: 1em;
+    justify-content: center;
 }
 
 .title {

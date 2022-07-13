@@ -9,3 +9,7 @@ export const submitFailure = createAction('[Submit] Submit Failure', props<{ err
 export const fetchSubmissions = createAction('[Submission] Fetch Submission', props<{ submissionId: string, userId: string }>());
 export const fetchSubmissionsSuccess = createAction('[Submission] Fetch Submission Success', props<{ submissions: Submission[] }>());
 export const fetchSubmissionsFailure = createAction('[Submission] Fetch Submission Failure', props<{ error: string }>());
+
+export const exEcution = createAction('[Execution] Execution', props<{ idSubmissions: string }>());
+export const exEcutionSuccess = createAction('[Execution] Execution Success');
+export const exEcutionFailure = createAction('[Execution] Execution Failure', props<{ error: string }>());

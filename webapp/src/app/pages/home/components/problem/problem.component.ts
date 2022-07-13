@@ -10,8 +10,8 @@ import { Problem } from 'src/models/problem.model';
 import { AuthState } from 'src/states/auth.state';
 import { InfoState } from 'src/states/info.state';
 import { ProblemRetrieval } from 'src/states/problem.state';
-import { SubmitState } from 'src/states/submit.state';
-
+import { exEcutionSubmitState, SubmitState } from 'src/states/submit.state';
+import { NbTabsetComponent, NbTabComponent } from '@nebular/theme/components/tabset/tabset.component';
 import * as SubmitActions from '../../../../../actions/submit.action';
 
 @Component({
@@ -25,13 +25,17 @@ export class ProblemComponent implements OnInit {
   info$: Observable<InfoState>;
   auth$: Observable<AuthState>;
   submit$: Observable<SubmitState>;
+  exEcution$: Observable<exEcutionSubmitState>;
   problem?: Problem;
   info?: Info;
-  constructor(private store: Store<{ problemRetrieval: ProblemRetrieval, info: InfoState, auth: AuthState, submit: SubmitState }>, private monacoService: MonacoEditorLoaderService, private activatedRoute: ActivatedRoute, private toast: NbToastrService) {
+  public isSubmitting: boolean = true;
+
+  constructor(private store: Store<{ problemRetrieval: ProblemRetrieval, info: InfoState, auth: AuthState, submit: SubmitState, exEcution: exEcutionSubmitState }>, private monacoService: MonacoEditorLoaderService, private activatedRoute: ActivatedRoute, private toast: NbToastrService) {
     this.problem$ = this.store.select('problemRetrieval');
     this.info$ = this.store.select('info');
     this.auth$ = this.store.select('auth');
     this.submit$ = this.store.select('submit');
+    this.exEcution$ = this.store.select('exEcution');
   }
 
   code: string = 'def test():\tprint("Hello, world")';
@@ -62,7 +66,7 @@ export class ProblemComponent implements OnInit {
   ngOnInit(): void {
     this.problem$.subscribe(problem => {
       if (problem.success) {
-        console.log(problem)
+        // console.log(problem)
         this.problem = problem.problem;
       }
       else {
@@ -104,8 +108,26 @@ export class ProblemComponent implements OnInit {
         this.activeMySubmissionTab = false;
       }
       else {
-        // this.toast.success("Your code has been submitted", "Success");
-        this.activeMySubmissionTab = true;
+
+        console.log(submit);
+
+        if (submit.isSubmitted && !submit.isSubmitting) {
+
+          this.toast.success("Your code has been submitted", "Success");
+
+          this.activeMySubmissionTab = true;
+
+          this.pb = false;
+          this.his = true;
+          this.sub = false;
+        }
+
+        if (submit.isSubmitting) {
+          this.isSubmitting = true;
+        }
+
+        this.isSubmitting = false;
+
       }
     });
   }
@@ -150,11 +172,27 @@ export class ProblemComponent implements OnInit {
         testcases: []
       }
     }))
-
   }
 
-  changeTab() {
-    this.activeMySubmissionTab = false;
+  pb = true;
+  sub = false;
+  his = false;
+
+  changeTab(event: NbTabComponent) {
+    // this.activeMySubmissionTab = false;
+    if (event.tabTitle == "PROBLEM") {
+      this.pb = true;
+      this.sub = false;
+      this.his = false;
+    } else if (event.tabTitle == "submission") {
+      this.pb = false;
+      this.sub = true;
+      this.his = false;
+    } else {
+      this.pb = false;
+      this.sub = false;
+      this.his = true;
+    }
   }
 
 }

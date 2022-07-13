@@ -28,17 +28,17 @@ export class MainComponent implements OnInit {
       this.problems.splice(0, this.problems.length);
       if (listing.list != undefined) {
         for (let i = 0; i < listing.list.length; i++) {
-          this.problems.push(listing.list[i]);
+          this.problems.push(listing.list[0]);
         }
       }
-      console.log(this.problems);
+      // console.log(this.problems);
       this.cd.detectChanges();
     });
     this.store.dispatch(listingProblem({ prevDoc: this.prevDoc }));
   }
 
   viewProblem(problem: Problem) {
-    console.log(problem);
+    // console.log(problem);
     this.router.navigate(['problem', problem.id]);
   }
 

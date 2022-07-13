@@ -22,7 +22,7 @@ export class ProblemEffects {
     createProblem$ = createEffect(() => this.action$.pipe(
         ofType(createProblem),
         switchMap(action => {
-            console.log(action);
+            // console.log(action);
             return from(addDoc(collection(this.db, 'problems'), action.problem))
         }),
         map(() => createProblemSuccess()),
@@ -37,7 +37,7 @@ export class ProblemEffects {
     getProblem$ = createEffect(() => this.action$.pipe(
         ofType(getProblem),
         switchMap(action => {
-            console.log(action);
+            // console.log(action);
             return from(getDoc(doc(this.db, 'problems', action.id)))
         }),
         map(action => action.data()),

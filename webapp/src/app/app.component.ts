@@ -29,19 +29,19 @@ export class AppComponent implements OnInit {
   }
   ngOnInit(): void {
     this.fetchAuth$.subscribe(auth => {
-      console.log(auth);
+      // console.log(auth);
       if (auth.isLoggedIn && auth.uid != '') {
         this.authState = auth;
-        console.log("Fetch profile");
+        // console.log("Fetch profile");
         // fetch profile
         this.store.dispatch(fetchProfile({ id: auth.uid }));
       }
     });
     this.profile$.subscribe(profile => {
-      console.log(profile);
+      // console.log(profile);
       if (profile.error == "Profile not found" && this.authState != undefined) {
         // auto create new profile
-        console.log("Create new profile");
+        // console.log("Create new profile");
         this.store.dispatch(createProfile({ id: this.authState.uid }));
         return;
       }

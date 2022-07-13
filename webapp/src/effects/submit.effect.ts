@@ -42,5 +42,11 @@ export class SubmitEffects {
         }),
         catchError(error => of(Action.fetchSubmissionsFailure({ error: error.message })))));
 
+    execution$ = createEffect(() => this.action$.pipe(
+        ofType(Action.exEcution),
+        switchMap(action => this.http.get(environment.api + `/execution/${action.idSubmissions}`)),
+        map(() => Action.exEcutionSuccess(),
+            catchError(error => of(Action.exEcutionFailure({ error: error.message })))))
+    )
 
 }
