@@ -62,6 +62,7 @@ export class ProblemComponent implements OnInit {
   ngOnInit(): void {
     this.problem$.subscribe(problem => {
       if (problem.success) {
+        console.log(problem)
         this.problem = problem.problem;
       }
       else {
