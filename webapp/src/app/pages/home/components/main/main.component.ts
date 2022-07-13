@@ -25,10 +25,11 @@ export class MainComponent implements OnInit {
 
   ngOnInit(): void {
     this.listing$.subscribe(listing => {
+      console.log(listing)
       this.problems.splice(0, this.problems.length);
       if (listing.list != undefined) {
         for (let i = 0; i < listing.list.length; i++) {
-          this.problems.push(listing.list[0]);
+          this.problems.push(listing.list[i]);
         }
       }
       // console.log(this.problems);
