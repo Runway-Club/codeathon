@@ -26,6 +26,8 @@ import { ProfileEffects } from 'src/effects/profile.effect';
 import { HttpClientModule } from '@angular/common/http';
 import { infoReducer } from 'src/reducers/info.reducer';
 import { InfoEffects } from 'src/effects/info.effect';
+import { submitReducer } from 'src/reducers/submit.reducer';
+import { SubmitEffects } from 'src/effects/submit.effect';
 
 @NgModule({
   declarations: [
@@ -53,13 +55,15 @@ import { InfoEffects } from 'src/effects/info.effect';
       problemResetSubmissions: resetSubmissionsReducer,
       problemListing: listingProblemReducer,
       profile: profileReducer,
-      info: infoReducer
+      info: infoReducer,
+      submit: submitReducer
     }, {}),
     EffectsModule.forRoot([
       AuthEffects,
       ProblemEffects,
       ProfileEffects,
-      InfoEffects
+      InfoEffects,
+      SubmitEffects
     ]),
     MarkdownModule.forRoot({
       sanitize: SecurityContext.NONE

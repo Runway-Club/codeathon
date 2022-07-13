@@ -1,8 +1,8 @@
 <div id="parent">
     <div class="left">
         <nb-card *ngIf="problem" style="height: 100%;">
-            <nb-card-body>
-                <nb-tabset>
+            <nb-card-body style="padding: 0;">
+                <nb-tabset (changeTab)="changeTab()" style="padding: 0;">
                     <nb-tab tabTitle="PROBLEM" tabIcon="alert-triangle-outline" responsive>
                         <div class="tab-problem">
                             <h1 class="title">
@@ -43,7 +43,8 @@
                     <nb-tab tabTitle="submission" tabIcon="award-outline" responsive>
                         <app-submission></app-submission>
                     </nb-tab>
-                    <nb-tab tabTitle="HISTORY" tabIcon="email-outline" responsive>
+                    <nb-tab [active]="activeMySubmissionTab" style="padding: 0;" tabTitle="HISTORY"
+                        tabIcon="email-outline" responsive>
                         <app-history></app-history>
                     </nb-tab>
                 </nb-tabset>
@@ -53,11 +54,13 @@
     <div class="right">
         <nb-card *ngIf="info" style="margin-bottom: 0;">
             <nb-card-body>
-                <nb-select placeholder="Language">
-                    <nb-option *ngFor="let language of info.programmingLanguages" [value]="language">{{language}}
+                <nb-select (selectedChange)="changeLanguage()" [(ngModel)]="selectedLanguageId" placeholder="Language">
+                    <nb-option *ngFor="let language of info.programmingLanguages" [value]="language.id">
+                        {{language.name}}
                     </nb-option>
                 </nb-select>
-                <button nbButton status="primary">
+
+                <button *ngIf="allowSubmit" (click)="submit()" style="float: right;" nbButton status="primary">
                     <nb-icon icon="arrow-right-outline"></nb-icon>Run
                 </button>
             </nb-card-body>
