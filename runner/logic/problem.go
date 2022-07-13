@@ -12,6 +12,8 @@ import (
 	"time"
 
 	"cloud.google.com/go/firestore"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 	"runwayclub.dev/codeathon/v2/core"
 	"runwayclub.dev/codeathon/v2/models"
 )
@@ -50,6 +52,27 @@ func (l *ProblemLogic) Get(id string) (*models.Problem, error) {
 		return nil, err
 	}
 	return problem, nil
+}
+
+func (l *ProblemLogic) AutoEvaluate() error {
+	it := l.db.Collection("submissions").Where("evaluated", "==", false).Snapshots(context.Background())
+	for {
+		snap, err := it.Next()
+		// DeadlineExceeded will be returned when ctx is cancelled.
+		if status.Code(err) == codes.DeadlineExceeded {
+			return nil
+		}
+		if err != nil {
+			return err
+		}
+		docs, err := snap.Documents.GetAll()
+		if err != nil {
+			return err
+		}
+		for _, doc := range docs {
+			l.Evaluate(doc.Ref.ID)
+		}
+	}
 }
 
 func (l *ProblemLogic) RequestEvaluate(submission *models.Submission) error {

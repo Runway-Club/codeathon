@@ -13,6 +13,7 @@ import (
 func NewExecutionController(endpoint string, s *core.Server) *echo.Group {
 	api := s.Echo.Group(endpoint)
 	problemLogic := logic.NewProblemLogic(s)
+
 	api.POST("/", func(c echo.Context) error {
 		// parse body to submission
 		submission := &models.Submission{}
@@ -39,6 +40,8 @@ func NewExecutionController(endpoint string, s *core.Server) *echo.Group {
 		}
 		return c.NoContent(http.StatusOK)
 	})
+
+	problemLogic.AutoEvaluate()
 
 	return api
 }
