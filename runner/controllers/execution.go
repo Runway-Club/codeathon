@@ -41,7 +41,7 @@ func NewExecutionController(endpoint string, s *core.Server) *echo.Group {
 		return c.NoContent(http.StatusOK)
 	})
 
-	problemLogic.AutoEvaluate()
+	// problemLogic.AutoEvaluate()
 
 	return api
 }
