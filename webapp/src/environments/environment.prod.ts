@@ -11,7 +11,6 @@ export const environment = {
     apiKey: "515e04efc9msh90cb0e1f01e697bp1a73e6jsn3346c5abc487",
     host: "judge0-ce.p.rapidapi.com"
   },
-  // api: "https://api.praktikum.gunadarma.ac.id",
   api: "http://35.223.167.125:8080/api/v1",
   production: true
 };
