@@ -97,9 +97,23 @@ export class ProblemEffects {
 
     searchProblems$ = createEffect(() => this.action$.pipe(
         ofType(searchProblem),
-        switchMap(action => this.http.post(environment.api + "/search?q=" + action.query, {})),
-        map((response: any) => {
-            return searchProblemSuccess({ problems: <Problem[]>response.result });
+        switchMap(action => {
+
+            console.log(`query::::::${action.query}`)
+            /**
+             * example query data firestore
+             */
+            var q = query(collection(this.db, 'problems'), where("time_limit", "==", 60));
+            return getDocs(q);
+        }),
+        map((snapshot) => {
+            let problems = [];
+
+            for (let d of snapshot.docs) {
+                problems.push({ ...<Problem>d.data(), id: d.id });
+            }
+
+            return searchProblemSuccess({ problems: problems });
         }),
         catchError(error => of(searchProblemFailure({ error: error.message })))));
 

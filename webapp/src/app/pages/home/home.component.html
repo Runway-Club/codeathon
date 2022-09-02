@@ -2,9 +2,11 @@
     <nb-layout-header>
         <span id="title">Codeathon</span>
         <span style="flex: 1 1 auto;"></span>
+
         <nb-search placeholder="Search problems..."
             style="background-color: white; border-radius: 5px; margin-right: 20px;" type="rotate-layout">
         </nb-search>
+
         <span class="login">
             <button *ngIf="!authState?.isLoggedIn??true" (click)="login()"
                 style="background-color: white; border-radius: 5px;" nbButton shape="rectangle">Login with

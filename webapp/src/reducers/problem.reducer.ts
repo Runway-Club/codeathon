@@ -1,11 +1,13 @@
 import { createReducer, on } from "@ngrx/store";
-import { ProblemCreation, ProblemDeletion, ProblemListing, ProblemResetSubmissions, ProblemRetrieval, ProblemUpdation } from "src/states/problem.state";
+import { GetProblemListing, ProblemCreation, ProblemDeletion, ProblemListing, ProblemResetSubmissions, ProblemRetrieval, ProblemUpdation } from "src/states/problem.state";
 import {
     createProblem, createProblemFailure, createProblemSuccess,
     updateProblem, updateProblemFailure, updateProblemSuccess,
     getProblem, getProblemSuccess, getProblemFailure,
     deleteProblem, deleteProblemFailure, deleteProblemSuccess,
-    resetSubmissions, resetSubmissionsFailure, resetSubmissionsSuccess, listingProblem, listingProblemSuccess, listingProblemFailure, searchProblem, searchProblemSuccess, searchProblemFailure
+    resetSubmissions, resetSubmissionsFailure, resetSubmissionsSuccess,
+    listingProblem, listingProblemSuccess, listingProblemFailure,
+    searchProblem, searchProblemSuccess, searchProblemFailure
 } from '../actions/problem.action';
 export const problemCreationReducer = createReducer(<ProblemCreation>{},
     on(createProblem, state => state),
@@ -157,3 +159,35 @@ export const listingProblemReducer = createReducer(<ProblemListing>{},
             list: []
         };
     }));
+
+export const problemReducer = createReducer(
+    <GetProblemListing>{},
+    on(searchProblem, (action, { query }) => {
+        return {
+            list: [],
+            isLoading: true,
+            success: false,
+            error: '',
+            query: query
+        }
+    }),
+    on(searchProblemSuccess, (action, { problems }) => {
+        return {
+            list: problems,
+            isLoading: false,
+            success: true,
+            error: '',
+            query: ''
+        }
+    }),
+    on(searchProblemFailure, (action, { error }) => {
+        return {
+            list: [],
+            isLoading: false,
+            success: false,
+            error: error,
+            query: ''
+        }
+    })
+
+)

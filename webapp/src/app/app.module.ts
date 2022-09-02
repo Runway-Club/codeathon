@@ -15,7 +15,7 @@ import { NbEvaIconsModule } from '@nebular/eva-icons';
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { authReducer } from 'src/reducers/auth.reducer';
-import { deleteProblemReducer, listingProblemReducer, problemCreationReducer, problemRetrievalReducer, problemUpdationReducer, resetSubmissionsReducer } from '../reducers/problem.reducer';
+import { deleteProblemReducer, listingProblemReducer, problemCreationReducer, problemReducer, problemRetrievalReducer, problemUpdationReducer, resetSubmissionsReducer } from '../reducers/problem.reducer';
 import { MarkdownModule, MarkdownService } from 'ngx-markdown';
 import { LMarkdownEditorModule } from 'ngx-markdown-editor';
 import { MonacoEditorModule, MONACO_PATH } from '@materia-ui/ngx-monaco-editor';
@@ -54,6 +54,7 @@ import { SubmitEffects } from 'src/effects/submit.effect';
       problemDeletion: deleteProblemReducer,
       problemResetSubmissions: resetSubmissionsReducer,
       problemListing: listingProblemReducer,
+      problemSearching: problemReducer,
       profile: profileReducer,
       info: infoReducer,
       submit: submitReducer,
