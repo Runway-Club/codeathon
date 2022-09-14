@@ -160,6 +160,38 @@ export const listingProblemReducer = createReducer(<ProblemListing>{},
         };
     }));
 
+// export const problemReducer = createReducer(
+//     <GetProblemListing>{},
+//     on(searchProblem, (action, { query }) => {
+//         return {
+//             list: [],
+//             isLoading: true,
+//             success: false,
+//             error: '',
+//             query: query
+//         }
+//     }),
+//     on(searchProblemSuccess, (action, { problems }) => {
+//         return {
+//             list: problems,
+//             isLoading: false,
+//             success: true,
+//             error: '',
+//             query: ''
+//         }
+//     }),
+//     on(searchProblemFailure, (action, { error }) => {
+//         return {
+//             list: [],
+//             isLoading: false,
+//             success: false,
+//             error: error,
+//             query: ''
+//         }
+//     })
+
+// )
+
 export const problemReducer = createReducer(
     <GetProblemListing>{},
     on(searchProblem, (action, { query }) => {
@@ -185,9 +217,8 @@ export const problemReducer = createReducer(
             list: [],
             isLoading: false,
             success: false,
-            error: error,
-            query: ''
+            error: 'error',
+            query: '',
         }
     })
-
-)
+);

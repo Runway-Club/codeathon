@@ -27,10 +27,14 @@ export class HomeComponent implements OnInit {
       this.authState = auth;
     });
 
-    this.NbSearchService.onSearchSubmit()
-      .subscribe((data: any) => {
-        this.getSearch(data.term);
-      })
+    // this.NbSearchService.onSearchSubmit()
+    //   .subscribe((data: any) => {
+    //     this.getSearch(data.term);
+    //   });
+
+    this.NbSearchService.onSearchSubmit().subscribe((data: any) => {
+            this.getSearch(data.term);
+    });
 
   }
 
@@ -51,6 +55,11 @@ export class HomeComponent implements OnInit {
   signout() {
     this.store.dispatch(logout());
   }
+
+  // getSearch(searchText: string) {
+  //   console.log(`searching for ${searchText}`);
+  //   this.store.dispatch(searchProblem({ query: searchText }))
+  // }
 
   getSearch(searchText: string) {
     console.log(`searching for ${searchText}`);
