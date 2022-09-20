@@ -1,5 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { NbGetters, NbSortDirection, NbTreeGridDataSource, NbTreeGridDataSourceBuilder } from '@nebular/theme';
+import { Store } from '@ngrx/store';
+import { Observable } from 'rxjs';
+import { Submission } from 'src/models/submission';
+import { SubmissionProblemState } from 'src/states/submit.state';
+import * as Submissions from '../../../../../../../actions/submit.action';
 interface FSEntry {
   name: string;
   size: string;
@@ -14,21 +19,38 @@ interface FSEntry {
   styleUrls: ['./submission.component.scss']
 })
 export class SubmissionComponent implements OnInit {
+
+  @Input() problemId: string = ""
+
   customColumn = 'Submit By';
   defaultColumns = ['Time (ms) ', 'Memory (KB) ', 'Language', 'Score'];
   allColumns = [this.customColumn, ...this.defaultColumns];
   source: NbTreeGridDataSource<FSEntry>;
 
-  constructor(dataSourceBuilder: NbTreeGridDataSourceBuilder<FSEntry>) {
+  constructor(dataSourceBuilder: NbTreeGridDataSourceBuilder<FSEntry>, private store: Store<{
+    SubmissionProblem: SubmissionProblemState,
+  }>) {
     const getters: NbGetters<FSEntry, FSEntry> = {
       dataGetter: (node: FSEntry) => node,
       childrenGetter: (node: FSEntry) => node.childEntries || undefined,
       expandedGetter: (node: FSEntry) => !!node.expanded,
     };
-    this.source = dataSourceBuilder.create(this.data, getters);
+    this.source = dataSourceBuilder.create(this.submissions, getters);
+    this.fetchSubmissionProblem$ = this.store.select(state => state.SubmissionProblem);
   }
+
+  public submissions: Submission[] = [];
+  public fetchSubmissionProblem$: Observable<SubmissionProblemState>;
+
   ngOnInit(): void {
     // throw new Error('Method not implemented.');
+    this.store.dispatch(Submissions.fetchSubmissionProblem({ problemId: this.problemId }));
+    this.fetchSubmissionProblem$.subscribe(
+      res => {
+        console.log(res.submissions);
+        this.submissions = res.submissions;
+      }
+    )
   }
 
   sortDirection: NbSortDirection = NbSortDirection.NONE;

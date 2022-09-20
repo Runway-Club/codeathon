@@ -41,7 +41,7 @@
                         </div>
                     </nb-tab>
                     <nb-tab active="{{sub}}" tabTitle="submission" tabIcon="award-outline" responsive>
-                        <app-submission></app-submission>
+                        <app-submission [problemId]="problemId"></app-submission>
                     </nb-tab>
                     <nb-tab active="{{his}}" #tabHistory style="padding: 0;" tabTitle="HISTORY" tabIcon="email-outline"
                         responsive>

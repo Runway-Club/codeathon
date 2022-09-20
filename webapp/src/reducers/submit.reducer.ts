@@ -1,5 +1,5 @@
 import { createReducer, on } from "@ngrx/store";
-import { exEcutionSubmitState, SubmitState } from "src/states/submit.state";
+import { exEcutionSubmitState, SubmitState, SubmissionProblemState } from "src/states/submit.state";
 import * as Action from '../actions/submit.action';
 
 let initialState: SubmitState = {
@@ -29,3 +29,39 @@ export const exEcutionReducer = createReducer(
     on(Action.exEcutionSuccess, (state) => ({ ...state, error: "", isExEcution: true, id: "" })),
     on(Action.exEcutionFailure, (state, { error }) => ({ ...state, error: error, isExEcution: false, id: "" })),
 )
+
+let initSubmissionProblem: SubmissionProblemState = {
+    idProblem: "",
+    error: "",
+    isSubmissionProblem: false,
+    submissions: []
+};
+
+export const SubmissionProblemReducer = createReducer(
+    initSubmissionProblem,
+    on(Action.fetchSubmissionProblem, (state, { problemId }) => (
+        {
+            ...state,
+            idProblem: problemId,
+            error: "",
+            isSubmissionProblem: false,
+            submissions: []
+        })),
+    on(Action.fetchSubmissionProblemSuccess, (state, { submissions }) => (
+        {
+            ...state,
+            error: "",
+            isSubmissionProblem: true,
+            submissions: submissions,
+            idProblem: ""
+        })),
+    on(Action.fetchSubmissionProblemFailure, (state, { error }) => (
+        {
+            ...state,
+            error: error,
+            isSubmissionProblem: false,
+            submissions: [],
+            idProblem: ""
+        })),
+)
+

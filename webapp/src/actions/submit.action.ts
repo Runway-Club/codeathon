@@ -13,3 +13,7 @@ export const fetchSubmissionsFailure = createAction('[Submission] Fetch Submissi
 export const exEcution = createAction('[Execution] Execution', props<{ idSubmissions: string }>());
 export const exEcutionSuccess = createAction('[Execution] Execution Success');
 export const exEcutionFailure = createAction('[Execution] Execution Failure', props<{ error: string }>());
+
+export const fetchSubmissionProblem = createAction('[Submission] Fetch Submission Problem', props<{ problemId: string }>());
+export const fetchSubmissionProblemSuccess = createAction('[Submission] Fetch Submission Problem Success', props<{ submissions: Submission[] }>());
+export const fetchSubmissionProblemFailure = createAction('[Submission] Fetch Submission Problem Failure', props<{ error: string }>());

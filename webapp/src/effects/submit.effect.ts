@@ -15,7 +15,7 @@ export class SubmitEffects {
     submit$ = createEffect(() => this.action$.pipe(
         ofType(Action.submit),
         switchMap(action => {
-            console.log(action.submission);
+            // console.log(action.submission);
             return this.http.post(environment.api + '/execution/', action.submission)
         }),
         map(res => Action.submitSuccess()),
@@ -48,5 +48,24 @@ export class SubmitEffects {
         map(() => Action.exEcutionSuccess(),
             catchError(error => of(Action.exEcutionFailure({ error: error.message })))))
     )
+
+    fetchSubmissionProblem$ = createEffect(() => this.action$.pipe(
+        ofType(Action.fetchSubmissionProblem),
+        switchMap((action) => {
+
+            const QUERY = query(collection(this.db, "submissions"),
+                where("problem_id", "==", action.problemId),
+                limit(20)
+            );
+            return from(getDocs(QUERY));
+        }),
+        map(res => {
+            let submissions: Submission[] = [];
+            for (let i = 0; i < res.docs.length; i++) {
+                submissions.push(res.docs[i].data() as Submission);
+            }
+            return Action.fetchSubmissionProblemSuccess({ submissions: submissions })
+        }),
+        catchError(error => of(Action.fetchSubmissionProblemFailure({ error: error.message })))));
 
 }

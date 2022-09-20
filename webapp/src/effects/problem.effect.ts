@@ -3,7 +3,6 @@ import { Injectable } from "@angular/core";
 import { addDoc, collection, deleteDoc, doc, Firestore, getDoc, getDocs, limit, query, setDoc, startAt, where } from "@angular/fire/firestore";
 import { Actions, createEffect, ofType } from "@ngrx/effects";
 import { from, switchMap, map, catchError, of } from "rxjs";
-import { environment } from "src/environments/environment.prod";
 import { Problem } from "src/models/problem.model";
 import {
     createProblem, createProblemSuccess, createProblemFailure,
@@ -99,16 +98,17 @@ export class ProblemEffects {
         ofType(searchProblem),
         switchMap(action => {
 
-            console.log(`query::::::${action.query}`)
-            /**
-             * example query data firestore
-             */
-            var q = query(collection(this.db, 'problems'), where("time_limit", "==", 60));
+            const TEXT_QUERY = action.query.toLowerCase();
+
+            var q = query(
+                collection(this.db, 'problems'),
+                where("title", '>=', TEXT_QUERY),
+                where("title", '<=', TEXT_QUERY + '\uf8ff'),
+                limit(20));
             return getDocs(q);
         }),
         map((snapshot) => {
             let problems = [];
-
             for (let d of snapshot.docs) {
                 problems.push({ ...<Problem>d.data(), id: d.id });
             }
@@ -116,27 +116,5 @@ export class ProblemEffects {
             return searchProblemSuccess({ problems: problems });
         }),
         catchError(error => of(searchProblemFailure({ error: error.message })))));
-
-        // searchProblems$ = createEffect(() => this.action$.pipe(
-        //     ofType(searchProblem),
-        //     switchMap(action => {
-    
-        //         console.log(`query::::::${action.query}`)
-        //         /**
-        //          * example query data firestore
-        //          */
-        //         var q = query(collection(this.db, 'problems'), where("time_limit", "==", 60));
-        //         return getDocs(q);
-        //     }),
-        //     map((snapshot) => {
-        //         let problems = [];
-    
-        //         for (let d of snapshot.docs) {
-        //             problems.push({ ...<Problem>d.data(), id: d.id });
-        //         }
-    
-        //         return searchProblemSuccess({ problems: problems });
-        //     }),
-        //     catchError(error => of(searchProblemFailure({ error: error.message })))));
 
 }

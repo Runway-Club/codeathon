@@ -12,3 +12,10 @@ export interface exEcutionSubmitState {
     isExEcution: boolean;
     error: string;
 }
+
+export interface SubmissionProblemState {
+    idProblem: string,
+    isSubmissionProblem: boolean;
+    error: string;
+    submissions: Submission[];
+}
