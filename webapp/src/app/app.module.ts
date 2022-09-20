@@ -26,7 +26,7 @@ import { ProfileEffects } from 'src/effects/profile.effect';
 import { HttpClientModule } from '@angular/common/http';
 import { infoReducer } from 'src/reducers/info.reducer';
 import { InfoEffects } from 'src/effects/info.effect';
-import { exEcutionReducer, submitReducer, SubmissionProblemReducer } from 'src/reducers/submit.reducer';
+import { exEcutionReducer, submitReducer, SubmissionProblemReducer, SubmissionDetailReducer} from 'src/reducers/submit.reducer';
 import { SubmitEffects } from 'src/effects/submit.effect';
 
 @NgModule({
@@ -59,7 +59,8 @@ import { SubmitEffects } from 'src/effects/submit.effect';
       info: infoReducer,
       submit: submitReducer,
       exEcution: exEcutionReducer,
-      SubmissionProblem: SubmissionProblemReducer
+      SubmissionProblem: SubmissionProblemReducer,
+      SubmissionDetail:SubmissionDetailReducer
     }, {}),
     EffectsModule.forRoot([
       AuthEffects,

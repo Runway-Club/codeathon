@@ -1,7 +1,7 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { docSnapshots, Firestore, getDocs, limit, orderBy } from "@angular/fire/firestore";
-import { collection, onSnapshot, query, where } from "@firebase/firestore";
+import { doc, docSnapshots, Firestore, getDocs, limit, orderBy } from "@angular/fire/firestore";
+import { collection, onSnapshot, query, where, getDoc } from "@firebase/firestore";
 import { Actions, createEffect, ofType } from "@ngrx/effects";
 import { switchMap, map, catchError, of, from } from "rxjs";
 import { environment } from "src/environments/environment";
@@ -67,5 +67,16 @@ export class SubmitEffects {
             return Action.fetchSubmissionProblemSuccess({ submissions: submissions })
         }),
         catchError(error => of(Action.fetchSubmissionProblemFailure({ error: error.message })))));
+
+    fetchSubmissionDetail$ = createEffect(() => this.action$.pipe(
+        ofType(Action.fetchSubmissionDetail),
+        switchMap((action) => {
+            const REFERENCE = doc(this.db, "submissions", action.submissionId);
+            return from(getDoc(REFERENCE));
+        }),
+        map(res => {
+            return Action.fetchSubmissionDetailSuccess({ submission: <Submission>res.data() })
+        }),
+        catchError(error => of(Action.fetchSubmissionDetailFailure({ error: error.message })))));
 
 }

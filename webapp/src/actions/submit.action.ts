@@ -17,3 +17,7 @@ export const exEcutionFailure = createAction('[Execution] Execution Failure', pr
 export const fetchSubmissionProblem = createAction('[Submission] Fetch Submission Problem', props<{ problemId: string }>());
 export const fetchSubmissionProblemSuccess = createAction('[Submission] Fetch Submission Problem Success', props<{ submissions: Submission[] }>());
 export const fetchSubmissionProblemFailure = createAction('[Submission] Fetch Submission Problem Failure', props<{ error: string }>());
+
+export const fetchSubmissionDetail = createAction('[Submission] Fetch Submission Detail', props<{ submissionId: string }>());
+export const fetchSubmissionDetailSuccess = createAction('[Submission] Fetch Submission Detail Success', props<{ submission: Submission }>());
+export const fetchSubmissionDetailFailure = createAction('[Submission] Fetch Submission Detail Failure', props<{ error: string }>());

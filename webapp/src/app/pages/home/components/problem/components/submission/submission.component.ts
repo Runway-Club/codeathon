@@ -35,7 +35,7 @@ export class SubmissionComponent implements OnInit {
       childrenGetter: (node: FSEntry) => node.childEntries || undefined,
       expandedGetter: (node: FSEntry) => !!node.expanded,
     };
-    this.source = dataSourceBuilder.create(this.submissions, getters);
+    this.source = dataSourceBuilder.create(this.data, getters);
     this.fetchSubmissionProblem$ = this.store.select(state => state.SubmissionProblem);
   }
 
@@ -47,7 +47,7 @@ export class SubmissionComponent implements OnInit {
     this.store.dispatch(Submissions.fetchSubmissionProblem({ problemId: this.problemId }));
     this.fetchSubmissionProblem$.subscribe(
       res => {
-        console.log(res.submissions);
+        // console.log(res.submissions);
         this.submissions = res.submissions;
       }
     )
@@ -84,7 +84,6 @@ export class SubmissionComponent implements OnInit {
     }
   ];
 
-  getShowOn(index: any) { }
   getSortDirection(column: string): NbSortDirection {
     if (this.sortColumn === column) {
       return this.sortDirection;

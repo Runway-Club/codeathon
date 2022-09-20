@@ -1,5 +1,9 @@
-import { Component, OnInit } from '@angular/core';
-
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Store } from '@ngrx/store';
+import { Observable } from 'rxjs';
+import { Submission } from 'src/models/submission';
+import { SubmissionDetailState } from 'src/states/submit.state';
+import * as SubmissionActions from '../../../../../../../actions/submit.action';
 @Component({
   selector: 'app-history',
   templateUrl: './history.component.html',
@@ -7,12 +11,43 @@ import { Component, OnInit } from '@angular/core';
 })
 export class HistoryComponent implements OnInit {
 
-  constructor() { }
+  public submissionDetail$: Observable<SubmissionDetailState>;
+
+  @Output() sourceCode = new EventEmitter<{
+    language_id: number,
+    source: string
+  }>();
+
+  constructor(
+    private store: Store<{
+      SubmissionDetail: SubmissionDetailState
+    }>
+  ) {
+    this.submissionDetail$ = this.store.select(state => state.SubmissionDetail);
+  }
 
   ngOnInit(): void {
+    this.store.dispatch(SubmissionActions.fetchSubmissionDetail({ submissionId: "mhenz8j5uo94q9jufs3W" }));
+    this.submissionDetail$.subscribe(
+      res => {
+        this.submission = res.submission;
+        console.log(this.submission);
+      }
+    )
+  }
+
+  public viewSrcCode() {
+    if (!this.submission.source) return;
+    this.sourceCode.emit({
+      language_id: this.submission.language_id,
+      source: this.submission.source
+
+    });
   }
 
   public date = Date.now()
+
+  public submission!: Submission;
 
   public histories = [
     {

@@ -19,3 +19,10 @@ export interface SubmissionProblemState {
     error: string;
     submissions: Submission[];
 }
+
+export interface SubmissionDetailState {
+    idSubmission: string,
+    isSubmissionDetail: boolean;
+    error: string;
+    submission: Submission;
+}

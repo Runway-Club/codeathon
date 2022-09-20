@@ -195,4 +195,14 @@ export class ProblemComponent implements OnInit {
     }
   }
 
+  viewSrcCode(event: {
+    language_id: number,
+    source: string
+  }) {
+    // this.code = event;
+    console.log(event);
+    this.code = event.source;
+    this.selectedLanguageId = event.language_id;
+  }
+
 }
