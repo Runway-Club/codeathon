@@ -1,8 +1,9 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { Submission } from 'src/models/submission';
-import { SubmissionDetailState } from 'src/states/submit.state';
+import { AuthState } from 'src/states/auth.state';
+import { SubmissionDetailState, SubmitState } from 'src/states/submit.state';
 import * as SubmissionActions from '../../../../../../../actions/submit.action';
 @Component({
   selector: 'app-history',
@@ -12,84 +13,51 @@ import * as SubmissionActions from '../../../../../../../actions/submit.action';
 export class HistoryComponent implements OnInit {
 
   public submissionDetail$: Observable<SubmissionDetailState>;
+  public submissions$: Observable<SubmitState>;
+  public auth$: Observable<AuthState>;
+  // public submission!: Submission;
+  public mySubmission: Submission[] = [];
 
   @Output() sourceCode = new EventEmitter<{
     language_id: number,
     source: string
   }>();
 
+  @Input() problem_id!: string;
+
   constructor(
     private store: Store<{
-      SubmissionDetail: SubmissionDetailState
+      SubmissionDetail: SubmissionDetailState,
+      submit: SubmitState,
+      auth: AuthState
     }>
   ) {
     this.submissionDetail$ = this.store.select(state => state.SubmissionDetail);
+    this.submissions$ = this.store.select(state => state.submit);
+    this.auth$ = this.store.select(state => state.auth);
   }
 
   ngOnInit(): void {
-    this.store.dispatch(SubmissionActions.fetchSubmissionDetail({ submissionId: "mhenz8j5uo94q9jufs3W" }));
-    this.submissionDetail$.subscribe(
+    this.submissions$.subscribe(
+      resp => {
+        this.mySubmission = resp.mySubmission;
+      }
+    )
+    this.auth$.subscribe(
       res => {
-        this.submission = res.submission;
-        console.log(this.submission);
+        if (res.isLoggedIn && this.problem_id) {
+          this.store.dispatch(SubmissionActions.fetchSubmissions({ userId: res.uid, problemId: this.problem_id }));
+        }
       }
     )
   }
 
   public viewSrcCode() {
-    if (!this.submission.source) return;
-    this.sourceCode.emit({
-      language_id: this.submission.language_id,
-      source: this.submission.source
-
-    });
+    // if (!this.submission.source) return;
+    // this.sourceCode.emit({
+    //   language_id: this.submission.language_id,
+    //   source: this.submission.source
+    // });
   }
-
-  public date = Date.now()
-
-  public submission!: Submission;
-
-  public histories = [
-    {
-      testcases: [
-        {
-          inputProblem: "9 + 1",
-          outPut: "10",
-          isTrue: true,
-          score: 30,
-          timeLimit: 2,
-          memoryLimit: 15
-        },
-
-        {
-          inputProblem: "999 + 1",
-          outPut: "1000",
-          isTrue: true,
-          score: 30,
-          timeLimit: 2,
-          memoryLimit: 15
-        },
-
-        {
-          inputProblem: "998 + 1",
-          outPut: "999",
-          isTrue: true,
-          score: 20,
-          timeLimit: 2,
-          memoryLimit: 15
-        },
-        {
-          inputProblem: "99 + 2",
-          outPut: "100",
-          isTrue: false,
-          score: 0,
-          timeLimit: 2,
-          memoryLimit: 15
-
-        },
-      ],
-      dateSubmit: Date.now(),
-    }
-  ]
 
 }

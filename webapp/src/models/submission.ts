@@ -8,8 +8,18 @@ export interface Submission {
     user_id: string;
     evaluated: boolean;
     score: number;
-    testcases: any[];
+    testcases?: TestCase[];
     total_memory: number;
     total_time: number;
     total_score: number;
+    time: number
+}
+
+export interface TestCase {
+    allow_view_on_failed: boolean,
+    expected_output: string,
+    input: string,
+    memory_limit: number,
+    score: number,
+    time_limit: number
 }

@@ -24,23 +24,28 @@ export class SubmitEffects {
     fetchMySubmissions$ = createEffect(() => this.action$.pipe(
         ofType(Action.fetchSubmissions),
         switchMap((action) => {
+            // console.log(action);
             let q = query(collection(this.db, "submissions"),
-                where("submission_id", "==", action.submissionId),
+                where("problem_id", "==", action.problemId),
                 where("user_id", "==", action.userId),
                 where("evaluated", "==", true),
-                orderBy("time", "desc"),
-                limit(100)
+                // orderBy("time", "desc"),
+                limit(100),
             );
             return from(getDocs(q));
         }),
         map(res => {
+            // console.log(res);
             let submissions: Submission[] = [];
             for (let i = 0; i < res.docs.length; i++) {
                 submissions.push(res.docs[i].data() as Submission);
             }
             return Action.fetchSubmissionsSuccess({ submissions: submissions })
         }),
-        catchError(error => of(Action.fetchSubmissionsFailure({ error: error.message })))));
+        catchError(error => {
+            // console.log(error);
+            return of(Action.fetchSubmissionsFailure({ error: error.message }))
+        })));
 
     execution$ = createEffect(() => this.action$.pipe(
         ofType(Action.exEcution),

@@ -6,7 +6,7 @@ export const submit = createAction('[Submit] Submit', props<{ submission: Submis
 export const submitSuccess = createAction('[Submit] Submit Success');
 export const submitFailure = createAction('[Submit] Submit Failure', props<{ error: string }>());
 
-export const fetchSubmissions = createAction('[Submission] Fetch Submission', props<{ submissionId: string, userId: string }>());
+export const fetchSubmissions = createAction('[Submission] Fetch Submission', props<{ problemId: string, userId: string }>());
 export const fetchSubmissionsSuccess = createAction('[Submission] Fetch Submission Success', props<{ submissions: Submission[] }>());
 export const fetchSubmissionsFailure = createAction('[Submission] Fetch Submission Failure', props<{ error: string }>());
 

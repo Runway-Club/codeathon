@@ -109,7 +109,7 @@ export class ProblemComponent implements OnInit {
       }
       else {
 
-        console.log(submit);
+        // console.log(submit);
 
         if (submit.isSubmitted && !submit.isSubmitting) {
 
@@ -169,7 +169,8 @@ export class ProblemComponent implements OnInit {
         total_memory: 0,
         total_time: 0,
         total_score: 0,
-        testcases: []
+        testcases: [],
+        time: 0
       }
     }))
   }
@@ -200,7 +201,6 @@ export class ProblemComponent implements OnInit {
     source: string
   }) {
     // this.code = event;
-    console.log(event);
     this.code = event.source;
     this.selectedLanguageId = event.language_id;
   }

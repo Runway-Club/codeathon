@@ -45,7 +45,7 @@
                     </nb-tab>
                     <nb-tab active="{{his}}" #tabHistory style="padding: 0;" tabTitle="HISTORY" tabIcon="email-outline"
                         responsive>
-                        <app-history (sourceCode)="viewSrcCode($event)"></app-history>
+                        <app-history [problem_id]="problemId" (sourceCode)="viewSrcCode($event)"></app-history>
                     </nb-tab>
                 </nb-tabset>
             </nb-card-body>
