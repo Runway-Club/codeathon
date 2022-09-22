@@ -5,11 +5,15 @@ import { fetchAuth, login, loginFailure, loginSuccess, logout, logoutFailure, lo
 import { catchError, map, of, switchMap } from 'rxjs';
 import { GoogleAuthProvider, signInWithPopup } from "@firebase/auth";
 import { Auth, authState, signOut } from "@angular/fire/auth";
-import { AuthState } from "src/states/auth.state";
+
 
 @Injectable()
 export class AuthEffects {
-    constructor(private action$: Actions, private db: Firestore, private auth: Auth) { }
+    constructor(
+        private action$: Actions,
+        private db: Firestore,
+        private auth: Auth,
+    ) { }
 
     login$ = createEffect(() => this.action$.pipe(
         ofType(login),

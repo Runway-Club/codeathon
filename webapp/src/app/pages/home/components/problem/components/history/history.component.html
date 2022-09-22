@@ -38,27 +38,28 @@
             <nb-accordion-item-body *ngIf="submission">
                 <div class="body">
                     <h1 class="score-heading">Your score: {{submission.total_score}}/100</h1>
-                    <p (click)="viewSrcCode()" class="view-code">View Source Code</p>
+                    <p (click)="viewSrcCode(submission.source, submission.language_id)" class="view-code">View Source
+                        Code</p>
                     <hr>
                     <div class="testcase">
                         <div *ngFor="let case of submission.testcases, index as i">
                             <p style="margin-top: 10px; font-weight: bold;">#test {{i + 1}}</p>
                             <div class="detail-testcase">
                                 <div class="input-testcase">
-                                    <textarea [value]="case.input" disabled class="input-case" type="text"></textarea>
+                                    <textarea [value]="case.Input" disabled class="input-case" type="text"></textarea>
                                 </div>
                                 <div class="output-testcase">
-                                    <textarea [value]="case.input" disabled class="input-case" type="text"></textarea>
+                                    <textarea [value]="case.Message" disabled class="input-case" type="text"></textarea>
                                 </div>
                                 <div class="check">
-                                    <nb-icon style="color: green;" *ngIf="case.input === case.expected_output"
-                                        class="icon-testcase" icon="checkmark-circle-2-outline"></nb-icon>
-                                    <nb-icon style="color: red;" *ngIf="case.input !== case.expected_output"
-                                        class="icon-testcase" icon="close-outline">
+                                    <nb-icon style="color: green;" *ngIf="case.Message !=='FAIL'" class="icon-testcase"
+                                        icon="checkmark-circle-2-outline"></nb-icon>
+                                    <nb-icon style="color: red;" *ngIf="case.Message ==='FAIL'" class="icon-testcase"
+                                        icon="close-outline">
                                     </nb-icon>
                                 </div>
                                 <div class="score">
-                                    <p class="score-case">{{case.score}}</p>
+                                    <p class="score-case">20</p>
                                 </div>
                             </div>
                         </div>

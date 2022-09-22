@@ -41,7 +41,7 @@ export class ProblemEffects {
         }),
         map(action => action.data()),
         map(data => {
-            console.log(<Problem>data);
+            // console.log(<Problem>data);
             if (data == undefined) {
                 return getProblemFailure({ error: "Problem not found" });
             }

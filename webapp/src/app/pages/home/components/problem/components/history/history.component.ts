@@ -41,6 +41,7 @@ export class HistoryComponent implements OnInit {
     this.submissions$.subscribe(
       resp => {
         this.mySubmission = resp.mySubmission;
+        console.log(resp);
       }
     )
     this.auth$.subscribe(
@@ -52,12 +53,12 @@ export class HistoryComponent implements OnInit {
     )
   }
 
-  public viewSrcCode() {
-    // if (!this.submission.source) return;
-    // this.sourceCode.emit({
-    //   language_id: this.submission.language_id,
-    //   source: this.submission.source
-    // });
+  public viewSrcCode(source: string, language_id: number) {
+    if (!source || !language_id) return;
+    this.sourceCode.emit({
+      language_id,
+      source
+    });
   }
 
 }

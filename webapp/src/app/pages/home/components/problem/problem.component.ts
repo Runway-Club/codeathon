@@ -203,6 +203,7 @@ export class ProblemComponent implements OnInit {
     // this.code = event;
     this.code = event.source;
     this.selectedLanguageId = event.language_id;
+    this.changeLanguage();
   }
 
 }

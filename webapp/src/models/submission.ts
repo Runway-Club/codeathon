@@ -16,10 +16,9 @@ export interface Submission {
 }
 
 export interface TestCase {
-    allow_view_on_failed: boolean,
-    expected_output: string,
-    input: string,
-    memory_limit: number,
-    score: number,
-    time_limit: number
+    ExpectedOutput: string,
+    Input: string,
+    Message: string,
+    Output: string,
+    Stderr: string
 }
