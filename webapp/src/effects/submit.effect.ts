@@ -1,16 +1,22 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { doc, docSnapshots, Firestore, getDocs, limit, orderBy } from "@angular/fire/firestore";
+import { doc, docSnapshots, Firestore, getDocs, limit, orderBy, collectionChanges } from "@angular/fire/firestore";
 import { collection, onSnapshot, query, where, getDoc } from "@firebase/firestore";
 import { Actions, createEffect, ofType } from "@ngrx/effects";
 import { switchMap, map, catchError, of, from } from "rxjs";
+import { SubmissionService } from "src/app/services/submission.service";
 import { environment } from "src/environments/environment";
 import { Submission } from "src/models/submission";
 import * as Action from '../actions/submit.action';
 
 @Injectable()
 export class SubmitEffects {
-    constructor(private action$: Actions, private http: HttpClient, private db: Firestore) { }
+    constructor(
+        private action$: Actions,
+        private http: HttpClient,
+        private db: Firestore,
+        private SubmissionService: SubmissionService
+    ) { }
 
     submit$ = createEffect(() => this.action$.pipe(
         ofType(Action.submit),
@@ -23,29 +29,23 @@ export class SubmitEffects {
 
     fetchMySubmissions$ = createEffect(() => this.action$.pipe(
         ofType(Action.fetchSubmissions),
-        switchMap((action) => {
-            // console.log(action);
-            let q = query(collection(this.db, "submissions"),
-                where("problem_id", "==", action.problemId),
-                where("user_id", "==", action.userId),
-                where("evaluated", "==", true),
-                // orderBy("time", "desc"),
-                limit(100),
-            );
-            return from(getDocs(q));
-        }),
-        map(res => {
-            // console.log(res);
-            let submissions: Submission[] = [];
-            for (let i = 0; i < res.docs.length; i++) {
-                submissions.push(res.docs[i].data() as Submission);
-            }
-            return Action.fetchSubmissionsSuccess({ submissions: submissions })
-        }),
-        catchError(error => {
-            // console.log(error);
-            return of(Action.fetchSubmissionsFailure({ error: error.message }))
-        })));
+        switchMap(action => this.SubmissionService.fetchSubmission(action.problemId, action.userId)),
+        map(
+            (submissions) => {
+                submissions.map(
+                    submission => {
+                        this.SubmissionService.addSubmission(<Submission>submission.doc.data())
+                    }
+                )
+                return Action.fetchSubmissionsSuccess({ submissions: this.SubmissionService.getSubmission() })
+            },
+            catchError(
+                error => of(
+                    Action.exEcutionFailure({ error: error.message })
+                )
+            )
+        ))
+    );
 
     execution$ = createEffect(() => this.action$.pipe(
         ofType(Action.exEcution),

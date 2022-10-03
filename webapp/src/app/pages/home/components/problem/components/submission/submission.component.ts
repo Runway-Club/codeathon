@@ -5,6 +5,13 @@ import { Observable } from 'rxjs';
 import { Submission } from 'src/models/submission';
 import { SubmissionProblemState } from 'src/states/submit.state';
 import * as Submissions from '../../../../../../../actions/submit.action';
+import { ProgrammingLanguage } from "../../../../../../../models/info.model";
+import { InfoState } from "../../../../../../../states/info.state";
+import { UserProfileState } from "../../../../../../../states/profile.state";
+import * as ProfileActions from '../../../../../../../actions/profile.action';
+import { UserProfile } from "../../../../../../../models/profile.model";
+import { UserService } from "../../../../../../services/user.service";
+
 interface FSEntry {
   name: string;
   size: string;
@@ -27,9 +34,15 @@ export class SubmissionComponent implements OnInit {
   allColumns = [this.customColumn, ...this.defaultColumns];
   source: NbTreeGridDataSource<FSEntry>;
 
-  constructor(dataSourceBuilder: NbTreeGridDataSourceBuilder<FSEntry>, private store: Store<{
-    SubmissionProblem: SubmissionProblemState,
-  }>) {
+  constructor(
+    dataSourceBuilder: NbTreeGridDataSourceBuilder<FSEntry>,
+    private store: Store<{
+      SubmissionProblem: SubmissionProblemState,
+      info: InfoState,
+      profile: UserProfileState
+    }>,
+    private userService: UserService
+  ) {
     const getters: NbGetters<FSEntry, FSEntry> = {
       dataGetter: (node: FSEntry) => node,
       childrenGetter: (node: FSEntry) => node.childEntries || undefined,
@@ -37,52 +50,90 @@ export class SubmissionComponent implements OnInit {
     };
     this.source = dataSourceBuilder.create(this.data, getters);
     this.fetchSubmissionProblem$ = this.store.select(state => state.SubmissionProblem);
+    this.fetchLanguages$ = this.store.select(state => state.info);
+    this.fetchProfile$ = this.store.select(state => state.profile);
   }
 
   public submissions: Submission[] = [];
+  public languages: ProgrammingLanguage[] = [];
+  public profile!: UserProfile;
   public fetchSubmissionProblem$: Observable<SubmissionProblemState>;
+  public fetchLanguages$: Observable<InfoState>;
+  public fetchProfile$: Observable<UserProfileState>;
 
   ngOnInit(): void {
     // throw new Error('Method not implemented.');
     this.store.dispatch(Submissions.fetchSubmissionProblem({ problemId: this.problemId }));
+
     this.fetchSubmissionProblem$.subscribe(
       res => {
-        // console.log(res.submissions);
-        this.submissions = res.submissions;
+        if (res.isSubmissionProblem) {
+          this.submissions = res.submissions;
+          res.submissions.map(async s => {
+            // console.log(s)
+            // console.log({
+            //   "Submit By": await this.getProfile(s.user_id),
+            //   "Time (ms)": s.total_time,
+            //   "Memory": s.total_memory,
+            //   "Language": this.getLanguage(s.language_id),
+            //   "Score": s.score
+            // })
+            // this.data.push();
+          })
+          // console.log(this.data);
+        }
       }
     )
+    this.fetchLanguages$.subscribe(
+      res => {
+        if (res.fetched) {
+          res.info.programmingLanguages.map(value => {
+            this.languageMap.set(value.id, value.name);
+          });
+        }
+      }
+    )
+
   }
 
   sortDirection: NbSortDirection = NbSortDirection.NONE;
   sortColumn!: string;
-  updateSort(sortRequest: any): void {
-    // this.sortColumn = sortRequest.column;
-    // this.sortDirection = sortRequest.direction;
+
+  public languageMap = new Map();
+
+  getLanguage(id: number) {
+    if (this.languageMap.size === 0) return;
+    return this.languageMap.get(id);
   }
 
   private data: any = [
-    {
-      "Submit By": "Duc Trong",
-      "Time (ms)": 3.6,
-      "Memory": 100,
-      "Language": "Javascript",
-      "Score": 80
-    },
-    {
-      "Submit By": "Duc Trong",
-      "Time": 1.8,
-      "Memory": 50,
-      "Language": "Ruby",
-      "Score": 80
-    },
-    {
-      "Submit By": "Duc Trong",
-      "Time": 2.1,
-      "Memory": 200,
-      "Language": "C++",
-      "Score": 80
-    }
+    // {
+    //   "Submit By": "Duc Trong",
+    //   "Time (ms)": 3.6,
+    //   "Memory": 100,
+    //   "Language": "Javascript",
+    //   "Score": 80
+    // },
+    // {
+    //   "Submit By": "Duc Trong",
+    //   "Time": 1.8,
+    //   "Memory": 50,
+    //   "Language": "Ruby",
+    //   "Score": 80
+    // },
+    // {
+    //   "Submit By": "Duc Trong",
+    //   "Time": 2.1,
+    //   "Memory": 200,
+    //   "Language": "C++",
+    //   "Score": 80
+    // }
   ];
+
+  async getProfile(id: string) {
+    let user = await this.userService.getUserById(id);
+    return user;
+  }
 
   getSortDirection(column: string): NbSortDirection {
     if (this.sortColumn === column) {

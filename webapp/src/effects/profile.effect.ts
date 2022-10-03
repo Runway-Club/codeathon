@@ -22,9 +22,7 @@ export class ProfileEffects {
 
     createProfile$ = createEffect(() => this.action$.pipe(
         ofType(action.createProfile),
-        switchMap(action => from(setDoc(doc(this.db, `profiles/${action.id}`), <UserProfile>{ role: 'basic' }))),
+        switchMap(action => from(setDoc(doc(this.db, `profiles/${action.profile.uid}`), action.profile))),
         map(() => action.createProfileSuccess({ profile: <UserProfile>{ role: 'basic' } })),
         catchError(error => of(action.createProfileFailure({ error: error.message })))));
-
-
 }

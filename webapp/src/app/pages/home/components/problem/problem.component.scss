@@ -23,7 +23,7 @@
 }
 
 .title {
-    font-size: 1.2rem;
+    font-size: 2rem;
     margin: 20px 0 10px 0;
 }
 
@@ -39,16 +39,9 @@
 
 .example {
     width: 100%;
-    display: flex;
-}
-
-.example-left {
-    width: 50%;
-}
-
-.example-right {
-    width: 50%;
-
+    padding: 10px;
+    background-color: #f7f9fa;
+    border-radius: 5px;
 }
 
 .input-ex {
@@ -60,7 +53,13 @@
     background-color: rgba(200, 200, 200, 0.5);
 }
 
+.text-example {
+    padding: 0px 0px 0px 10px;
+    font-size: 10pt;
+    margin-bottom: 0;
+    font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+}
+
 .date {
     margin: 10px 0 10px 0;
 }
-

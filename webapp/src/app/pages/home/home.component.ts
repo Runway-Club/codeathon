@@ -40,7 +40,7 @@ export class HomeComponent implements OnInit {
 
   ngOnInit(): void {
     this.searchingProblem$.subscribe(problem => {
-      console.log(problem);
+      // console.log(problem);
     })
   }
 

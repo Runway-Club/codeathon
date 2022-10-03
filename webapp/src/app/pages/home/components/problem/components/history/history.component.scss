@@ -9,38 +9,16 @@
         width: 25%;
         display: flex;
     }
+}
 
+.parent {
+    padding: 16px;
 }
 
 .score-heading {
     font-size: 1.5rem;
     font-weight: bold;
-}
-
-.detail-testcase {
-    width: 100%;
-    display: flex;
-
-    .input-testcase {
-        width: 35%;
-
-    }
-
-    .output-testcase {
-        width: 35%;
-    }
-
-    .check {
-        width: 15%;
-    }
-
-    .score {
-        width: 15%;
-
-        p {
-            text-align: center;
-        }
-    }
+    font-family: Open Sans, sans-serif;
 }
 
 .input-case {
@@ -67,10 +45,49 @@
 .view-code {
     font-style: italic;
     color: rgb(0, 98, 244);
+    font-family: Open Sans, sans-serif;
 }
 
 .icon-testcase {
     display: block;
     margin: 0 auto;
-    margin-top: 20px;
+}
+
+.case {
+    width: 100%;
+}
+
+.row-case {
+    display: flex;
+    width: 100%;
+    background-color: #f7f9fa;
+}
+
+.example {
+    width: 80%;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.row-case-check {
+    width: 20%;
+    padding: 10px;
+    margin-top: 10px;
+}
+
+
+
+.text-example {
+    padding: 0px 0px 0px 10px;
+    font-size: 10pt;
+    margin-bottom: 0;
+    font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+}
+
+.no-submission {
+    margin-top: 50px;
+    text-align: center;
+    color: rgb(0, 0, 0, 0.5);
+    font-size: 1rem;
+    font-family: Open Sans, sans-serif;
 }

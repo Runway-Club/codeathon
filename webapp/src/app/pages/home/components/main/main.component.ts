@@ -18,7 +18,7 @@ export class MainComponent implements OnInit {
 
   problems: Problem[] = [];
   prevDoc: DocumentSnapshot | undefined = undefined;
-
+  public isLoaded: boolean = false;
   constructor(private store: Store<{ problemListing: ProblemListing }>, private cd: ChangeDetectorRef, private router: Router) {
     this.listing$ = this.store.select('problemListing');
   }
@@ -31,6 +31,7 @@ export class MainComponent implements OnInit {
         for (let i = 0; i < listing.list.length; i++) {
           this.problems.push(listing.list[i]);
         }
+        this.isLoaded = true;
       }
       // console.log(this.problems);
       this.cd.detectChanges();

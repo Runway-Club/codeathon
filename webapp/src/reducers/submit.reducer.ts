@@ -11,12 +11,12 @@ let initialState: SubmitState = {
 }
 
 export const submitReducer = createReducer(initialState,
-    on(Action.submit, state => ({ ...state, isSubmitting: true, error: '' })),
+    on(Action.submit, state => ({ ...state, isSubmitting: true, error: '', isSubmitted: false })),
     on(Action.submitSuccess, state => ({ ...state, isSubmitting: false, error: '', isSubmitted: true })),
-    on(Action.submitFailure, (state, action) => ({ ...state, isSubmitting: false, error: action.error, isSubmitted: true })),
-    on(Action.fetchSubmissions, state => ({ ...state, mySubmission: [] })),
-    on(Action.fetchSubmissionsSuccess, (state, action) => ({ ...state, mySubmission: action.submissions })),
-    on(Action.fetchSubmissionsFailure, (state, action) => ({ ...state, mySubmission: [], error: action.error })));
+    on(Action.submitFailure, (state, action) => ({ ...state, isSubmitting: false, error: action.error, isSubmitted: false })),
+    on(Action.fetchSubmissions, state => ({ ...state, mySubmission: [], isSubmitted: false })),
+    on(Action.fetchSubmissionsSuccess, (state, action) => ({ ...state, mySubmission: action.submissions, isSubmitted: false })),
+    on(Action.fetchSubmissionsFailure, (state, action) => ({ ...state, mySubmission: [], error: action.error, isSubmitted: false })));
 
 let initExEcution: exEcutionSubmitState = {
     id: "",

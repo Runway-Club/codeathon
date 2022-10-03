@@ -38,7 +38,7 @@ export class ProblemComponent implements OnInit {
     this.exEcution$ = this.store.select('exEcution');
   }
 
-  code: string = 'def test():\tprint("Hello, world")';
+  code: string = 'def test():\n\tprint("Hello, world")';
   originalCode: string = 'function x() { // TODO }';
   userId: string = '';
 
@@ -66,7 +66,6 @@ export class ProblemComponent implements OnInit {
   ngOnInit(): void {
     this.problem$.subscribe(problem => {
       if (problem.success) {
-        // console.log(problem)
         this.problem = problem.problem;
       }
       else {
@@ -108,8 +107,6 @@ export class ProblemComponent implements OnInit {
         this.activeMySubmissionTab = false;
       }
       else {
-
-        // console.log(submit);
 
         if (submit.isSubmitted && !submit.isSubmitting) {
 

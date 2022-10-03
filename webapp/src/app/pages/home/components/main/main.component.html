@@ -1,4 +1,5 @@
-<div id="body">
+<app-spinkit *ngIf="!isLoaded"></app-spinkit>
+<div *ngIf="isLoaded" id="body">
     <div class="list">
         <nb-card *ngFor="let problem of problems" class="card" style="position: relative;"
             (click)="viewProblem(problem)">

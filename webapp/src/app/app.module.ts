@@ -26,12 +26,12 @@ import { ProfileEffects } from 'src/effects/profile.effect';
 import { HttpClientModule } from '@angular/common/http';
 import { infoReducer } from 'src/reducers/info.reducer';
 import { InfoEffects } from 'src/effects/info.effect';
-import { exEcutionReducer, submitReducer, SubmissionProblemReducer, SubmissionDetailReducer} from 'src/reducers/submit.reducer';
+import { exEcutionReducer, submitReducer, SubmissionProblemReducer, SubmissionDetailReducer } from 'src/reducers/submit.reducer';
 import { SubmitEffects } from 'src/effects/submit.effect';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
   ],
   imports: [
     BrowserModule,
@@ -60,7 +60,7 @@ import { SubmitEffects } from 'src/effects/submit.effect';
       submit: submitReducer,
       exEcution: exEcutionReducer,
       SubmissionProblem: SubmissionProblemReducer,
-      SubmissionDetail:SubmissionDetailReducer
+      SubmissionDetail: SubmissionDetailReducer
     }, {}),
     EffectsModule.forRoot([
       AuthEffects,

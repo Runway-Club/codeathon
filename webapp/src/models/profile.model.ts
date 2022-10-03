@@ -1,3 +1,8 @@
+import { User } from '@angular/fire/auth';
 export interface UserProfile {
-    role: string;
+    displayName?: string;
+    email?: string;
+    photoURL?: string;
+    role?: string;
+    uid: string;
 }

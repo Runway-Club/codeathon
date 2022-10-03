@@ -42,7 +42,14 @@ export class AppComponent implements OnInit {
       if (profile.error == "Profile not found" && this.authState != undefined) {
         // auto create new profile
         // console.log("Create new profile");
-        this.store.dispatch(createProfile({ id: this.authState.uid }));
+        const profile: UserProfile = {
+          email: this.authState.email,
+          uid: this.authState.uid,
+          displayName: this.authState.displayName,
+          photoURL: this.authState.photoURL,
+          role: "basic"
+        }
+        this.store.dispatch(createProfile({ profile }));
         return;
       }
       if (profile.error == "" && profile.profile != undefined && this.authState != undefined) {
