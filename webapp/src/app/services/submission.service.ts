@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { collectionChanges, limit, query, where, Firestore, collection, Query } from '@angular/fire/firestore';
+import { collectionChanges, limit, query, where, Firestore, collection, Query, collectionSnapshots } from '@angular/fire/firestore';
 import { Submission } from 'src/models/submission';
 
 @Injectable({
@@ -22,7 +22,7 @@ export class SubmissionService {
       // orderBy("time", "desc"),
       limit(100),
     );
-    return collectionChanges(QUERY);
+    return collectionSnapshots(QUERY);
   }
 
   addSubmission(submission: Submission) {

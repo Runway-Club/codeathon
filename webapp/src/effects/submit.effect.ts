@@ -32,12 +32,7 @@ export class SubmitEffects {
         switchMap(action => this.SubmissionService.fetchSubmission(action.problemId, action.userId)),
         map(
             (submissions) => {
-                submissions.map(
-                    submission => {
-                        this.SubmissionService.addSubmission(<Submission>submission.doc.data())
-                    }
-                )
-                return Action.fetchSubmissionsSuccess({ submissions: this.SubmissionService.getSubmission() })
+                return Action.fetchSubmissionsSuccess({ submissions: submissions.map(value => value.data()) as Submission[] })
             },
             catchError(
                 error => of(
