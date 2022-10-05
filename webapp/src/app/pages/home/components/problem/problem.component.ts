@@ -101,6 +101,7 @@ export class ProblemComponent implements OnInit {
       }
     });
     this.submit$.subscribe((submit) => {
+      console.log(submit);
       this.allowSubmit = !submit.isSubmitting;
       if (submit.error != '') {
         this.toast.danger(submit.error, "Cannot submit your code");
