@@ -5,6 +5,7 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"io/ioutil"
 	"net/http"
 	"strconv"
@@ -70,6 +71,7 @@ func (l *ProblemLogic) AutoEvaluate() error {
 			return err
 		}
 		for _, doc := range docs {
+			println("wr")
 			l.Evaluate(doc.Ref.ID)
 		}
 	}
@@ -167,9 +169,10 @@ func (l *ProblemLogic) Evaluate(submissionId string) error {
 			// response body
 			body, err := ioutil.ReadAll(res.Body)
 			if err != nil {
+				fmt.Printf("bdfbfef %+v", err.Error())
 				return err
 			}
-			return errors.New(string(body))
+			return errors.New("HELLO===" + string(body))
 		}
 		if err != nil {
 			return err

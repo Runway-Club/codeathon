@@ -22,7 +22,7 @@ func NewExecutionController(endpoint string, s *core.Server) *echo.Group {
 			return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 		}
 
-		fmt.Println(submission)
+		fmt.Printf("=====Value===== %+v", submission)
 
 		err := problemLogic.RequestEvaluate(submission)
 		if err != nil {
