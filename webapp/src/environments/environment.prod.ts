@@ -12,6 +12,6 @@ export const environment = {
     host: "judge0-ce.p.rapidapi.com"
   },
   // api: "http://35.223.167.125:8080/api/v1",
-  api: "https://codeathon.server.trongpham.dev/api/v1",
+  api: "https://codeathon-oolzqmo74q-uc.a.run.app/api/v1",
   production: true
 };

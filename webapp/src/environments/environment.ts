@@ -15,7 +15,7 @@ export const environment = {
     apiKey: "515e04efc9msh90cb0e1f01e697bp1a73e6jsn3346c5abc487",
     host: "judge0-ce.p.rapidapi.com"
   },
-  api: "https://codeathon.server.trongpham.dev/api/v1",
+  api: "https://codeathon-oolzqmo74q-uc.a.run.app/api/v1",
   // api: "http://localhost:8080/api/v1",
   production: false
 };
