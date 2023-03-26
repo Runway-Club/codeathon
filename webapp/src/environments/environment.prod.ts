@@ -8,10 +8,10 @@ export const environment = {
     messagingSenderId: '893549035333',
   },
   judge0: {
-    apiKey: "515e04efc9msh90cb0e1f01e697bp1a73e6jsn3346c5abc487",
-    host: "judge0-ce.p.rapidapi.com"
+    apiKey: '515e04efc9msh90cb0e1f01e697bp1a73e6jsn3346c5abc487',
+    host: 'judge0-ce.p.rapidapi.com',
   },
-  // api: "http://35.223.167.125:8080/api/v1",
-  api: "https://codeathon-oolzqmo74q-uc.a.run.app/api/v1",
-  production: true
+  // api: 'http://localhost:8080/api/v1',
+  api: 'https://codeathon-server-cuvoajx6da-as.a.run.app/api/v1',
+  production: true,
 };
