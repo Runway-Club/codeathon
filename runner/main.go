@@ -12,11 +12,13 @@ import (
 func main() {
 	opt := option.WithCredentialsFile("admin-key.json")
 	app, err := firebase.NewApp(context.Background(), nil, opt)
+
 	if err != nil {
 		panic(err)
 	}
 
 	server, err := core.NewServer("config.json", app)
+
 	if err != nil {
 		panic(err)
 	}

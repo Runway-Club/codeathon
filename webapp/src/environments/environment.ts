@@ -11,8 +11,8 @@ export const environment = {
     authDomain: 'codeathon-standalone.firebaseapp.com',
     messagingSenderId: '893549035333',
   },
-  api: 'https://codeathon-server-cuvoajx6da-as.a.run.app/api/v1',
-  // api: 'http://localhost:8080/api/v1',
+  //api: 'https://codeathon-server-cuvoajx6da-as.a.run.app/api/v1',
+  api: 'http://localhost:8080/api/v1',
   production: false,
 };
 

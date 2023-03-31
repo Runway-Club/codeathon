@@ -24,7 +24,7 @@ export class SubmitEffects {
             // console.log(action.submission);
             return this.http.post(environment.api + '/execution/', action.submission)
         }),
-        map(res => Action.submitSuccess()),
+        map(res => { return Action.submitSuccess() }),
         catchError(error => of(Action.submitFailure({ error: error.message })))));
 
     fetchMySubmissions$ = createEffect(() => this.action$.pipe(
