@@ -22,12 +22,14 @@ func NewExecutionController(endpoint string, s *core.Server) *echo.Group {
 			return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 		}
 
-		fmt.Printf("=====Value===== %+v", submission)
+		fmt.Printf("\n=====Value===== %+v", submission)
 
 		err := problemLogic.RequestEvaluate(submission)
+		fmt.Printf("\n=====Error===== %+v", err)
 		if err != nil {
 			return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 		}
+
 		return c.NoContent(http.StatusOK)
 	})
 

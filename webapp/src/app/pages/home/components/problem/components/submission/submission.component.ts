@@ -61,39 +61,40 @@ export class SubmissionComponent implements OnInit {
   public fetchLanguages$: Observable<InfoState>;
   public fetchProfile$: Observable<UserProfileState>;
 
+  //process
+  processFetchSubmissionProblem = (res: any) => {
+    if (!res.isSubmissionProblem) return;
+
+    this.submissions = res.submissions;
+    res.submissions.map(async (s: any) => {
+      // console.log(s)
+      // console.log({
+      //   "Submit By": await this.getProfile(s.user_id),
+      //   "Time (ms)": s.total_time,
+      //   "Memory": s.total_memory,
+      //   "Language": this.getLanguage(s.language_id),
+      //   "Score": s.score
+      // })
+      // this.data.push();
+    })
+    // console.log(this.data);
+  }
+
+  processFetchLanguages = (res: any) => {
+    if (!res.fetched) return;
+
+    res.info.programmingLanguages.map((value: any) => {
+      this.languageMap.set(value.id, value.name);
+    });
+  }
+
+
   ngOnInit(): void {
     // throw new Error('Method not implemented.');
     this.store.dispatch(Submissions.fetchSubmissionProblem({ problemId: this.problemId }));
 
-    this.fetchSubmissionProblem$.subscribe(
-      res => {
-        if (res.isSubmissionProblem) {
-          this.submissions = res.submissions;
-          res.submissions.map(async s => {
-            // console.log(s)
-            // console.log({
-            //   "Submit By": await this.getProfile(s.user_id),
-            //   "Time (ms)": s.total_time,
-            //   "Memory": s.total_memory,
-            //   "Language": this.getLanguage(s.language_id),
-            //   "Score": s.score
-            // })
-            // this.data.push();
-          })
-          // console.log(this.data);
-        }
-      }
-    )
-    this.fetchLanguages$.subscribe(
-      res => {
-        if (res.fetched) {
-          res.info.programmingLanguages.map(value => {
-            this.languageMap.set(value.id, value.name);
-          });
-        }
-      }
-    )
-
+    this.fetchSubmissionProblem$.subscribe(this.processFetchSubmissionProblem)
+    this.fetchLanguages$.subscribe(this.processFetchLanguages)
   }
 
   sortDirection: NbSortDirection = NbSortDirection.NONE;

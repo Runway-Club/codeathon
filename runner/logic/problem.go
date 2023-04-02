@@ -83,7 +83,9 @@ func (l *ProblemLogic) RequestEvaluate(submission *models.Submission) error {
 	if err != nil {
 		return err
 	}
+
 	tokens := make([]string, 0)
+
 	for _, testcase := range problem.TestCases {
 		judgeSubmitionRequestByte, err := json.Marshal(&models.JudgeSubmissionRequest{
 			SourceCode:   submission.Source,
@@ -92,11 +94,14 @@ func (l *ProblemLogic) RequestEvaluate(submission *models.Submission) error {
 			CpuTimeLimit: testcase.TimeLimit,
 			MemoryLimit:  testcase.MemoryLimit,
 		})
+
 		if err != nil {
 			return err
 		}
+
 		res, err := http.Post(l.config.Judge0+"/submissions/", "application/json", bytes.NewBuffer(judgeSubmitionRequestByte))
-		println(res.StatusCode)
+
+		// println(res.StatusCode)
 		if err != nil {
 			return err
 		}
@@ -115,7 +120,7 @@ func (l *ProblemLogic) RequestEvaluate(submission *models.Submission) error {
 		if err := json.NewDecoder(res.Body).Decode(judgeSubmissionResponse); err != nil {
 			return err
 		}
-		println(judgeSubmissionResponse.Token)
+		// println(judgeSubmissionResponse.Token)
 		tokens = append(tokens, judgeSubmissionResponse.Token)
 	}
 	currentTime := time.Now().UnixMilli()
@@ -139,15 +144,17 @@ func (l *ProblemLogic) Evaluate(submissionId string) error {
 	if err != nil {
 		return err
 	}
+
 	// parse data to submission
 	waitingSubmission := &models.WaitingSubmission{}
 	waitingSubmissionData, _ := json.Marshal(doc.Data())
+
 	// parse to waitingSubmission
 	if err := json.Unmarshal(waitingSubmissionData, waitingSubmission); err != nil {
 		return err
 	}
 
-	println(waitingSubmission.ProblemId)
+	//println(waitingSubmission.ProblemId)
 
 	// get problem from firestore
 	problem, err := l.Get(waitingSubmission.ProblemId)
@@ -163,6 +170,7 @@ func (l *ProblemLogic) Evaluate(submissionId string) error {
 	for i, testcase := range problem.TestCases {
 		totalScore += testcase.Score
 		testResult := &models.TestcaseResult{}
+
 		// get judgeSubmissionResponse
 		res, err := http.Get(l.config.Judge0 + "/submissions/" + waitingSubmission.Tokens[i])
 		if res.StatusCode != http.StatusOK {
@@ -174,44 +182,58 @@ func (l *ProblemLogic) Evaluate(submissionId string) error {
 			}
 			return errors.New("HELLO===" + string(body))
 		}
+
 		if err != nil {
 			return err
 		}
+
 		defer res.Body.Close()
+
 		// parse response to judgeSubmissionResponse
 		judgeSubmissionResponse := &models.JudgeSubmissionResponse{}
+
 		// unmarshal response to judgeSubmissionResponse
 		resData, _ := ioutil.ReadAll(res.Body)
-		println(string(resData))
+		// println(string(resData))
+
 		if err := json.Unmarshal(resData, judgeSubmissionResponse); err != nil {
 			return err
 		}
+
 		parsedTime, _ := strconv.ParseFloat(judgeSubmissionResponse.Time, 64)
-		println(judgeSubmissionResponse.Stdout)
+		// println(judgeSubmissionResponse.Stdout)
 		expectedOutput := strings.TrimSpace(testcase.ExpectedOutput)
 		actualOutput := strings.TrimSpace(judgeSubmissionResponse.Stdout)
+
 		if expectedOutput == actualOutput {
 			actualScore += testcase.Score
 			totalMemory += float64(judgeSubmissionResponse.Memory)
 			totalTime += parsedTime
+
 			testResult.Message = "PASS"
 			testResult.Input = testcase.Input
 			testResult.ExpectedOutput = testcase.ExpectedOutput
 			testResult.Output = actualOutput
 		} else {
+			totalMemory += float64(judgeSubmissionResponse.Memory)
+			totalTime += parsedTime
+
 			if judgeSubmissionResponse.Stderr == "" {
 				testResult.Message = "FAIL"
 			} else {
 				testResult.Message = judgeSubmissionResponse.Stderr
 			}
+
 			if testcase.ViewOnFailure {
 				testResult.Input = testcase.Input
 				testResult.ExpectedOutput = testcase.ExpectedOutput
 				testResult.Output = judgeSubmissionResponse.Stdout
 			}
 		}
+		// fmt.Println(testResult)
 		testResults = append(testResults, *testResult)
 	}
+
 	// save result to firestore
 	_, err = l.db.Collection("submissions").Doc(submissionId).Set(context.Background(), map[string]interface{}{
 		"problem_id":    waitingSubmission.ProblemId,

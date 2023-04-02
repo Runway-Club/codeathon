@@ -37,24 +37,25 @@ export class HistoryComponent implements OnInit {
     this.auth$ = this.store.select(state => state.auth);
   }
 
+  //process
+  processSubmission = (res: any) => {
+    this.mySubmission = res.mySubmission;
+  }
+
+  processAuth = (res: any) => {
+    if (res.isLoggedIn && this.problem_id) {
+      this.store.dispatch(SubmissionActions.fetchSubmissions({ userId: res.uid, problemId: this.problem_id }));
+    }
+  }
+
   ngOnInit(): void {
-    this.submissions$.subscribe(
-      resp => {
-        this.mySubmission = resp.mySubmission;
-        console.log(resp);
-      }
-    )
-    this.auth$.subscribe(
-      res => {
-        if (res.isLoggedIn && this.problem_id) {
-          this.store.dispatch(SubmissionActions.fetchSubmissions({ userId: res.uid, problemId: this.problem_id }));
-        }
-      }
-    )
+    this.submissions$.subscribe(this.processSubmission)
+    this.auth$.subscribe(this.processAuth)
   }
 
   public viewSrcCode(source: string, language_id: number) {
     if (!source || !language_id) return;
+
     this.sourceCode.emit({
       language_id,
       source
