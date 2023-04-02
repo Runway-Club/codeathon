@@ -200,14 +200,16 @@ func (l *ProblemLogic) Evaluate(submissionId string) error {
 		resData, _ := ioutil.ReadAll(res.Body)
 
 		if err := json.Unmarshal(resData, judgeSubmissionResponse); err != nil {
-			fmt.Printf("bdfbfef %+v", err.Error())
 			return err
 		}
 
 		parsedTime, _ := strconv.ParseFloat(judgeSubmissionResponse.Time, 64)
+		parseMemory := int(judgeSubmissionResponse.Memory)
+
 		expectedOutput := strings.TrimSpace(testcase.ExpectedOutput)
 		actualOutput := strings.TrimSpace(judgeSubmissionResponse.Stdout)
 		errOutput := strings.TrimSpace(judgeSubmissionResponse.Stderr)
+		messageOutput := strings.TrimSpace(judgeSubmissionResponse.Message)
 
 		totalTime += parsedTime
 		totalMemory += float64(judgeSubmissionResponse.Memory)
@@ -215,6 +217,7 @@ func (l *ProblemLogic) Evaluate(submissionId string) error {
 		if errOutput == "" {
 			testResult.Output = actualOutput
 		}
+
 		testResult.Stderr = errOutput
 
 		if expectedOutput == actualOutput {
@@ -224,7 +227,11 @@ func (l *ProblemLogic) Evaluate(submissionId string) error {
 			testResult.Input = testcase.Input
 			testResult.ExpectedOutput = testcase.ExpectedOutput
 		} else {
-			if judgeSubmissionResponse.Stderr == "" {
+			if parseMemory >= testcase.MemoryLimit {
+				testResult.Message = "Memory Limit Exceeded"
+			} else if messageOutput != "" {
+				testResult.Message = messageOutput
+			} else {
 				testResult.Message = "FAIL"
 			}
 
@@ -233,7 +240,7 @@ func (l *ProblemLogic) Evaluate(submissionId string) error {
 				testResult.ExpectedOutput = testcase.ExpectedOutput
 			}
 		}
-		// fmt.Println(testResult)
+
 		testResults = append(testResults, *testResult)
 	}
 
