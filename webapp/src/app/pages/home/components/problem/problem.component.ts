@@ -56,7 +56,6 @@ export class ProblemComponent implements OnInit {
     },
     fontSize: 15,
   };
-
   selectedLanguageId = 71;
 
   allowSubmit = false;
