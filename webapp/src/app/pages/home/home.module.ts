@@ -5,7 +5,7 @@ import { HomeRoutingModule } from './home-routing.module';
 import { HomeComponent } from './home.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { MainComponent } from './components/main/main.component';
-import { NbAccordionModule, NbActionsModule, NbBadgeModule, NbButtonModule, NbCardModule, NbIconModule, NbInputModule, NbLayoutModule, NbPopoverModule, NbSearchModule, NbSelectModule, NbTabsetModule, NbTagModule, NbToastrModule, NbToastrService, NbToggleModule, NbTooltipModule, NbTreeGridModule, NbUserModule } from '@nebular/theme';
+import { NbMenuItem,NbContextMenuModule, NbAccordionModule, NbActionsModule, NbBadgeModule, NbButtonModule, NbCardModule, NbIconModule, NbInputModule, NbLayoutModule, NbPopoverModule, NbSearchModule, NbSelectModule, NbTabsetModule, NbTagModule, NbToastrModule, NbToastrService, NbToggleModule, NbTooltipModule, NbTreeGridModule, NbUserModule } from '@nebular/theme';
 import { NewProblemComponent } from './components/new-problem/new-problem.component';
 import { MarkdownModule, MarkdownService } from 'ngx-markdown'
 import { LMarkdownEditorModule } from 'ngx-markdown-editor';
@@ -16,6 +16,7 @@ import { NbEvaIconsModule } from '@nebular/eva-icons';
 import { SubmissionComponent } from './components/problem/components/submission/submission.component';
 import { MonacoEditorModule } from '@materia-ui/ngx-monaco-editor';
 import { SpinkitComponent } from '../../components/spinkit/spinkit.component';
+import { ManageProblemComponent } from './components/manage-problem/manage-problem.component';
 
 @NgModule({
   declarations: [
@@ -26,7 +27,8 @@ import { SpinkitComponent } from '../../components/spinkit/spinkit.component';
     ProblemComponent,
     HistoryComponent,
     SubmissionComponent,
-    SpinkitComponent
+    SpinkitComponent,
+    ManageProblemComponent
   ],
   imports: [
     CommonModule,
@@ -53,10 +55,13 @@ import { SpinkitComponent } from '../../components/spinkit/spinkit.component';
     NbPopoverModule,
     MonacoEditorModule,
     NbActionsModule,
+    NbContextMenuModule,
     NbTooltipModule
   ],
   providers: [
     NbToastrService
   ]
 })
-export class HomeModule { }
+export class HomeModule {
+  
+ }

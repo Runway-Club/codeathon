@@ -52,18 +52,17 @@ export class HomeComponent implements OnInit {
     window.location.href = '/problem-editor';
   }
 
+  manageProblem()
+  {
+    window.location.href = '/manage';
+  }
+  
   signout() {
     this.store.dispatch(logout());
   }
-
-  // getSearch(searchText: string) {
-  //   console.log(`searching for ${searchText}`);
-  //   this.store.dispatch(searchProblem({ query: searchText }))
-  // }
 
   getSearch(searchText: string) {
     console.log(`searching for ${searchText}`);
     this.store.dispatch(searchProblem({ query: searchText }))
   }
-
 }

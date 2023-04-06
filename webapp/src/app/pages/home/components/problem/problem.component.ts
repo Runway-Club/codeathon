@@ -63,17 +63,21 @@ export class ProblemComponent implements OnInit {
   activeMySubmissionTab = false;
   problemId: string = '';
 
+  //process
+  processProblem = (problem: any) => {
+    if (problem.success) {
+      this.problem = problem.problem;
+    }
+    else {
+      if (problem.error) {
+        window.location.href = '/';
+      }
+    }
+  }
+
   ngOnInit(): void {
-    this.problem$.subscribe(problem => {
-      if (problem.success) {
-        this.problem = problem.problem;
-      }
-      else {
-        if (problem.error) {
-          window.location.href = '/';
-        }
-      }
-    });
+    this.problem$.subscribe(this.processProblem);
+
     this.activatedRoute.params.subscribe(params => {
       if (params['id'] == undefined) {
         window.location.href = '/';
@@ -179,17 +183,16 @@ export class ProblemComponent implements OnInit {
 
   changeTab(event: NbTabComponent) {
     // this.activeMySubmissionTab = false;
+
+    this.pb = false;
+    this.sub = false;
+    this.his = false;
+
     if (event.tabTitle == "PROBLEM") {
       this.pb = true;
-      this.sub = false;
-      this.his = false;
     } else if (event.tabTitle == "submission") {
-      this.pb = false;
       this.sub = true;
-      this.his = false;
     } else {
-      this.pb = false;
-      this.sub = false;
       this.his = true;
     }
   }
