@@ -141,16 +141,14 @@
               [(ngModel)]="testcase.score"
             />
             <br />
-            <nb-toggle [(ngModel)]="testcase.allow_view_on_failed"
-              >Allow view test on failed</nb-toggle
-            >
+            <nb-toggle [(ngModel)]="testcase.allow_view_on_failed">Allow view test on failed</nb-toggle>
             <br />
             <button
               style="float: right"
               nbButton
               status="danger"
-              (click)="removeTest(i)"
-            >
+              (click)="removeTest(i)">
+              
               Delete
             </button>
           </nb-accordion-item-body>

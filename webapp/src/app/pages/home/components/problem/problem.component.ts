@@ -55,12 +55,12 @@ export class ProblemComponent implements OnInit {
     },
     fontSize: 15,
   };
-
   selectedLanguageId = 71;
   allowSubmit = false;
   activeMySubmissionTab = false;
   problemId: string = '';
 
+<<<<<<< HEAD
   //constructor
   constructor(
     private store: Store<{
@@ -135,13 +135,26 @@ export class ProblemComponent implements OnInit {
     }
   };
 
+=======
+>>>>>>> 8b232556207ab51dc65285050edeefb5e53a55a2
   ngOnInit(): void {
-    this.problem$.subscribe(this.processProblem);
-    this.submit$.subscribe(this.processSubmit);
-    this.info$.subscribe(this.processInfo);
-    this.auth$.subscribe(this.processAuth);
-
-    this.activatedRoute.params.subscribe(this.processParams);
+    this.problem$.subscribe(problem => {
+      if (problem.success) {
+        this.problem = problem.problem;
+      }
+      else {
+        if (problem.error) {
+          window.location.href = '/';
+        }
+      }
+    });
+    this.activatedRoute.params.subscribe(params => {
+      if (params['id'] == undefined) {
+        window.location.href = '/';
+      }
+      this.problemId = params['id'];
+      this.store.dispatch(getProblem({ id: params['id'] }));
+    });
     this.monacoService.isMonacoLoaded$
       .pipe(
         filter((isLoaded) => !!isLoaded),

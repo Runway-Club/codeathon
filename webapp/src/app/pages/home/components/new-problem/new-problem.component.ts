@@ -54,7 +54,8 @@ export class NewProblemComponent implements OnInit {
     this.activatedRoute.queryParams.subscribe((params) => {
       let id = params['id'];
       console.log(id);
-      if (id != undefined) {
+      if (id != undefined) 
+      {
         this.id = id;
         this.store.dispatch(getProblem({ id: id }));
         this.editorTitle = 'Edit Problem';
