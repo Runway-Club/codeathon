@@ -2,19 +2,22 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { HomeRoutingModule } from './home-routing.module';
+
+import { MarkdownModule, MarkdownService } from 'ngx-markdown'
+import { MonacoEditorModule } from '@materia-ui/ngx-monaco-editor';
+import { FormsModule } from '@angular/forms';
+import { SharedNebularModule } from 'src/app/modules/nebular/nebular.module';
+
+
+//components
 import { HomeComponent } from './home.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { MainComponent } from './components/main/main.component';
-import { NbAccordionModule, NbActionsModule, NbBadgeModule, NbButtonModule, NbCardModule, NbIconModule, NbInputModule, NbLayoutModule, NbPopoverModule, NbSearchModule, NbSelectModule, NbTabsetModule, NbTagModule, NbToastrModule, NbToastrService, NbToggleModule, NbTooltipModule, NbTreeGridModule, NbUserModule } from '@nebular/theme';
 import { NewProblemComponent } from './components/new-problem/new-problem.component';
-import { MarkdownModule, MarkdownService } from 'ngx-markdown'
 import { LMarkdownEditorModule } from 'ngx-markdown-editor';
-import { FormsModule } from '@angular/forms';
 import { ProblemComponent } from './components/problem/problem.component';
 import { HistoryComponent } from './components/problem/components/history/history.component';
-import { NbEvaIconsModule } from '@nebular/eva-icons';
 import { SubmissionComponent } from './components/problem/components/submission/submission.component';
-import { MonacoEditorModule } from '@materia-ui/ngx-monaco-editor';
 import { SpinkitComponent } from '../../components/spinkit/spinkit.component';
 
 @NgModule({
@@ -31,32 +34,11 @@ import { SpinkitComponent } from '../../components/spinkit/spinkit.component';
   imports: [
     CommonModule,
     HomeRoutingModule,
-    NbLayoutModule,
-    NbCardModule,
-    NbBadgeModule,
-    NbTagModule,
-    NbSelectModule,
-    NbInputModule,
     MarkdownModule.forChild(),
     LMarkdownEditorModule,
-    NbButtonModule,
-    NbAccordionModule,
-    NbToggleModule,
     FormsModule,
-    NbToastrModule,
-    NbTabsetModule,
-    NbEvaIconsModule,
-    NbIconModule,
-    NbSearchModule,
-    NbTreeGridModule,
-    NbUserModule,
-    NbPopoverModule,
     MonacoEditorModule,
-    NbActionsModule,
-    NbTooltipModule
+    SharedNebularModule
   ],
-  providers: [
-    NbToastrService
-  ]
 })
 export class HomeModule { }

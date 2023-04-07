@@ -1,0 +1,91 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+}
+
+.card {
+    background-color: transparent;
+    border: none;
+
+    height: auto;
+}
+
+$select-margin: 1rem;
+
+.select-container {
+    padding-left: 0px;
+    padding-right: 0px;
+
+    width: calc(100% + 2 * $select-margin);
+}
+
+.select {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+
+    &>nb-select {
+        margin-right: $select-margin;
+    }
+}
+
+.problem-header {
+    border-bottom: 1px solid rgba($color: #FFFFFF, $alpha: 0.2);
+
+    &>.problem {
+        background-color: transparent !important;
+    }
+}
+
+.problem {
+    display: flex;
+    flex-direction: row;
+
+    background-color: var(--card-background-color);
+
+    $status: 52;
+    $title: 260;
+    $difficulty: 84;
+    $unit: px;
+
+    border: none;
+
+    .status {
+        flex: $status 0 auto;
+        min-width: 0px;
+        width: $status + $unit;
+    }
+
+    .title {
+        flex: $title 0 auto;
+        min-width: 0px;
+        width: $title + $unit;
+
+        &>a {
+            text-decoration: none;
+        }
+
+        &>a:hover {
+            color: rgb(82, 82, 255);
+            cursor: pointer;
+        }
+    }
+
+    .difficulty {
+        flex: $difficulty 0 auto;
+        min-width: 0px;
+        width: $difficulty + $unit;
+    }
+}
+
+
+.search-input {
+    flex: 1 0 auto;
+}
+
+.nobg {
+    background-color: transparent;
+}

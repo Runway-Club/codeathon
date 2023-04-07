@@ -1,19 +1,50 @@
 @forward '@nebular/theme/styles/theming';
 @use '@nebular/theme/styles/theming' as *;
 @use '@nebular/theme/styles/themes/corporate';
+@use '@nebular/theme/styles/themes/dark';
 
-$nb-themes: nb-register-theme((
+$nb-themes: nb-register-theme(( // add your variables here like:
 
-  // add your variables here like:
+      // color-primary-100: #f2f6ff,
+      // color-primary-200: #d9e4ff,
+      // color-primary-300: #a6c1ff,
+      // color-primary-400: #598bff,
+      // color-primary-500: #3366ff,
+      // color-primary-600: #274bdb,
+      // color-primary-700: #1a34b8,
+      // color-primary-800: #102694,
+      // color-primary-900: #091c7a,
 
-  // color-primary-100: #f2f6ff,
-  // color-primary-200: #d9e4ff,
-  // color-primary-300: #a6c1ff,
-  // color-primary-400: #598bff,
-  // color-primary-500: #3366ff,
-  // color-primary-600: #274bdb,
-  // color-primary-700: #1a34b8,
-  // color-primary-800: #102694,
-  // color-primary-900: #091c7a,
+    ), corporate, corporate);
 
-), corporate, corporate);
+$nb-themes: nb-register-theme(( // add your variables here like:
+      color-basic-100: #ffffff,
+      color-basic-200: #fdfdfd,
+      color-basic-300: #f5f5f5,
+      color-basic-400: #f0f0f0,
+      color-basic-500: #e2e2e2,
+      color-basic-600: #b3b3b3,
+      color-basic-700: #505050,
+      color-basic-800: #3d3d3d,
+      color-basic-900: #303030,
+      color-basic-1000: #202020,
+      color-basic-1100: #252525,
+
+      background-primary-color-1: #ffffff,
+      background-primary-color-2: #d8d8d8,
+      background-primary-color-3: #acacac,
+      background-primary-color-4: #8a8a8a,
+
+      background-basic-color-1: #313131,
+      background-basic-color-2: #2e2e2e,
+      background-basic-color-3: #1f1f1f,
+      background-basic-color-4: #101426,
+
+      border-basic-color-1: #444444,
+      border-basic-color-2: #303030,
+      border-basic-color-3: #222222,
+      border-basic-color-4: #1f1f1f,
+      border-basic-color-5: #222222,
+
+      shadow: 0 0.5rem 1rem 0 #252525,
+    ), dark, dark);

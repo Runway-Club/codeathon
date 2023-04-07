@@ -3,9 +3,11 @@ import { DocumentSnapshot } from '@angular/fire/firestore';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { listingProblem } from 'src/actions/problem.action';
+
 import { Problem } from 'src/models/problem.model';
+import { listingProblem } from 'src/actions/problem.action';
 import { ProblemListing } from 'src/states/problem.state';
+
 @Component({
   selector: 'app-main',
   changeDetection: ChangeDetectionStrategy.OnPush,
