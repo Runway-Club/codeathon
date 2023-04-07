@@ -11,7 +11,7 @@
                     </div>
                     <div class="timelimit">
                         <div nbTooltip="Runtime" style="display: flex;">
-                            <p style="margin-top: 3px;">{{submission.total_time.toFixed(3)}} ms
+                            <p style="margin-top: 3px;">{{(submission.total_time * 1000).toFixed(0)}} ms
                             </p>
                             <nb-icon style="margin-left: 5px;" class="icon" icon="clock-outline">
                             </nb-icon>
@@ -19,7 +19,7 @@
                     </div>
                     <div class="memlimit">
                         <div nbTooltip="Memory" style="display: flex;">
-                            <p style="margin-top: 4.5px;">{{submission.total_memory}} KB
+                            <p style="margin-top: 4.5px;">{{(submission.total_memory / 1024).toFixed(2)}} KB
                             </p>
                             <nb-icon style="margin-left: 5px;" class="icon" icon="save-outline">
                             </nb-icon>
@@ -61,6 +61,14 @@
                                                 ExpectedOutput:
                                             </strong>
                                             {{case.ExpectedOutput || "NULL"}}
+                                        </span>
+                                    </p>
+                                    <p class="text-example">
+                                        <span>
+                                            <strong>
+                                                YourOutput:
+                                            </strong>
+                                            {{case.Message || case.Output || case.Stderr || "NULL"}}
                                         </span>
                                     </p>
                                 </div>
