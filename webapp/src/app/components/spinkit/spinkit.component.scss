@@ -1,4 +1,5 @@
-body {
+body 
+{
     padding: 1em;
     background: #2B3134;
     color: #777;
@@ -8,18 +9,21 @@ body {
     margin: 0 auto;
 }
 
-h1 {
+h1 
+{
     margin: 1em 0;
     border-bottom: 1px dashed;
     padding-bottom: 1em;
     font-weight: lighter;
 }
 
-p {
+p 
+{
     font-style: italic;
 }
 
-.loader {
+.loader 
+{
     margin: 0 0 2em;
     height: 100px;
     width: 20%;
@@ -30,10 +34,8 @@ p {
     vertical-align: top;
 }
 
-/*
-    Set the color of the icon
-  */
 svg path,
-svg rect {
+svg rect 
+{
     fill: #000000;
 }
