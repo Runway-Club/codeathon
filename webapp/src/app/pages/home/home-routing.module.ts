@@ -4,6 +4,7 @@ import { MainComponent } from './components/main/main.component';
 import { NewProblemComponent } from './components/new-problem/new-problem.component';
 import { ProblemComponent } from './components/problem/problem.component';
 import { HomeComponent } from './home.component';
+import { ManageProblemComponent } from './components/manage-problem/manage-problem.component';
 
 const routes: Routes = [
   {
@@ -13,6 +14,9 @@ const routes: Routes = [
       },
       {
         path: 'problem-editor', component: NewProblemComponent
+      },
+      {
+        path: 'manage', component: ManageProblemComponent
       },
       {
         path: 'problem/:id', component: ProblemComponent

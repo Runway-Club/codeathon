@@ -49,82 +49,29 @@ export class ProblemComponent implements OnInit {
     },
     fontSize: 15,
   };
-
   selectedLanguageId = 71;
   allowSubmit = false;
   activeMySubmissionTab = false;
   problemId: string = '';
 
-  //constructor
-  constructor(private store: Store<{ problemRetrieval: ProblemRetrieval, info: InfoState, auth: AuthState, submit: SubmitState, exEcution: exEcutionSubmitState }>, private monacoService: MonacoEditorLoaderService, private activatedRoute: ActivatedRoute, private toast: NbToastrService) {
-    this.problem$ = this.store.select('problemRetrieval');
-    this.info$ = this.store.select('info');
-    this.auth$ = this.store.select('auth');
-    this.submit$ = this.store.select('submit');
-    this.exEcution$ = this.store.select('exEcution');
-  }
-
-  //process 
-  processProblem = (problem: any) => {
-    if (problem.error) {
-      window.location.href = '/';
-    }
-
-    if (problem.success) {
-      this.problem = problem.problem;
-    }
-  }
-
-  processSubmit = (submit: any) => {
-    //console.log(submit);
-    this.allowSubmit = !submit.isSubmitting;
-
-    if (submit.error != '') {
-      this.toast.danger(submit.error, "Cannot submit your code");
-      this.activeMySubmissionTab = false;
-      return;
-    }
-
-    if (submit.isSubmitted && !submit.isSubmitting) {
-      this.toast.success("Your code has been submitted", "Success");
-      this.activeMySubmissionTab = true;
-
-      this.pb = false;
-      this.his = true;
-      this.sub = false;
-    }
-
-    this.isSubmitting = submit.isSubmitting;
-  }
-
-  processParams = (params: any) => {
-    if (params['id'] == undefined) {
-      window.location.href = '/';
-    }
-    this.problemId = params['id'];
-    this.store.dispatch(getProblem({ id: params['id'] }));
-  }
-
-  processInfo = (info: any) => {
-    if (info.fetched) {
-      this.info = info.info;
-    }
-  }
-
-  processAuth = (auth: any) => {
-    if (auth.isLoggedIn) {
-      this.allowSubmit = true;
-      this.userId = auth.uid;
-    }
-  }
-
   ngOnInit(): void {
-    this.problem$.subscribe(this.processProblem);
-    this.submit$.subscribe(this.processSubmit);
-    this.info$.subscribe(this.processInfo);
-    this.auth$.subscribe(this.processAuth);
-
-    this.activatedRoute.params.subscribe(this.processParams);
+    this.problem$.subscribe(problem => {
+      if (problem.success) {
+        this.problem = problem.problem;
+      }
+      else {
+        if (problem.error) {
+          window.location.href = '/';
+        }
+      }
+    });
+    this.activatedRoute.params.subscribe(params => {
+      if (params['id'] == undefined) {
+        window.location.href = '/';
+      }
+      this.problemId = params['id'];
+      this.store.dispatch(getProblem({ id: params['id'] }));
+    });
     this.monacoService.isMonacoLoaded$
       .pipe(
         filter(isLoaded => !!isLoaded),

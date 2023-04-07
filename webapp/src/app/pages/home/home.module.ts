@@ -19,6 +19,7 @@ import { ProblemComponent } from './components/problem/problem.component';
 import { HistoryComponent } from './components/problem/components/history/history.component';
 import { SubmissionComponent } from './components/problem/components/submission/submission.component';
 import { SpinkitComponent } from '../../components/spinkit/spinkit.component';
+import { ManageProblemComponent } from './components/manage-problem/manage-problem.component';
 
 @NgModule({
   declarations: [
@@ -29,7 +30,8 @@ import { SpinkitComponent } from '../../components/spinkit/spinkit.component';
     ProblemComponent,
     HistoryComponent,
     SubmissionComponent,
-    SpinkitComponent
+    SpinkitComponent,
+    ManageProblemComponent
   ],
   imports: [
     CommonModule,
@@ -41,4 +43,6 @@ import { SpinkitComponent } from '../../components/spinkit/spinkit.component';
     SharedNebularModule
   ],
 })
-export class HomeModule { }
+export class HomeModule {
+
+}
