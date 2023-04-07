@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/labstack/echo/v4"
@@ -22,19 +21,18 @@ func NewExecutionController(endpoint string, s *core.Server) *echo.Group {
 			return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 		}
 
-		fmt.Printf("=====Value===== %+v", submission)
-
 		err := problemLogic.RequestEvaluate(submission)
 		if err != nil {
 			return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 		}
+
 		return c.NoContent(http.StatusOK)
 	})
 
 	api.GET("/:id", func(c echo.Context) error {
 		id := c.Param("id")
-		print(id)
 		err := problemLogic.Evaluate(id)
+
 		if err != nil {
 			return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 		}

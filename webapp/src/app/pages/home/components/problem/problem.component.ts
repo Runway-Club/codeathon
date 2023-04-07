@@ -21,22 +21,15 @@ import * as SubmitActions from '../../../../../actions/submit.action';
 })
 export class ProblemComponent implements OnInit {
 
-  problem$: Observable<ProblemRetrieval>;
   info$: Observable<InfoState>;
   auth$: Observable<AuthState>;
   submit$: Observable<SubmitState>;
   exEcution$: Observable<exEcutionSubmitState>;
+
+  problem$: Observable<ProblemRetrieval>;
   problem?: Problem;
   info?: Info;
   public isSubmitting: boolean = true;
-
-  constructor(private store: Store<{ problemRetrieval: ProblemRetrieval, info: InfoState, auth: AuthState, submit: SubmitState, exEcution: exEcutionSubmitState }>, private monacoService: MonacoEditorLoaderService, private activatedRoute: ActivatedRoute, private toast: NbToastrService) {
-    this.problem$ = this.store.select('problemRetrieval');
-    this.info$ = this.store.select('info');
-    this.auth$ = this.store.select('auth');
-    this.submit$ = this.store.select('submit');
-    this.exEcution$ = this.store.select('exEcution');
-  }
 
   code: string = 'def test():\n\tprint("Hello, world")';
   originalCode: string = 'function x() { // TODO }';
@@ -57,26 +50,21 @@ export class ProblemComponent implements OnInit {
     fontSize: 15,
   };
   selectedLanguageId = 71;
-
   allowSubmit = false;
   activeMySubmissionTab = false;
   problemId: string = '';
 
-  //process
-  processProblem = (problem: any) => {
-    if (problem.success) {
-      this.problem = problem.problem;
-    }
-    else {
-      if (problem.error) {
-        window.location.href = '/';
-      }
-    }
-  }
-
   ngOnInit(): void {
-    this.problem$.subscribe(this.processProblem);
-
+    this.problem$.subscribe(problem => {
+      if (problem.success) {
+        this.problem = problem.problem;
+      }
+      else {
+        if (problem.error) {
+          window.location.href = '/';
+        }
+      }
+    });
     this.activatedRoute.params.subscribe(params => {
       if (params['id'] == undefined) {
         window.location.href = '/';
@@ -92,55 +80,14 @@ export class ProblemComponent implements OnInit {
       .subscribe(() => {
         this.registerMonacoCustomTheme();
       });
-    this.info$.subscribe(info => {
-      if (info.fetched) {
-        this.info = info.info;
-      }
-    });
-    this.auth$.subscribe(auth => {
-      if (auth.isLoggedIn) {
-        this.allowSubmit = true;
-        this.userId = auth.uid;
-      }
-    });
-    this.submit$.subscribe((submit) => {
-      console.log(submit);
-      this.allowSubmit = !submit.isSubmitting;
-      if (submit.error != '') {
-        this.toast.danger(submit.error, "Cannot submit your code");
-        this.activeMySubmissionTab = false;
-      }
-      else {
-
-        if (submit.isSubmitted && !submit.isSubmitting) {
-
-          this.toast.success("Your code has been submitted", "Success");
-
-          this.activeMySubmissionTab = true;
-
-          this.pb = false;
-          this.his = true;
-          this.sub = false;
-        }
-
-        if (submit.isSubmitting) {
-          this.isSubmitting = true;
-        }
-
-        this.isSubmitting = false;
-
-      }
-    });
   }
 
   registerMonacoCustomTheme() {
     monaco.editor.defineTheme('codeathon-theme', {
       base: 'vs-dark', // can also be vs or hc-black
       inherit: true, // can also be false to completely replace the builtin rules
-      rules: [
-      ],
+      rules: [],
       colors: {},
-
     });
   }
 
@@ -158,22 +105,26 @@ export class ProblemComponent implements OnInit {
   }
 
   submit() {
-    this.store.dispatch(SubmitActions.submit({
-      submission: {
-        problem_id: this.problemId,
-        code: this.code,
-        language_id: this.selectedLanguageId,
-        user_id: this.userId,
-        source: this.code,
-        evaluated: false,
-        score: 0,
-        total_memory: 0,
-        total_time: 0,
-        total_score: 0,
-        testcases: [],
-        time: 0
-      }
-    }))
+    this.store.dispatch(
+      SubmitActions.submit({ submission: this.createSubmission() })
+    )
+  }
+
+  createSubmission() {
+    return {
+      problem_id: this.problemId,
+      code: this.code,
+      language_id: this.selectedLanguageId,
+      user_id: this.userId,
+      source: this.code,
+      evaluated: false,
+      score: 0,
+      total_memory: 0,
+      total_time: 0,
+      total_score: 0,
+      testcases: [],
+      time: 0
+    }
   }
 
   pb = true;
@@ -194,6 +145,7 @@ export class ProblemComponent implements OnInit {
     } else {
       this.his = true;
     }
+
   }
 
   viewSrcCode(event: {
