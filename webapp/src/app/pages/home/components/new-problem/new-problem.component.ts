@@ -3,39 +3,61 @@ import { ActivatedRoute } from '@angular/router';
 import { NbToast, NbToastrService } from '@nebular/theme';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { createProblem, createProblemFailure, deleteProblem, getProblem, resetSubmissions, updateProblem } from 'src/actions/problem.action';
+import {
+  createProblem,
+  createProblemFailure,
+  deleteProblem,
+  getProblem,
+  resetSubmissions,
+  updateProblem,
+} from 'src/actions/problem.action';
 import { ProblemSample } from 'src/models/sample.model';
 import { Testcase } from 'src/models/testcase.model';
-import { ProblemCreation, ProblemDeletion, ProblemResetSubmissions, ProblemRetrieval, ProblemUpdation } from 'src/states/problem.state';
+import { AuthState } from 'src/states/auth.state';
+import {
+  ProblemCreation,
+  ProblemDeletion,
+  ProblemResetSubmissions,
+  ProblemRetrieval,
+  ProblemUpdation,
+} from 'src/states/problem.state';
 
 @Component({
   selector: 'app-new-problem',
   templateUrl: './new-problem.component.html',
-  styleUrls: ['./new-problem.component.scss']
+  styleUrls: ['./new-problem.component.scss'],
 })
 export class NewProblemComponent implements OnInit {
-
-  constructor(private store: Store<{
-    problemCreation: ProblemCreation,
-    problemUpdation: ProblemUpdation,
-    problemRetrieval: ProblemRetrieval,
-    problemDeletion: ProblemDeletion,
-    problemResetSubmissions: ProblemResetSubmissions
-  }>,
+  authState$: Observable<AuthState>;
+  userId!: string;
+  constructor(
+    private store: Store<{
+      problemCreation: ProblemCreation;
+      problemUpdation: ProblemUpdation;
+      problemRetrieval: ProblemRetrieval;
+      problemDeletion: ProblemDeletion;
+      problemResetSubmissions: ProblemResetSubmissions;
+      auth: AuthState;
+    }>,
     private toast: NbToastrService,
-    private activatedRoute: ActivatedRoute) {
+    private activatedRoute: ActivatedRoute
+  ) {
     this.problemCreation$ = this.store.select('problemCreation');
     this.problemRetrival$ = this.store.select('problemRetrieval');
     this.problemUpdation$ = this.store.select('problemUpdation');
     this.problemDeletion$ = this.store.select('problemDeletion');
     this.resetSubmissions$ = this.store.select('problemResetSubmissions');
-    this.activatedRoute.queryParams.subscribe(params => {
+    this.authState$ = this.store.select('auth');
+    this.authState$.subscribe((data) => {
+      this.userId = data.uid;
+    });
+    this.activatedRoute.queryParams.subscribe((params) => {
       let id = params['id'];
       console.log(id);
       if (id != undefined) {
         this.id = id;
         this.store.dispatch(getProblem({ id: id }));
-        this.editorTitle = "Edit Problem";
+        this.editorTitle = 'Edit Problem';
         this.allowUpdateProblem = true;
         this.allowDeleteProblem = true;
         this.allowResetSubmit = true;
@@ -46,19 +68,19 @@ export class NewProblemComponent implements OnInit {
       this.allowDeleteProblem = false;
       this.allowResetSubmit = false;
 
-      this.editorTitle = "Create a new problem";
+      this.editorTitle = 'Create a new problem';
     });
   }
 
-  editorTitle = "";
+  editorTitle = '';
 
-  title = "Title of the problem";
-  description = "Description of the problem";
+  title = 'Title of the problem';
+  description = 'Description of the problem';
   samples: ProblemSample[] = [];
   testcases: Testcase[] = [];
-  tags = "";
+  tags = '';
   tagArray: string[] = [];
-  problemStatement = "";
+  problemStatement = '';
   timeLimit = 60;
   memoryLimit = 100;
   difficulty = 1;
@@ -69,7 +91,7 @@ export class NewProblemComponent implements OnInit {
   allowDeleteProblem = false;
   allowResetSubmit = false;
 
-  id = "";
+  id = '';
 
   problemCreation$: Observable<ProblemCreation>;
   problemUpdation$: Observable<ProblemUpdation>;
@@ -78,47 +100,45 @@ export class NewProblemComponent implements OnInit {
   resetSubmissions$: Observable<ProblemResetSubmissions>;
 
   ngOnInit(): void {
-    this.problemCreation$.subscribe(state => {
+    this.problemCreation$.subscribe((state) => {
       if (state.success) {
-        this.toast.success("200 OK!", "Problem created successfully");
-        window.location.href = "/";
-      }
-      else {
+        this.toast.success('200 OK!', 'Problem created successfully');
+        window.location.href = '/';
+      } else {
         if (state.error == undefined) {
           return;
         }
         if (state.error.length > 0) {
-          this.toast.danger(state.error, "Cannot create new problem");
+          this.toast.danger(state.error, 'Cannot create new problem');
         }
       }
       this.allowCreateProblem = true;
     });
 
-    this.problemUpdation$.subscribe(state => {
+    this.problemUpdation$.subscribe((state) => {
       if (state.success) {
-        this.toast.success("200 OK!", "Problem updated successfully");
+        this.toast.success('200 OK!', 'Problem updated successfully');
         setTimeout(() => {
           window.location.reload();
         }, 2000);
-      }
-      else {
+      } else {
         if (state.error == undefined) {
           return;
         }
         if (state.error.length > 0) {
-          this.toast.danger(state.error, "Cannot update problem");
+          this.toast.danger(state.error, 'Cannot update problem');
         }
       }
     });
 
-    this.problemRetrival$.subscribe(state => {
+    this.problemRetrival$.subscribe((state) => {
       console.log(state);
       if (!state.success || state.problem == undefined) {
         if (state.error == undefined) {
           return;
         }
         if (state.error.length > 0) {
-          this.toast.danger(state.error, "Problem not found");
+          this.toast.danger(state.error, 'Problem not found');
         }
         return;
       }
@@ -128,7 +148,7 @@ export class NewProblemComponent implements OnInit {
       this.title = state.problem.title;
       this.description = state.problem.description;
       this.problemStatement = state.problem.content;
-      this.tags = state.problem.tags.join(",");
+      this.tags = state.problem.tags.join(',');
       this.tagArray = [...state.problem.tags];
       this.samples.splice(0, this.samples.length);
       for (let sample of state.problem.samples) {
@@ -141,47 +161,42 @@ export class NewProblemComponent implements OnInit {
       this.timeLimit = state.problem.time_limit;
     });
 
-    this.problemDeletion$.subscribe(state => {
-
+    this.problemDeletion$.subscribe((state) => {
       if (state.success) {
         this.allowDeleteProblem = true;
-        this.toast.success("200 OK!", "Problem deleted successfully");
+        this.toast.success('200 OK!', 'Problem deleted successfully');
         setTimeout(() => {
-          window.location.href = "/problem-editor";
+          window.location.href = '/problem-editor';
         }, 2000);
-      }
-      else {
+      } else {
         if (state.error == undefined) {
           return;
         }
         if (state.error.length > 0) {
-          this.toast.danger(state.error, "Cannot delete problem");
+          this.toast.danger(state.error, 'Cannot delete problem');
         }
       }
     });
 
-    this.resetSubmissions$.subscribe(state => {
-
+    this.resetSubmissions$.subscribe((state) => {
       if (state.success) {
         this.allowResetSubmit = true;
-        this.toast.success("200 OK!", "Submissions reset successfully");
-      }
-      else {
+        this.toast.success('200 OK!', 'Submissions reset successfully');
+      } else {
         if (state.error == undefined) {
           return;
         }
         if (state.error.length > 0) {
-          this.toast.danger(state.error, "Cannot reset submissions");
+          this.toast.danger(state.error, 'Cannot reset submissions');
         }
       }
     });
-
   }
 
   addSample() {
     this.samples.push({
-      input: "",
-      output: ""
+      input: '',
+      output: '',
     });
   }
 
@@ -195,17 +210,17 @@ export class NewProblemComponent implements OnInit {
 
   addTest() {
     this.testcases.push({
-      input: "",
-      expected_output: "",
-      time_limit: 60,
-      memory_limit: 100,
+      input: '',
+      expected_output: '',
+      time_limit: 15,
+      memory_limit: 2048,
       score: 0,
-      allow_view_on_failed: false
+      allow_view_on_failed: false,
     });
   }
 
   changeTag() {
-    let tags = this.tags.split(",");
+    let tags = this.tags.split(',');
     this.tagArray.splice(0, this.tagArray.length);
     for (let tag of tags) {
       this.tagArray.push(tag.trim());
@@ -215,14 +230,20 @@ export class NewProblemComponent implements OnInit {
   createProblem() {
     this.allowCreateProblem = false;
     if (this.problemStatement.length == 0) {
-      this.store.dispatch(createProblemFailure({ error: "Problem statement must be filled" }));
+      this.store.dispatch(
+        createProblemFailure({ error: 'Problem statement must be filled' })
+      );
       return;
     }
     if (this.testcases.length === 0) {
-      this.store.dispatch(createProblemFailure({ error: "No testcase is added" }));
+      this.store.dispatch(
+        createProblemFailure({ error: 'No testcase is added' })
+      );
       return;
     }
     let problem = {
+      id: this.createId(),
+      userId: this.userId,
       title: this.title,
       description: this.description,
       content: this.problemStatement,
@@ -232,12 +253,14 @@ export class NewProblemComponent implements OnInit {
       difficulty: this.difficulty,
       time_limit: this.timeLimit,
       memory_limit: this.memoryLimit,
-      createdAt: Date.now()
-    }
+      createdAt: Date.now(),
+    };
     console.log(problem);
-    this.store.dispatch(createProblem({
-      problem: problem
-    }));
+    this.store.dispatch(
+      createProblem({
+        problem: problem,
+      })
+    );
   }
 
   updateProblem() {
@@ -245,11 +268,15 @@ export class NewProblemComponent implements OnInit {
     this.allowDeleteProblem = false;
     this.allowResetSubmit = false;
     if (this.problemStatement.length == 0) {
-      this.store.dispatch(createProblemFailure({ error: "Problem statement must be filled" }));
+      this.store.dispatch(
+        createProblemFailure({ error: 'Problem statement must be filled' })
+      );
       return;
     }
     if (this.testcases.length === 0) {
-      this.store.dispatch(createProblemFailure({ error: "No testcase is added" }));
+      this.store.dispatch(
+        createProblemFailure({ error: 'No testcase is added' })
+      );
       return;
     }
     let problem = {
@@ -262,28 +289,42 @@ export class NewProblemComponent implements OnInit {
       difficulty: this.difficulty,
       time_limit: this.timeLimit,
       memory_limit: this.memoryLimit,
-      createdAt: Date.now()
-    }
+      createdAt: Date.now(),
+    };
     console.log(problem);
-    this.store.dispatch(updateProblem({
-      id: this.id,
-      problem: problem
-    }));
+    this.store.dispatch(
+      updateProblem({
+        id: this.id,
+        problem: problem,
+      })
+    );
   }
 
   deleteProblem() {
     this.allowDeleteProblem = false;
     this.allowCreateProblem = false;
     this.allowUpdateProblem = false;
-    this.store.dispatch(deleteProblem({
-      id: this.id
-    }));
+    this.store.dispatch(
+      deleteProblem({
+        id: this.id,
+      })
+    );
   }
   resetSubmissions() {
     this.allowResetSubmit = false;
-    this.store.dispatch(resetSubmissions({
-      id: this.id
-    }));
+    this.store.dispatch(
+      resetSubmissions({
+        id: this.id,
+      })
+    );
   }
 
+  createId() {
+    return (
+      Date.now().toString(36) +
+      Math.floor(
+        Math.pow(10, 12) + Math.random() * 9 * Math.pow(10, 12)
+      ).toString(36)
+    );
+  }
 }

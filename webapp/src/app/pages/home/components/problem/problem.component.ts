@@ -1,6 +1,10 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { MonacoEditorComponent, MonacoEditorConstructionOptions, MonacoEditorLoaderService } from '@materia-ui/ngx-monaco-editor';
+import {
+  MonacoEditorComponent,
+  MonacoEditorConstructionOptions,
+  MonacoEditorLoaderService,
+} from '@materia-ui/ngx-monaco-editor';
 import { NbToastrService } from '@nebular/theme';
 import { Store } from '@ngrx/store';
 import { filter, Observable, take } from 'rxjs';
@@ -11,16 +15,18 @@ import { AuthState } from 'src/states/auth.state';
 import { InfoState } from 'src/states/info.state';
 import { ProblemRetrieval } from 'src/states/problem.state';
 import { exEcutionSubmitState, SubmitState } from 'src/states/submit.state';
-import { NbTabsetComponent, NbTabComponent } from '@nebular/theme/components/tabset/tabset.component';
+import {
+  NbTabsetComponent,
+  NbTabComponent,
+} from '@nebular/theme/components/tabset/tabset.component';
 import * as SubmitActions from '../../../../../actions/submit.action';
 
 @Component({
   selector: 'app-problem',
   templateUrl: './problem.component.html',
-  styleUrls: ['./problem.component.scss']
+  styleUrls: ['./problem.component.scss'],
 })
 export class ProblemComponent implements OnInit {
-
   info$: Observable<InfoState>;
   auth$: Observable<AuthState>;
   submit$: Observable<SubmitState>;
@@ -45,7 +51,7 @@ export class ProblemComponent implements OnInit {
     autoIndent: 'full',
     minimap: {
       enabled: true,
-      renderCharacters: false
+      renderCharacters: false,
     },
     fontSize: 15,
   };
@@ -56,7 +62,18 @@ export class ProblemComponent implements OnInit {
   problemId: string = '';
 
   //constructor
-  constructor(private store: Store<{ problemRetrieval: ProblemRetrieval, info: InfoState, auth: AuthState, submit: SubmitState, exEcution: exEcutionSubmitState }>, private monacoService: MonacoEditorLoaderService, private activatedRoute: ActivatedRoute, private toast: NbToastrService) {
+  constructor(
+    private store: Store<{
+      problemRetrieval: ProblemRetrieval;
+      info: InfoState;
+      auth: AuthState;
+      submit: SubmitState;
+      exEcution: exEcutionSubmitState;
+    }>,
+    private monacoService: MonacoEditorLoaderService,
+    private activatedRoute: ActivatedRoute,
+    private toast: NbToastrService
+  ) {
     this.problem$ = this.store.select('problemRetrieval');
     this.info$ = this.store.select('info');
     this.auth$ = this.store.select('auth');
@@ -64,7 +81,7 @@ export class ProblemComponent implements OnInit {
     this.exEcution$ = this.store.select('exEcution');
   }
 
-  //process 
+  //process
   processProblem = (problem: any) => {
     if (problem.error) {
       window.location.href = '/';
@@ -73,20 +90,20 @@ export class ProblemComponent implements OnInit {
     if (problem.success) {
       this.problem = problem.problem;
     }
-  }
+  };
 
   processSubmit = (submit: any) => {
     //console.log(submit);
     this.allowSubmit = !submit.isSubmitting;
 
     if (submit.error != '') {
-      this.toast.danger(submit.error, "Cannot submit your code");
+      this.toast.danger(submit.error, 'Cannot submit your code');
       this.activeMySubmissionTab = false;
       return;
     }
 
     if (submit.isSubmitted && !submit.isSubmitting) {
-      this.toast.success("Your code has been submitted", "Success");
+      this.toast.success('Your code has been submitted', 'Success');
       this.activeMySubmissionTab = true;
 
       this.pb = false;
@@ -95,7 +112,7 @@ export class ProblemComponent implements OnInit {
     }
 
     this.isSubmitting = submit.isSubmitting;
-  }
+  };
 
   processParams = (params: any) => {
     if (params['id'] == undefined) {
@@ -103,20 +120,20 @@ export class ProblemComponent implements OnInit {
     }
     this.problemId = params['id'];
     this.store.dispatch(getProblem({ id: params['id'] }));
-  }
+  };
 
   processInfo = (info: any) => {
     if (info.fetched) {
       this.info = info.info;
     }
-  }
+  };
 
   processAuth = (auth: any) => {
     if (auth.isLoggedIn) {
       this.allowSubmit = true;
       this.userId = auth.uid;
     }
-  }
+  };
 
   ngOnInit(): void {
     this.problem$.subscribe(this.processProblem);
@@ -127,7 +144,7 @@ export class ProblemComponent implements OnInit {
     this.activatedRoute.params.subscribe(this.processParams);
     this.monacoService.isMonacoLoaded$
       .pipe(
-        filter(isLoaded => !!isLoaded),
+        filter((isLoaded) => !!isLoaded),
         take(1)
       )
       .subscribe(() => {
@@ -147,12 +164,14 @@ export class ProblemComponent implements OnInit {
   mergeOptions(partialOptions: any) {
     return {
       ...this.editorOptions,
-      ...partialOptions
+      ...partialOptions,
     };
   }
 
   changeLanguage() {
-    let language = this.info?.programmingLanguages.filter((lang) => lang.id == this.selectedLanguageId)[0];
+    let language = this.info?.programmingLanguages.filter(
+      (lang) => lang.id == this.selectedLanguageId
+    )[0];
     let languageName = language?.name.split(' ')[0].toLocaleLowerCase();
     this.editorOptions = this.mergeOptions({ language: languageName });
   }
@@ -160,7 +179,7 @@ export class ProblemComponent implements OnInit {
   submit() {
     this.store.dispatch(
       SubmitActions.submit({ submission: this.createSubmission() })
-    )
+    );
   }
 
   createSubmission() {
@@ -176,8 +195,8 @@ export class ProblemComponent implements OnInit {
       total_time: 0,
       total_score: 0,
       testcases: [],
-      time: 0
-    }
+      time: 0,
+    };
   }
 
   pb = true;
@@ -191,24 +210,19 @@ export class ProblemComponent implements OnInit {
     this.sub = false;
     this.his = false;
 
-    if (event.tabTitle == "PROBLEM") {
+    if (event.tabTitle == 'PROBLEM') {
       this.pb = true;
-    } else if (event.tabTitle == "submission") {
+    } else if (event.tabTitle == 'submission') {
       this.sub = true;
     } else {
       this.his = true;
     }
-
   }
 
-  viewSrcCode(event: {
-    language_id: number,
-    source: string
-  }) {
+  viewSrcCode(event: { language_id: number; source: string }) {
     // this.code = event;
     this.code = event.source;
     this.selectedLanguageId = event.language_id;
     this.changeLanguage();
   }
-
 }

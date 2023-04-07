@@ -21,4 +21,5 @@ type Problem struct {
 	Content   string          `json:"content"`
 	Samples   []ProblemSample `json:"samples"`
 	TestCases []TestCase      `json:"testcases"`
+	UserId    string          `json:"userId"`
 }
