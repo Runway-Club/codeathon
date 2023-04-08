@@ -1,10 +1,16 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
+import { SpinkitComponent } from '../components/spinkit/spinkit.component';
 @NgModule({
-  declarations: [],
+  declarations: [
+    SpinkitComponent
+  ],
   imports: [
     CommonModule
+  ],
+  exports: [
+    SpinkitComponent
   ]
 })
 

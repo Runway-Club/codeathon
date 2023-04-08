@@ -6,10 +6,7 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./spinkit.component.scss']
 })
 export class SpinkitComponent implements OnInit {
-
   constructor() { }
-
   ngOnInit(): void {
   }
-
 }

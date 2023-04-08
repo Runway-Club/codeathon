@@ -9,7 +9,6 @@ import { SpinkitComponent } from 'src/app/components/spinkit/spinkit.component';
 @NgModule({
   declarations: [
     ProblemComponent,
-    SpinkitComponent,
   ],
   imports: [
     CommonModule,

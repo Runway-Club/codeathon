@@ -7,7 +7,7 @@ import { MarkdownModule, MarkdownService } from 'ngx-markdown'
 import { MonacoEditorModule } from '@materia-ui/ngx-monaco-editor';
 import { FormsModule } from '@angular/forms';
 import { SharedNebularModule } from 'src/app/modules/nebular/nebular.module';
-
+import { SharedModule } from 'src/app/modules/shared.module';
 
 //components
 import { HomeComponent } from './home.component';
@@ -18,7 +18,6 @@ import { LMarkdownEditorModule } from 'ngx-markdown-editor';
 import { ProblemComponent } from './components/problem/problem.component';
 import { HistoryComponent } from './components/problem/components/history/history.component';
 import { SubmissionComponent } from './components/problem/components/submission/submission.component';
-import { SpinkitComponent } from '../../components/spinkit/spinkit.component';
 import { ManageProblemComponent } from './components/manage-problem/manage-problem.component';
 
 @NgModule({
@@ -30,7 +29,6 @@ import { ManageProblemComponent } from './components/manage-problem/manage-probl
     ProblemComponent,
     HistoryComponent,
     SubmissionComponent,
-    SpinkitComponent,
     ManageProblemComponent
   ],
   imports: [
@@ -40,7 +38,8 @@ import { ManageProblemComponent } from './components/manage-problem/manage-probl
     LMarkdownEditorModule,
     FormsModule,
     MonacoEditorModule,
-    SharedNebularModule
+    SharedNebularModule,
+    SharedModule
   ],
 })
 export class HomeModule {
