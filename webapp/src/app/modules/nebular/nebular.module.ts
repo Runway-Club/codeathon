@@ -2,6 +2,8 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import {
+  NbToastrModule,
+
   NbLayoutModule,
   NbListModule,
   NbCardModule,
@@ -12,7 +14,6 @@ import {
   NbButtonModule,
   NbAccordionModule,
   NbToggleModule,
-  NbToastrModule,
   NbTabsetModule,
   NbIconModule,
   NbSearchModule,
@@ -22,7 +23,7 @@ import {
   NbActionsModule,
   NbTooltipModule,
   NbToastrService,
-  NbContextMenuModule
+  NbContextMenuModule,
 } from '@nebular/theme';
 import { NbEvaIconsModule } from '@nebular/eva-icons';
 
@@ -30,7 +31,7 @@ import { NbEvaIconsModule } from '@nebular/eva-icons';
   declarations: [],
   imports: [
     CommonModule,
-    NbEvaIconsModule
+    NbEvaIconsModule,
   ],
   providers: [
     NbToastrService

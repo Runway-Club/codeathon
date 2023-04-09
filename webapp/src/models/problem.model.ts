@@ -1,6 +1,3 @@
-import { ProblemSample } from "./sample.model";
-import { Testcase } from "./testcase.model";
-
 export interface Problem {
     id?: string;
     title: string;
@@ -13,6 +10,22 @@ export interface Problem {
     memory_limit: number;
 
     samples: ProblemSample[];
-    testcases: Testcase[];
+    testcases: TestCase[];
     createdAt: number;
+}
+
+export interface TestCase {
+    input: string;
+    expected_output: string;
+
+    time_limit: number;
+    memory_limit: number;
+
+    score: number;
+    allow_view_on_failed: boolean;
+}
+
+export interface ProblemSample {
+    input: string;
+    output: string;
 }

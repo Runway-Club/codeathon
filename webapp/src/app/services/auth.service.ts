@@ -1,5 +1,12 @@
 import { Injectable } from '@angular/core';
-import { Auth, GoogleAuthProvider, User, onAuthStateChanged, signInWithPopup, signInWithRedirect } from '@angular/fire/auth';
+import {
+  Auth,
+  User,
+  GoogleAuthProvider,
+  onAuthStateChanged,
+  signInWithPopup,
+  signInWithRedirect
+} from '@angular/fire/auth';
 import { Subject } from 'rxjs';
 
 @Injectable({

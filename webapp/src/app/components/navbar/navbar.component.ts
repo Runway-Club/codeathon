@@ -8,9 +8,14 @@ import { User } from '@angular/fire/auth';
 })
 export class NavbarComponent implements OnInit {
 
+  constructor() { }
+
   @Input() user: User | null = null;
 
-  constructor() { }
+  menuItems = [
+    { title: 'Profile' },
+    { title: 'Log out' }
+  ];
 
   ngOnInit(): void {
   }

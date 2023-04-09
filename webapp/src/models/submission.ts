@@ -1,21 +1,22 @@
-import { Testcase } from "./testcase.model";
-
 export interface Submission {
-    language_id: number;
+    id?: string;
     problem_id: string;
+    language_id: number;
     code: string;
     source: string;
     user_id: string;
+
     evaluated: boolean;
     score: number;
-    testcases?: TestCase[];
+    testcases?: TestCaseResult[];
+
     total_memory: number;
     total_time: number;
     total_score: number;
     time: number
 }
 
-export interface TestCase {
+export interface TestCaseResult {
     ExpectedOutput: string,
     Input: string,
     Message: string,

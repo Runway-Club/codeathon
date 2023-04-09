@@ -1,6 +1,6 @@
 export interface ProgrammingLanguage {
-    name: string;
     id: number;
+    name: string;
 }
 export interface Info {
     programmingLanguages: ProgrammingLanguage[];

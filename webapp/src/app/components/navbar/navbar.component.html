@@ -1,11 +1,11 @@
 <div class="container">
-    <span class="logo" [routerLink]="['home2']">CODEATHON</span>
+    <span class="logo" [routerLink]="['/home']">CODEATHON</span>
     <span class="anchors">
-        <a href="/home2">Problems</a>
+        <a href="/home">Problems</a>
         <a href="/about">About</a>
     </span>
     <span class="user">
-        <button class="profile" nbButton [nbContextMenu]="[{ title: 'Profile' }, { title: 'Log out' }]" shape="round">
+        <button class="profile" nbButton [nbContextMenu]="menuItems" shape="round">
             <img *ngIf="user" [src]="user.photoURL" alt="user photo">
         </button>
 
