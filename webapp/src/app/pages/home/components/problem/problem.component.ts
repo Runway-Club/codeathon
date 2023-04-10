@@ -31,6 +31,14 @@ export class ProblemComponent implements OnInit {
   info?: Info;
   public isSubmitting: boolean = true;
 
+  constructor(private store: Store<{ problemRetrieval: ProblemRetrieval, info: InfoState, auth: AuthState, submit: SubmitState, exEcution: exEcutionSubmitState }>, private monacoService: MonacoEditorLoaderService, private activatedRoute: ActivatedRoute, private toast: NbToastrService) {
+    this.problem$ = this.store.select('problemRetrieval');
+    this.info$ = this.store.select('info');
+    this.auth$ = this.store.select('auth');
+    this.submit$ = this.store.select('submit');
+    this.exEcution$ = this.store.select('exEcution');
+  }
+
   code: string = 'def test():\n\tprint("Hello, world")';
   originalCode: string = 'function x() { // TODO }';
   userId: string = '';
