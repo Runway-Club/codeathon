@@ -1,37 +1,8 @@
 <nb-layout>
-    <nb-layout-header>
-        <span class="logo" routerLink="/" id="title">Codeathon</span>
-        <span style="flex: 1 1 auto;"></span>
-
-        <nb-search placeholder="Search problems..."
-            style="background-color: white; border-radius: 5px; margin-right: 20px;" type="rotate-layout">
-        </nb-search>
-
-        <span class="login">
-            <button *ngIf="!authState?.isLoggedIn??true" (click)="login()"
-                style="background-color: white; border-radius: 5px;" nbButton shape="rectangle">Login with
-                Google</button>
-        </span>
-        <nb-user *ngIf="authState?.isLoggedIn??false" nbPopoverTrigger="hover" [nbPopover]="signoutPopover"
-            style="background-color: #fff; padding:5px;border-radius:5px;" [name]="authState?.displayName??''"
-            [picture]="authState?.photoURL??''">
-        </nb-user>
+    <nb-layout-header fixed>
+        <app-navbar [user]="user" style="width: 100%;"></app-navbar>
     </nb-layout-header>
-    <nb-layout-column style="padding: 0;" class="colored-column-basic">
+    <nb-layout-column>
         <router-outlet></router-outlet>
     </nb-layout-column>
-    <ng-template #signoutPopover>
-        <div style="padding: 10px;">
-            <button nbButton status="primary" (click)="createNewProblem()">New problem</button>
-        </div>
-
-        <div style="padding: 10px;">
-            <button nbButton status="primary" (click)="manageProblem()">Your problem</button>
-        </div>
-
-        <div style="padding:10px;">
-            <button nbButton status="primary" (click)="signout()">Sign out</button>
-        </div>
-
-    </ng-template>
 </nb-layout>

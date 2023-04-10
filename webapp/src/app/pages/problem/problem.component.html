@@ -1,0 +1,16 @@
+<nb-layout>
+    <nb-layout-header fixed>
+        <app-navbar [user]="user" style="width: 100%;"></app-navbar>
+    </nb-layout-header>
+    <nb-layout-column *ngIf="(isLoading$ | async); else problem">
+        <app-spinkit></app-spinkit>
+    </nb-layout-column>
+    <ng-template #problem>
+        <nb-layout-column class="column problem">
+            <app-info [problem]="(problem$ | async)!" [submissions]="(submissions$ | async)"></app-info>
+        </nb-layout-column>
+        <nb-layout-column class="column editor">
+            <app-editor [problem]="(problem$ | async)!" (submitCode)="handleSubmitCode($event)"></app-editor>
+        </nb-layout-column>
+    </ng-template>
+</nb-layout>
