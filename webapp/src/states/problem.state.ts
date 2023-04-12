@@ -41,3 +41,11 @@ export interface GetProblemListing {
     success: boolean;
     query: string;
 }
+
+export interface ProblemState {
+    problems: Problem[];
+    problem?: Problem;
+    isLoading: boolean;
+    error: string;
+}
+

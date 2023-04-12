@@ -13,4 +13,5 @@ export interface Problem {
     samples: ProblemSample[];
     testcases: Testcase[];
     createdAt: number;
+    score: number;
 }
