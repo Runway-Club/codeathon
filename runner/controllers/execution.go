@@ -22,6 +22,7 @@ func NewExecutionController(endpoint string, s *core.Server) *echo.Group {
 		}
 
 		err := problemLogic.RequestEvaluate(submission)
+
 		if err != nil {
 			return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 		}

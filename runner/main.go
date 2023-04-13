@@ -25,6 +25,6 @@ func main() {
 
 	controllers.NewExecutionController("/api/v1/execution", server)
 	controllers.NewInfoController("/api/v1/info", server)
-
+	controllers.DisplayProblemController(server)
 	server.Start()
 }

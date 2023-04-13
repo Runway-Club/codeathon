@@ -1,0 +1,57 @@
+<nb-tabset>
+    <nb-tab tabTitle="Problem">
+        <div class="tab-problem">
+            <div class="header">
+                <h1><strong>{{problem.title}}</strong></h1>
+                <p class="date">{{problem.createdAt | date: "medium"}}</p>
+                <div class="tags">
+                    <nb-tag *ngFor="let tag of problem.tags" class="tag" size="small" status="primary"
+                        appearance="outline" [text]="tag"></nb-tag>
+                </div>
+            </div>
+            <div class="description">
+                <h3><strong>Description: </strong></h3>
+                <p>{{problem.description}}</p>
+            </div>
+            <div class="samples">
+                <h3><strong>Samples:</strong></h3>
+                <div *ngFor="let sample of problem.samples, index as i">
+                    <p style="margin-top: 10px; font-weight: bold;">Case: {{i + 1}}</p>
+                    <div class="case">
+                        <p class="case-line">
+                            <strong>Input:</strong>
+                            <code>{{sample.input}}</code>
+                        </p>
+                        <p class="case-line">
+                            <strong>Output:</strong>
+                            <code>{{sample.output}}</code>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nb-tab>
+    <nb-tab tabTitle="Submission">
+        <div class="tab-submission">
+            <nb-list>
+                <nb-list-item *ngFor="let submission of submissions; let i=index" class="submission">
+                    <span class="spin" *ngIf="!submission.evaluated; else sub">
+                        <app-spinkit></app-spinkit>
+                    </span>
+                    <ng-template #sub>
+                        <span class="detail">
+                            <span class="header">
+                                <strong [ngClass]="checkSubmission(submission)==='ACCEPTED' ? 'green' : 'red'">
+                                    {{checkSubmission(submission)}}
+                                </strong>
+                                <span>{{submission.time | date: "medium"}}</span>
+                            </span>
+                            <span>{{(submission.total_time * 1000).toFixed(0)}} ms</span>
+                            <span>{{(submission.total_memory / 1024).toFixed(0)}} KB</span>
+                        </span>
+                    </ng-template>
+                </nb-list-item>
+            </nb-list>
+        </div>
+    </nb-tab>
+</nb-tabset>

@@ -37,6 +37,7 @@ func NewProblemLogic(server *core.Server) *ProblemLogic {
 
 func (l *ProblemLogic) Get(id string) (*models.Problem, error) {
 	// load problem from firestore
+	
 	docRef := l.db.Collection("problems").Doc(id)
 	doc, err := docRef.Get(context.Background())
 	if err != nil {
@@ -56,6 +57,30 @@ func (l *ProblemLogic) Get(id string) (*models.Problem, error) {
 	}
 	return problem, nil
 }
+
+func (l *ProblemLogic) GetUserProblem(userId string) (*models.Problem, error) {
+	docRef := l.db.Collection("problems").Doc(userId)
+	doc, err := docRef.Get(context.Background())
+	if err != nil {
+		return nil, err
+	}
+	
+	problem := &models.Problem{}
+	if(problem.UserId == userId){
+		docData, err := json.Marshal(doc.Data())
+	if err != nil {
+		return nil, err
+	}
+	
+	if err := json.Unmarshal(docData, problem); err != nil {
+		return nil, err
+	}
+	return problem, nil
+	}
+	
+	return nil, err;
+}
+
 
 func (l *ProblemLogic) AutoEvaluate() error {
 	it := l.db.Collection("submissions").Where("evaluated", "==", false).Snapshots(context.Background())

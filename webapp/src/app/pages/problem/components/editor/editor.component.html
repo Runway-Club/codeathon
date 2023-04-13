@@ -1,0 +1,29 @@
+<div class="tab">
+    <span>
+        <span class="tab-set">
+            <div>
+                <div *ngFor="let tab of codeTabs; index as i" class="tab-title" (click)="handleChangeTab(tab.id)"
+                    [ngClass]="{'active': tab.id === currentCodeTab!.id}">
+                    <div>New tab</div>
+                    <button nbButton size="small" shape="round" appearance="outline" status="primary"
+                        (click)="handleDeleteTab(tab.id)">
+                        <nb-icon icon="close-outline"></nb-icon>
+                    </button>
+                </div>
+            </div>
+        </span>
+        <span class="add-tab" *ngIf="codeTabs.length < 4">
+            <button nbButton size="small" shape="round" appearance="outline" status="primary" (click)="createTab()">
+                <nb-icon icon="plus-circle-outline"></nb-icon>
+            </button>
+        </span>
+    </span>
+    <span>
+        <button nbButton size="medium" appearance="outline" status="primary" (click)="submit()">run</button>
+    </span>
+</div>
+<div class="tool">
+</div>
+<div class="editor" *ngIf="currentCodeTab">
+    <ngx-monaco-editor [options]="editorOptions" [(ngModel)]="currentCodeTab.code"></ngx-monaco-editor>
+</div>
