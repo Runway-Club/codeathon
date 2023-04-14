@@ -4,8 +4,7 @@ import { CommonModule } from '@angular/common';
 import {
   NbThemeModule,
   NbToastrModule,
-  NbMenuModule,
-  NbSelectModule
+  NbMenuModule
 } from '@nebular/theme';
 
 @NgModule({
@@ -14,14 +13,12 @@ import {
     CommonModule,
     NbThemeModule.forRoot({ name: 'dark' }),
     NbToastrModule.forRoot(),
-    NbMenuModule.forRoot(),
-    NbSelectModule
+    NbMenuModule.forRoot()
   ],
   exports: [
     NbThemeModule,
     NbToastrModule,
-    NbMenuModule,
-    NbSelectModule
+    NbMenuModule
   ]
 })
 export class SharedNebularRootModule { }
