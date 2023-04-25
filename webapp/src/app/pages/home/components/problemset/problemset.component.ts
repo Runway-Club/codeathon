@@ -30,8 +30,8 @@ export class ProblemsetComponent implements OnInit {
     this.store.dispatch(ProblemActions.getProblems({ previousDocument: this.previousDocument }));
   }
 
-  viewProblem(problem: Problem) {
-    // console.log(problem);
+  viewProblem(problem: Problem) 
+  {
     this.router.navigate(['/problem', problem.id]);
   }
 

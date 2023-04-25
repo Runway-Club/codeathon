@@ -1,92 +1,125 @@
-.container {
+h1
+{
+    text-align: center;
+}
+
+#body
+{
     display: flex;
     flex-direction: column;
     justify-content: center;
-
 }
 
-.card {
+
+.card 
+{
     background-color: transparent;
     border: none;
-
     height: auto;
 }
 
 $select-margin: 1rem;
 
-.select-container {
+.select-container 
+{
     padding-left: 0px;
     padding-right: 0px;
-
     width: calc(100% + 2 * $select-margin);
 }
 
-.select {
+.select 
+{
     display: flex;
     flex-direction: row;
     justify-content: flex-start;
     align-items: center;
 
-    &>nb-select {
+    &>nb-select 
+    {
         margin-right: $select-margin;
+    }
+
+    #search
+    {
+        margin-left: 1rem;
     }
 }
 
-.problem-header {
+#list_manage
+{
+    margin: 0 auto;
+    width: 95%;
+}
+
+
+.problem-header 
+{
     border-bottom: 1px solid rgba($color: #FFFFFF, $alpha: 0.2);
 
-    &>.problem {
+    &>.problem 
+    {
         background-color: transparent !important;
     }
 }
 
-.problem {
+.problem 
+{
     display: flex;
     flex-direction: row;
 
     background-color: var(--card-background-color);
 
     $status: 52;
-    $title: 180;
+    $title: 200;
     $difficulty: 84;
     $unit: px;
-    
+    $score: 60;
+
 
     border: none;
 
-    .status {
+    .status 
+    {
         flex: $status 0 auto;
         min-width: 0px;
         width: $status + $unit;
     }
 
-    .title {
+    .title 
+    {
         flex: $title 0 auto;
         min-width: 0px;
         width: $title + $unit;
 
-        &>a {
+        &>a 
+        {
             text-decoration: none;
         }
 
-        &>a:hover {
+        &>a:hover 
+        {
             color: rgb(82, 82, 255);
             cursor: pointer;
         }
     }
 
-    .difficulty {
+    .difficulty 
+    {
         flex: $difficulty 0 auto;
         min-width: 0px;
         width: $difficulty + $unit;
     }
+
+    .score 
+    {
+        flex: $score 0 auto;
+        min-width: 0px;
+        width: $score + $unit;
+    }
 }
 
-
-.search-input {
-    flex: 1 0 auto;
-}
-
-.nobg {
+.nobg
+{
     background-color: transparent;
 }
+

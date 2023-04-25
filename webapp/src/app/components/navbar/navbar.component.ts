@@ -13,11 +13,11 @@ export class NavbarComponent implements OnInit {
   @Input() user: User | null = null;
 
   menuItems = [
-    { title: 'Profile' },
+    { title: 'Profile', link: 'profile' },
+    { title: 'Manage', link: 'manage' },
     { title: 'Log out' }
   ];
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void { }
 
 }

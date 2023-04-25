@@ -5,14 +5,14 @@ import { Store } from '@ngrx/store';
 import { map } from 'rxjs';
 import { ProblemState } from 'src/states/problem.state';
 import { Problem } from 'src/models/problem.model';
-
+import { ProblemActions } from 'src/app/ngrx/actions/problems.action';
 
 @Component({
-  selector: 'app-manage-problem',
-  templateUrl: './manage-problem.component.html',
-  styleUrls: ['./manage-problem.component.scss']
+  selector: 'app-yourmanage',
+  templateUrl: './yourmanage.component.html',
+  styleUrls: ['./yourmanage.component.scss']
 })
-export class ManageProblemComponent implements OnInit 
+export class YourmanageComponent implements OnInit 
 {
   constructor
   (
@@ -28,12 +28,9 @@ export class ManageProblemComponent implements OnInit
   previousDocument: DocumentSnapshot | undefined = undefined;
 
   ngOnInit(): void {
-    // this.store.dispatch(ProblemActions.getProblems({ previousDocument: this.previousDocument }));
+    this.store.dispatch(ProblemActions.getProblems({ previousDocument: this.previousDocument }));
   }
 
-  viewProblem(problem: Problem) {
-    // console.log(problem);
-    this.router.navigate(['/problem', problem.id]);
-  }
+  viewProblem(problem: Problem) { this.router.navigate(['/problem', problem.id]); }
 
 }

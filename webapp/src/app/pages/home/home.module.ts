@@ -6,21 +6,17 @@ import { HomeComponent } from './home.component';
 
 import { SharedNebularModule } from 'src/app/modules/nebular/nebular.module';
 import { ProblemsetComponent } from './components/problemset/problemset.component';
-import { ManageProblemComponent } from './components/manage-problem/manage-problem.component';
 import { SharedModule } from 'src/app/modules/shared.module';
-
 
 @NgModule({
   declarations: [
     HomeComponent,
-    ProblemsetComponent,
-    ManageProblemComponent,
+    ProblemsetComponent
   ],
   imports: [
     CommonModule,
     HomeRoutingModule,
     SharedModule,
-    ManageProblemComponent,
     SharedNebularModule
   ]
 })

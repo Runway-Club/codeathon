@@ -1,0 +1,53 @@
+<h1>Your Problems</h1>
+<app-spinkit *ngIf="(loading$ | async); else content"></app-spinkit>
+<ng-template #content>
+    <div id="body">
+        <nb-card class="card">
+            <nb-card-body class="select-container">
+                <div class="select">
+                    <nb-select placeholder="Select Difficulty" [(selected)]="selectedDifficulty" shape="round">
+                        <nb-option value="1">Easy</nb-option>
+                        <nb-option value="2">Medium</nb-option>
+                        <nb-option value="3">Hard</nb-option>
+                    </nb-select>
+                    <nb-select placeholder="Select Status" [(selected)]="selectedStatus" shape="round">
+                        <nb-option value="1">To do</nb-option>
+                        <nb-option value="2">Solved</nb-option>
+                        <nb-option value="3">Attempted</nb-option>
+                    </nb-select>
+                    <label class="search-label" for="search">
+                        <nb-icon icon="search"></nb-icon>
+                    </label>
+                    <input nbInput id="search" placeholder="Search...." class="search-input" shape="round">
+                </div>
+            </nb-card-body>
+        </nb-card>
+        <nb-card class="card">
+            <nb-card-header style="padding: 16px;" class="problem-header">
+                <div class="problem">
+                    <span class="status">Status</span>
+                    <span class="title">Title</span>
+                    <span class="score">Score</span>
+                    <span class="difficulty">Difficulty</span>
+                </div>
+            </nb-card-header>
+            <nb-list>
+                <nb-list-item *ngFor="let problem of (problems$ | async); let i = index" class="problem"
+                    [ngClass]="{'nobg' : i % 2 === 0}">
+                    <div class="status"><span>Todo</span></div>
+                    <div class="title">
+                        <a (click)="viewProblem(problem)">{{problem.title}}</a>
+                    </div>
+                    <div class="score">
+                        <span>{{ problem.score }}</span>
+                    </div>
+                    <div class="difficulty">
+                        <span>{{ problem.difficulty }}</span>
+                    </div>
+                </nb-list-item>
+            </nb-list>
+        </nb-card>
+    </div>
+</ng-template>
+
+

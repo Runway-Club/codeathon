@@ -4,7 +4,7 @@ import { MonacoEditorComponent, MonacoEditorConstructionOptions, MonacoEditorLoa
 import { NbToastrService } from '@nebular/theme';
 import { Store } from '@ngrx/store';
 import { filter, Observable, take } from 'rxjs';
-import { getProblem } from 'src/actions/problem.action';
+import { ProblemActions } from 'src/app/ngrx/actions/problems.action';
 import { Info, ProgrammingLanguage } from 'src/models/info.model';
 import { Problem } from 'src/models/problem.model';
 import { AuthState } from 'src/states/auth.state';
@@ -78,7 +78,7 @@ export class ProblemComponent implements OnInit {
         window.location.href = '/';
       }
       this.problemId = params['id'];
-      this.store.dispatch(getProblem({ id: params['id'] }));
+      this.store.dispatch(ProblemActions.getProblem({ id: params['id'] }));
     });
     this.monacoService.isMonacoLoaded$
       .pipe(
