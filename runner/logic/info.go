@@ -29,14 +29,18 @@ func NewInfoLogic(server *core.Server) *InfoLogic {
 
 func (l *InfoLogic) GetLanguages() ([]*models.Language, error) {
 	res, err := http.Get(l.config.Judge0 + "/languages/")
+
 	if err != nil {
 		return nil, err
 	}
+
 	defer res.Body.Close()
 	// parse data to languages
 	languages := make([]*models.Language, 0)
+
 	if err := json.NewDecoder(res.Body).Decode(&languages); err != nil {
 		return nil, err
 	}
+
 	return languages, nil
 }

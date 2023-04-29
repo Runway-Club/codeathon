@@ -12,11 +12,14 @@ import {
   doc,
   limit,
   query,
+  Query,
   startAt,
   where,
-  DocumentSnapshot
+  DocumentSnapshot,
+  orderBy,
+  DocumentData,
+  OrderByDirection
 } from "@angular/fire/firestore";
-import { Observable } from 'rxjs';
 
 
 @Injectable({
@@ -26,15 +29,41 @@ import { Observable } from 'rxjs';
 export class ProblemService {
   constructor(private database: Firestore) { }
 
-  async getProblems(previousDocument: DocumentSnapshot | undefined): Promise<Problem[]> {
-    let problems: Problem[] = [];
-    let q: any;
-
-    if (previousDocument == undefined) {
-      q = query(collection(this.database, 'problems'), limit(20));
-    } else {
-      q = query(collection(this.database, 'problems'), startAt(previousDocument), limit(20));
+  async getProblems(
+    previousDocument?: DocumentSnapshot,
+    difficulty?: string,
+    status?: string,
+    sort?: {
+      field: string,
+      direction: "desc" | "asc"
     }
+  ): Promise<Problem[]> {
+    const limitation = 20;
+
+    let problems: Problem[] = [];
+
+    let q: Query<DocumentData> = query(
+      collection(this.database, 'problems'),
+      limit(limitation)
+    );
+
+    if (previousDocument) {
+      q = query(q, startAt(previousDocument));
+    }
+
+    if (difficulty) {
+      q = query(q, where('difficulty', "==", difficulty));
+    }
+
+    if (status) {
+      q = query(q, where('status', "==", status));
+    }
+
+    if (sort) {
+      const { field, direction } = sort;
+      q = query(q, orderBy(field, direction));
+    }
+
 
     const querySnapshot = await getDocs(q);
 

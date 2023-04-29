@@ -1,294 +1,420 @@
 package logic
 
 import (
-	"bytes"
 	"context"
-	"encoding/json"
-	"errors"
-	"fmt"
-	"io/ioutil"
-	"net/http"
-	"strconv"
-	"strings"
-	"time"
 
-	"cloud.google.com/go/firestore"
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
-	"runwayclub.dev/codeathon/v2/core"
+	"github.com/labstack/echo/v4"
 	"runwayclub.dev/codeathon/v2/models"
+
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
+	"go.mongodb.org/mongo-driver/mongo"
 )
 
+const MaxProblem = 5
+
+type ProblemHandler struct {
+	pl *ProblemLogic
+}
+
 type ProblemLogic struct {
-	db     *firestore.Client
-	config *core.Config
+	pdb *ProblemDatabase
 }
 
-func NewProblemLogic(server *core.Server) *ProblemLogic {
-	client, err := server.App.Firestore(context.Background())
-	if err != nil {
-		panic(err)
-	}
-	return &ProblemLogic{
-		db:     client,
-		config: server.Config,
+type ProblemDatabase struct {
+	m *mongo.Database
+}
+
+func NewProblemHandler(m *mongo.Client) *ProblemHandler {
+	return &ProblemHandler{
+		pl: &ProblemLogic{
+			pdb: &ProblemDatabase{m: m.Database("codeathon")},
+		},
 	}
 }
 
-func (l *ProblemLogic) Get(id string) (*models.Problem, error) {
-	// load problem from firestore
-	
-	docRef := l.db.Collection("problems").Doc(id)
-	doc, err := docRef.Get(context.Background())
+// db access
+
+func (db *ProblemDatabase) aggregate(col string, pipeline interface{}) (interface{}, error) {
+	cursor, err := db.m.Collection(col).Aggregate(context.Background(), pipeline)
+
 	if err != nil {
 		return nil, err
 	}
 
-	// parse data to problem
-	problem := &models.Problem{}
-	docData, err := json.Marshal(doc.Data())
-	if err != nil {
+	var results []map[string]interface{}
+
+	if err = cursor.All(context.Background(), &results); err != nil {
+		println(err.Error())
 		return nil, err
 	}
 
-	// marshal data to problem
-	if err := json.Unmarshal(docData, problem); err != nil {
-		return nil, err
-	}
-	return problem, nil
+	return results, nil
 }
 
-func (l *ProblemLogic) GetUserProblem(userId string) (*models.Problem, error) {
-	docRef := l.db.Collection("problems").Doc(userId)
-	doc, err := docRef.Get(context.Background())
+func (db *ProblemDatabase) findOne(col string, filter bson.D) (interface{}, error) {
+	var result map[string]interface{}
+	err := db.m.Collection(col).FindOne(context.Background(), filter).Decode(&result)
+
 	if err != nil {
 		return nil, err
 	}
-	
-	problem := &models.Problem{}
-	if(problem.UserId == userId){
-		docData, err := json.Marshal(doc.Data())
-	if err != nil {
-		return nil, err
-	}
-	
-	if err := json.Unmarshal(docData, problem); err != nil {
-		return nil, err
-	}
-	return problem, nil
-	}
-	
-	return nil, err;
+
+	return result, nil
 }
 
+func (db *ProblemDatabase) insertOne(col string, doc interface{}) (primitive.ObjectID, error) {
+	result, err := db.m.Collection(col).InsertOne(context.Background(), doc)
 
-func (l *ProblemLogic) AutoEvaluate() error {
-	it := l.db.Collection("submissions").Where("evaluated", "==", false).Snapshots(context.Background())
-	for {
-		snap, err := it.Next()
-		// DeadlineExceeded will be returned when ctx is cancelled.
-		if status.Code(err) == codes.DeadlineExceeded {
-			return nil
-		}
+	if err != nil {
+		return primitive.NilObjectID, err
+	}
+
+	return result.InsertedID.(primitive.ObjectID), nil
+}
+
+func (db *ProblemDatabase) updateOne(col string, filter interface{}, update interface{}) (*mongo.UpdateResult, error) {
+	result, err := db.m.Collection(col).UpdateOne(context.Background(), filter, update)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return result, nil
+}
+
+func (db *ProblemDatabase) delete(col string, filter interface{}) (*mongo.DeleteResult, error) {
+	result, err := db.m.Collection(col).DeleteMany(context.Background(), filter)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return result, nil
+}
+
+func (db *ProblemDatabase) deleteOne(col string, filter interface{}) (*mongo.DeleteResult, error) {
+	result, err := db.m.Collection(col).DeleteOne(context.Background(), filter)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return result, nil
+}
+
+// process
+const MaxProblemPerUser = 20
+
+func (l *ProblemLogic) getAllProblemWithPaginate(page int64, limit int64) (interface{}, error) {
+	pipeline := []bson.M{
+		{
+			"$lookup": bson.M{ // join testcase
+				"from":         "testcase",
+				"localField":   "_id",
+				"foreignField": "problem_id",
+				"as":           "testcase",
+			},
+		},
+		{
+			"$project": bson.M{
+				"testcase.problem_id": 0, // remove problem_id from testcase
+			},
+		},
+		{
+			"$skip": (page - 1) * limit,
+		},
+		{
+			"$limit": limit,
+		},
+	}
+
+	result, err := l.pdb.aggregate("problem", pipeline)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return result, nil
+}
+
+func (l *ProblemLogic) getAllProblemWithStatus(page int64, limit int64) (interface{}, error) {
+	pipeline := []bson.M{
+		{
+			"$lookup": bson.M{ // join status
+				"from":         "status",
+				"localField":   "_id",
+				"foreignField": "problem_id",
+				"as":           "status",
+			},
+		},
+		{
+			"$addFields": bson.M{
+				"status": bson.M{
+					"$arrayElemAt": bson.A{"$status.status", 0},
+				},
+			},
+		},
+		{
+			"$lookup": bson.M{ // join testcase
+				"from":         "testcase",
+				"localField":   "_id",
+				"foreignField": "problem_id",
+				"as":           "testcase",
+			},
+		},
+		{
+			"$project": bson.M{
+				"testcase.problem_id": 0, // remove problem_id from testcase
+			},
+		},
+		{
+			"$skip": (page - 1) * limit,
+		},
+		{
+			"$limit": limit,
+		},
+	}
+
+	result, err := l.pdb.aggregate("problem", pipeline)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return result, nil
+}
+
+func (l *ProblemLogic) getProblem(id string) (interface{}, error) {
+	filter := bson.D{{Key: "_id", Value: id}}
+
+	result, err := l.pdb.findOne("problem", filter)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return result, nil
+}
+
+func (l *ProblemLogic) createProblem(p *models.Problem, tc *[]models.TestCase) (interface{}, error) {
+	id, err := l.pdb.insertOne("problem", p)
+
+	if err != nil {
+		return nil, err
+	}
+
+	for _, t := range *tc {
+		t.ProblemID = id
+
+		_, err := l.pdb.insertOne("testcase", t)
+
 		if err != nil {
-			return err
-		}
-		docs, err := snap.Documents.GetAll()
-		if err != nil {
-			return err
-		}
-		for _, doc := range docs {
-			l.Evaluate(doc.Ref.ID)
+			return nil, err
 		}
 	}
+
+	result := &struct {
+		Message string `json:"message"`
+		ID      string `json:"id"`
+	}{
+		Message: "successfully created problem ",
+		ID:      id.Hex(),
+	}
+
+	return result, nil
 }
 
-func (l *ProblemLogic) RequestEvaluate(submission *models.Submission) error {
-	// load problem
-	problem, err := l.Get(submission.ProblemId)
-	if err != nil {
-		return err
+func (l *ProblemLogic) updateProblem(p *models.Problem, tc *[]models.TestCase) (interface{}, error) {
+	filter := bson.D{{Key: "_id", Value: p.ID}}
+
+	update := bson.D{
+		{Key: "$set", Value: bson.D{
+			{Key: "title", Value: p.Title},
+			{Key: "content", Value: p.Content},
+			{Key: "difficulty", Value: p.Difficulty},
+		}},
 	}
 
-	tokens := make([]string, 0)
+	_, err := l.pdb.updateOne("problem", filter, update)
 
-	for _, testcase := range problem.TestCases {
-		judgeSubmitionRequestByte, err := json.Marshal(&models.JudgeSubmissionRequest{
-			SourceCode:   submission.Source,
-			LanguageId:   submission.LanguageId,
-			Stdin:        testcase.Input,
-			CpuTimeLimit: testcase.TimeLimit,
-			MemoryLimit:  testcase.MemoryLimit,
-		})
+	if err != nil {
+		return nil, err
+	}
 
-		if err != nil {
-			return err
-		}
+	if tc != nil {
+		for _, t := range *tc {
+			filter := bson.D{{Key: "_id", Value: t.ID}}
 
-		res, err := http.Post(l.config.Judge0+"/submissions/", "application/json", bytes.NewBuffer(judgeSubmitionRequestByte))
+			update := bson.D{
+				{Key: "$set", Value: bson.D{
+					{Key: "input", Value: t.Input},
+					{Key: "expected_out", Value: t.ExpectedOutput},
+					{Key: "memory_limit", Value: t.MemoryLimit},
+					{Key: "time_limit", Value: t.TimeLimit},
+					{Key: "score", Value: t.Score},
+					{Key: "allow_view_on_faied", Value: t.ViewOnFailure},
+					{Key: "problem_id", Value: p.ID},
+				}},
+			}
 
-		// println(res.StatusCode)
-		if err != nil {
-			return err
-		}
+			_, err := l.pdb.updateOne("testcase", filter, update)
 
-		if res.StatusCode != http.StatusCreated {
-			// print body
-			body, err := ioutil.ReadAll(res.Body)
 			if err != nil {
-				return err
+				return nil, err
 			}
-
-			return errors.New(string(body))
 		}
-
-		defer res.Body.Close()
-		// parse response to judgeSubmissionResponse
-		judgeSubmissionResponse := &models.JudgeSubmissionAsyncResponse{}
-		if err := json.NewDecoder(res.Body).Decode(judgeSubmissionResponse); err != nil {
-			return err
-		}
-
-		// println(judgeSubmissionResponse.Token)
-		tokens = append(tokens, judgeSubmissionResponse.Token)
 	}
-	currentTime := time.Now().UnixMilli()
-	// save tokens to firestore
-	l.db.Collection("submissions").Add(context.Background(), map[string]interface{}{
-		"problem_id":  submission.ProblemId,
-		"user_id":     submission.UserId,
-		"tokens":      tokens,
-		"time":        currentTime,
-		"evaluated":   false,
-		"source":      submission.Source,
-		"language_id": submission.LanguageId,
-	})
-	return nil
+
+	result := &struct {
+		Message string `json:"message"`
+		ID      string `json:"id"`
+	}{
+		Message: "successfully updated problem ",
+		ID:      p.ID.Hex(),
+	}
+
+	return result, nil
 }
 
-func (l *ProblemLogic) Evaluate(submissionId string) error {
-	// get submission from firestore
-	docRef := l.db.Collection("submissions").Doc(submissionId)
-	doc, err := docRef.Get(context.Background())
+func (l *ProblemLogic) deleteProblem(pid string) (interface{}, error) {
+	id, err := primitive.ObjectIDFromHex(pid)
+
 	if err != nil {
-		return err
+		return nil, err
 	}
 
-	// parse data to submission
-	waitingSubmission := &models.WaitingSubmission{}
-	waitingSubmissionData, _ := json.Marshal(doc.Data())
+	filter := bson.D{{Key: "_id", Value: id}}
 
-	// parse to waitingSubmission
-	if err := json.Unmarshal(waitingSubmissionData, waitingSubmission); err != nil {
-		return err
-	}
+	_, err = l.pdb.deleteOne("problem", filter)
 
-	// get problem from firestore
-	problem, err := l.Get(waitingSubmission.ProblemId)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
-	//process
-	totalScore := 0
-	actualScore := 0
-	totalTime := float64(0)
-	totalMemory := float64(0)
-	testResults := make([]models.TestcaseResult, 0)
+	filter = bson.D{{Key: "problem_id", Value: id}}
 
-	for i, testcase := range problem.TestCases {
-		totalScore += testcase.Score
-		testResult := &models.TestcaseResult{}
+	_, err = l.pdb.delete("testcase", filter)
 
-		// get judgeSubmissionResponse
-		res, err := http.Get(l.config.Judge0 + "/submissions/" + waitingSubmission.Tokens[i])
-		if res.StatusCode != http.StatusOK {
-			// response body
-			body, err := ioutil.ReadAll(res.Body)
-			if err != nil {
-				fmt.Printf("bdfbfef %+v", err.Error())
-				return err
-			}
-			return errors.New("HELLO===" + string(body))
-		}
-
-		if err != nil {
-			return err
-		}
-
-		defer res.Body.Close()
-
-		// parse response to judgeSubmissionResponse
-		judgeSubmissionResponse := &models.JudgeSubmissionResponse{}
-
-		// unmarshal response to judgeSubmissionResponse
-		resData, _ := ioutil.ReadAll(res.Body)
-
-		if err := json.Unmarshal(resData, judgeSubmissionResponse); err != nil {
-			return err
-		}
-
-		parsedTime, _ := strconv.ParseFloat(judgeSubmissionResponse.Time, 64)
-		parseMemory := int(judgeSubmissionResponse.Memory)
-
-		expectedOutput := strings.TrimSpace(testcase.ExpectedOutput)
-		actualOutput := strings.TrimSpace(judgeSubmissionResponse.Stdout)
-		errOutput := strings.TrimSpace(judgeSubmissionResponse.Stderr)
-		messageOutput := strings.TrimSpace(judgeSubmissionResponse.Message)
-
-		totalTime += parsedTime
-		totalMemory += float64(judgeSubmissionResponse.Memory)
-
-		if errOutput == "" {
-			testResult.Output = actualOutput
-		}
-
-		testResult.Stderr = errOutput
-
-		if expectedOutput == actualOutput {
-			actualScore += testcase.Score
-
-			testResult.Message = "PASS"
-			testResult.Input = testcase.Input
-			testResult.ExpectedOutput = testcase.ExpectedOutput
-		} else {
-			if parseMemory >= testcase.MemoryLimit {
-				testResult.Message = "Memory Limit Exceeded"
-			} else if messageOutput != "" {
-				testResult.Message = messageOutput
-			} else {
-				testResult.Message = "FAIL"
-			}
-
-			if testcase.ViewOnFailure {
-				testResult.Input = testcase.Input
-				testResult.ExpectedOutput = testcase.ExpectedOutput
-			}
-		}
-
-		testResults = append(testResults, *testResult)
+	if err != nil {
+		return nil, err
 	}
 
-	// save result to firestore
-	_, err = l.db.Collection("submissions").Doc(submissionId).Set(context.Background(), map[string]interface{}{
-		"problem_id":    waitingSubmission.ProblemId,
-		"tokens":        waitingSubmission.Tokens,
-		"score":         actualScore,
-		"total_score":   totalScore,
-		"total_time":    totalTime,
-		"total_memory":  totalMemory,
-		"testcases":     testResults,
-		"evaluated":     true,
-		"submission_id": submissionId,
-		"user_id":       waitingSubmission.UserId,
-		"language_id":   waitingSubmission.LanguageId,
-		"source":        waitingSubmission.Source,
-		"time":          waitingSubmission.Time,
-	})
+	result := &struct {
+		Message string `json:"message"`
+		ID      string `json:"id"`
+	}{
+		Message: "successfully deleted problem",
+		ID:      pid,
+	}
+
+	return result, nil
+}
+
+// high level
+func (handler *ProblemHandler) GetAllProblem(c echo.Context) error {
+	body := &struct {
+		Page  int64  `json:"page"`
+		Limit int64  `json:"limit"`
+		UID   string `json:"uid"`
+	}{}
+
+	if err := c.Bind(body); err != nil {
+		return echo.NewHTTPError(400, err.Error())
+	}
+
+	page := body.Page
+	limit := body.Limit
+	uid := body.UID
+
+	var result interface{}
+	var err error
+
+	if page == 0 {
+		page = 1
+	}
+
+	if limit == 0 {
+		limit = MaxProblemPerUser
+	}
+
+	if uid == "" {
+		result, err = handler.pl.getAllProblemWithPaginate(page, limit)
+	} else {
+		result, err = handler.pl.getAllProblemWithStatus(page, limit)
+	}
+
+	if err != nil {
+		return echo.NewHTTPError(500, err.Error())
+	}
+
+	return c.JSON(200, result)
+}
+
+func (handler *ProblemHandler) GetProblem(c echo.Context) error {
+	id := c.Param("id")
+
+	result, err := handler.pl.getProblem(id)
 
 	if err != nil {
 		return err
 	}
 
-	return nil
+	return c.JSON(200, result)
+}
+
+func (handler *ProblemHandler) CreateProblem(c echo.Context) error {
+	body := &struct {
+		models.Problem
+		TestCase *[]models.TestCase `json:"testcase"`
+	}{}
+
+	if err := c.Bind(body); err != nil {
+		return echo.NewHTTPError(400, err.Error())
+	}
+
+	problem := body.Problem
+	testCase := body.TestCase
+
+	result, err := handler.pl.createProblem(&problem, testCase)
+
+	if err != nil {
+		return echo.NewHTTPError(500, err.Error())
+	}
+
+	return c.JSON(200, result)
+}
+
+func (handler *ProblemHandler) UpdateProblem(c echo.Context) error {
+	body := &struct {
+		models.Problem
+		TestCase *[]models.TestCase `json:"testcase"`
+	}{}
+
+	if err := c.Bind(body); err != nil {
+		return echo.NewHTTPError(400, err.Error())
+	}
+
+	problem := body.Problem
+	testCase := body.TestCase
+
+	result, err := handler.pl.updateProblem(&problem, testCase)
+
+	if err != nil {
+		return echo.NewHTTPError(500, err.Error())
+	}
+
+	return c.JSON(200, result)
+}
+
+func (handler *ProblemHandler) DeleteProblem(c echo.Context) error {
+	id := c.Param("id")
+
+	result, err := handler.pl.deleteProblem(id)
+
+	if err != nil {
+		return echo.NewHTTPError(500, err.Error())
+	}
+
+	return c.JSON(200, result)
 }
