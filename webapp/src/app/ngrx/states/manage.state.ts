@@ -1,5 +1,4 @@
 import { Manage } from "src/models/manage.model";
-
 export interface ManageState
 {
     manages: Manage[];
