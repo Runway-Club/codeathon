@@ -6,13 +6,9 @@ import {
 } from '@materia-ui/ngx-monaco-editor';
 import { filter, take } from 'rxjs';
 import { AuthService } from 'src/app/services/auth.service';
-import { Problem } from 'src/models/problem.model';
 
-interface CodeTab {
-  id: number;
-  languageId: number;
-  code: string;
-}
+import { Problem } from 'src/models/problem.model';
+import { CodeTab, DefaultCodes, CodeMap } from 'src/models/code.model';
 
 @Component({
   selector: 'app-editor',
@@ -34,6 +30,7 @@ export class EditorComponent implements OnInit {
   codeTabs: CodeTab[] = []
   currentCodeTab?: CodeTab;
 
+  editor?: any;
   editorOptions: MonacoEditorConstructionOptions = {
     theme: 'codeathon-theme',
     language: 'python',
@@ -53,6 +50,10 @@ export class EditorComponent implements OnInit {
     this.initializer();
   }
 
+  editorInit(editor: any) {
+    this.editor = editor;
+  }
+
   initializer() {
     this.createTab();
   }
@@ -69,18 +70,56 @@ export class EditorComponent implements OnInit {
   createTab() {
     let newTab: CodeTab = {
       id: Date.now(),
-      languageId: 71,
-      code: 'def main():\n    print("Hello World")'
+      currentLanguageID: 71,
+      codes: DefaultCodes,
     }
 
     this.codeTabs.push(newTab);
     this.currentCodeTab = newTab;
+    this.currentCodeTab.currentCode = this.getCode(this.currentCodeTab);
+  }
+
+  getCode(currentCodeTab: CodeTab) {
+    const { currentLanguageID: languageID, codes } = currentCodeTab;
+
+    let tempCode = codes.find(element => element.languageID === languageID);
+
+    if (tempCode) {
+      return tempCode.code;
+    }
+
+    return "";
+  }
+
+  updateCode(currentCodeTab: CodeTab) {
+    const { currentLanguageID: languageID, currentCode, codes } = currentCodeTab;
+
+    let tempCode = codes.find(element => element.languageID === languageID);
+
+    if (tempCode) {
+      tempCode.code = currentCode || "";
+    }
+  }
+
+  handleChangeLanguage(languageID: number) {
+    if (!this.currentCodeTab) return;
+
+    this.updateCode(this.currentCodeTab);
+
+    this.currentCodeTab.currentLanguageID = languageID;
+    this.currentCodeTab.currentCode = this.getCode(this.currentCodeTab);
+
+    let newLanguage = CodeMap[languageID as keyof typeof CodeMap];
+    console.log(newLanguage)
+    monaco.editor.setModelLanguage(this.editor.getModel(), newLanguage);
   }
 
   handleChangeTab(id: number) {
     let tempTab = this.codeTabs.find(element => element.id === id);
 
     if (tempTab) {
+      this.updateCode(this.currentCodeTab!);
+      this.editor.updateOptions(this.editorOptions);
       this.currentCodeTab = tempTab;
     }
   }
@@ -106,21 +145,24 @@ export class EditorComponent implements OnInit {
   }
 
   createSubmission() {
+    const { currentLanguageID, currentCode, codes } = this.currentCodeTab!;
+    const { uid } = this.user!;
+    const { id, testcases } = this.problem!;
+
     return {
-      problem_id: this.problem?.id || '',
-      code: this.currentCodeTab?.code || '',
-      language_id: this.currentCodeTab?.languageId || 71,
-      user_id: this.user?.uid || '',
-      source: this.currentCodeTab?.code || '',
+      problem_id: id || '',
+      code: currentCode || '',
+      language_id: currentLanguageID || 71,
+      user_id: uid || '',
+      source: currentCode || '',
       evaluated: false,
       score: 0,
       total_memory: 0,
       total_time: 0,
       total_score: 0,
-      testcases: this.problem?.testcases || [],
+      testcases: testcases || [],
       time: 0
     }
   }
-
 
 }

@@ -5,7 +5,7 @@ export interface Problem {
     description: string;
     content: string;
     tags: string[];
-    difficulty: number;
+    difficulty: string;
 
     time_limit: number;
     memory_limit: number;

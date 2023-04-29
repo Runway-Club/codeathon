@@ -20,7 +20,10 @@ export class ProblemsetComponent implements OnInit {
   ) { }
 
   selectedDifficulty: string = 'All';
-  selectedStatus: string = 'All';
+
+  sort: any = undefined;
+  difficulty: string | undefined = undefined;
+  status: string | undefined = undefined;
 
   problems$ = this.store.select('problem').pipe(map((problemState) => problemState.problems))
   loading$ = this.store.select('problem').pipe(map((problemState) => problemState.isLoading))
@@ -28,6 +31,25 @@ export class ProblemsetComponent implements OnInit {
 
   ngOnInit(): void {
     this.store.dispatch(ProblemActions.getProblems({ previousDocument: this.previousDocument }));
+  }
+
+  handleDifficultyChange(difficulty: string) {
+    this.difficulty = difficulty;
+    this.getProblems();
+  }
+
+  handleSortChange(sort: any) {
+    this.sort = sort;
+    this.getProblems();
+  }
+
+  getProblems() {
+    this.store.dispatch(ProblemActions.getProblems({
+      previousDocument: this.previousDocument,
+      difficulty: this.difficulty,
+      status: this.status,
+      sort: this.sort
+    }));
   }
 
   viewProblem(problem: Problem) {

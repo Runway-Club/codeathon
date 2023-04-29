@@ -2,8 +2,13 @@ import { createAction, props } from "@ngrx/store"
 import { Problem } from "src/models/problem.model"
 import { DocumentSnapshot } from "@angular/fire/firestore"
 
+type Sort = {
+    field: string,
+    direction: "desc" | "asc"
+}
+
 export const ProblemActions = {
-    getProblems: createAction('[Problem] Get Problems', props<{ previousDocument: DocumentSnapshot | undefined }>()),
+    getProblems: createAction('[Problem] Get Problems', props<{ previousDocument: DocumentSnapshot | undefined, difficulty?: string, status?: string, sort?: Sort }>()),
     getProblemsSuccess: createAction('[Problem] Get Problems Success', props<{ problems: Problem[] }>()),
     getProblemsFailure: createAction('[Problem] Get Problems Failure', props<{ error: string }>()),
 

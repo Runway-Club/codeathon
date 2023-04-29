@@ -1,51 +1,22 @@
 package controllers
 
 import (
-	"net/http"
+	"go.mongodb.org/mongo-driver/mongo"
 
-	"github.com/gin-gonic/gin"
+	"github.com/labstack/echo/v4"
 	"runwayclub.dev/codeathon/v2/core"
 	"runwayclub.dev/codeathon/v2/logic"
 )
 
+func NewProblemController(endpoint string, s *core.Server, m *mongo.Client) *echo.Group {
+	api := s.Echo.Group(endpoint)
+	handler := logic.NewProblemHandler(m)
 
-func DisplayProblemController(s *core.Server){
-	router := gin.Default()
-	api := router.Group("/api")
-	problemLogic:= logic.NewProblemLogic(s)
-	{
-		v1:= api.Group("/v1")
-		{
-			v1.GET("problem/:id", func(context *gin.Context){
-				id := context.Param("id");
-				problem, err := problemLogic.Get(id)
-				if err != nil {
-					context.String(http.StatusInternalServerError, err.Error())
-				}
-				context.JSON(http.StatusOK,problem);
-			})
-		}
-	}
-	router.Run(":8080");
+	api.GET("/", handler.GetAllProblem)
+	api.GET("/:id", handler.GetProblem)
+	api.POST("/", handler.CreateProblem)
+	api.PUT("/", handler.UpdateProblem)
+	api.DELETE("/:id", handler.DeleteProblem)
+
+	return api
 }
-
-func GetUserProblemController(s *core.Server){
-	router := gin.Default()
-	api := router.Group("/api")
-	problemLogic:= logic.NewProblemLogic(s)
-	{
-		v1:= api.Group("/v1")
-		{
-			v1.GET("user/:id", func(context *gin.Context){
-				userId := context.Param("id");
-				problem, err := problemLogic.GetUserProblem(userId)
-				if err != nil {
-					context.String(http.StatusInternalServerError, err.Error())
-				}
-				context.JSON(http.StatusOK,problem);
-			})
-		}
-	}
-	router.Run(":8080");
-}
-
