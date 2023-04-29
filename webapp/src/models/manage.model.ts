@@ -1,23 +1,23 @@
-export interface Problem {
+export interface Manage 
+{
     id?: string;
     title: string;
-    description: string;
     content: string;
     tags: string[];
     difficulty: number;
+    status: string;
 
     time_limit: number;
     memory_limit: number;
 
-    samples: ProblemSample[];
+    samples: ManageSample[];
     testcases: TestCase[];
     createdAt: number;
 
     score: number;
-
 }
-
-export interface TestCase {
+export interface TestCase 
+{
     input: string;
     expected_output: string;
 
@@ -28,8 +28,8 @@ export interface TestCase {
     allow_view_on_failed: boolean;
 }
 
-export interface ProblemSample {
+export interface ManageSample 
+{
     input: string;
     output: string;
-
 }

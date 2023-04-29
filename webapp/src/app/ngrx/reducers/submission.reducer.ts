@@ -3,7 +3,8 @@ import { createReducer, on } from '@ngrx/store';
 import { SubmissionActions } from '../actions/submission.action';
 import { SubmissionState } from '../states/submission.state';
 
-export const initialState: SubmissionState = {
+export const initialState: SubmissionState = 
+{
     submissions: [],
     submission: undefined,
     isLoading: false,
@@ -11,6 +12,7 @@ export const initialState: SubmissionState = {
 };
 
 export const SubmissionReducer = createReducer(
+
     initialState,
     on(SubmissionActions.getSubmissions, state => ({ ...state, isLoading: true })),
     on(SubmissionActions.getSubmissionsSuccess, (state, { submissions }) => ({ ...state, submissions, isLoading: false })),
