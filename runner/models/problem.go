@@ -1,25 +1,24 @@
 package models
 
-type ProblemSample struct {
-	Input  string `json:"input"`
-	Output string `json:"output"`
-}
+import (
+	"go.mongodb.org/mongo-driver/bson/primitive"
+)
 
 type TestCase struct {
-	Input          string `json:"input"`
-	ExpectedOutput string `json:"expected_output"`
-	TimeLimit      int    `json:"time_limit"`
-	MemoryLimit    int    `json:"memory_limit"`
-	Score          int    `json:"score"`
-	ViewOnFailure  bool   `json:"allow_view_on_failed"`
+	ID             primitive.ObjectID `json:"_id,omitempty" bson:"_id,omitempty"`
+	Input          string             `json:"input" bson:"input"`
+	ExpectedOutput string             `json:"expected_output" bson:"expected_output"`
+	TimeLimit      int32              `json:"time_limit" bson:"time_limit"`
+	MemoryLimit    int32              `json:"memory_limit" bson:"memory_limit"`
+	Score          int32              `json:"score" bson:"score"`
+	ViewOnFailure  bool               `json:"allow_view_on_failed" bson:"allow_view_on_failed"`
+	ProblemID      primitive.ObjectID `json:"problem_id,omitempty" bson:"problem_id,omitempty"`
 }
 
 type Problem struct {
-	Id        int             `json:"id"`
-	Title     string          `json:"title"`
-	Tags      []string        `json:"tags"`
-	Content   string          `json:"content"`
-	Samples   []ProblemSample `json:"samples"`
-	TestCases []TestCase      `json:"testcases"`
-	UserId    string          `json:"userId"`
+	ID         primitive.ObjectID `json:"_id,omitempty" bson:"_id,omitempty"`
+	Title      string             `json:"title" bson:"title"`
+	Content    string             `json:"content" bson:"content"`
+	Difficulty string             `json:"difficulty" bson:"difficulty"`
+	UID        string             `json:"uid" bson:"uid"`
 }

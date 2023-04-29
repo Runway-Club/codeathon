@@ -18,7 +18,7 @@ export class ProblemEffects {
     getProblems$ = createEffect(() => this.actions$.pipe(
         ofType(ProblemActions.getProblems),
         switchMap((action) => {
-            return this.problemService.getProblems(action.previousDocument)
+            return this.problemService.getProblems(action.previousDocument, action.difficulty, action.status, action.sort)
         }),
         map((problems: Problem[]) => {
             return ProblemActions.getProblemsSuccess({ problems })
