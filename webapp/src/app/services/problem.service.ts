@@ -48,7 +48,8 @@ export class ProblemService {
     return problems;
   }
 
-  async getProblem(id: string): Promise<Problem> {
+  async getProblem(id: string): Promise<Problem> 
+  {
     const documentReference = doc(this.database, 'problems', id);
     const documentSnapshot = await getDoc(documentReference);
 
@@ -56,20 +57,22 @@ export class ProblemService {
       id: documentSnapshot.id,
       ...<Problem>documentSnapshot.data()
     };
-
   }
 
-  async createProblem(problem: Problem): Promise<string> {
+  async createProblem(problem: Problem): Promise<string> 
+  {
     const documentReference = await addDoc(collection(this.database, 'problems'), problem);
     return documentReference.id;
   }
 
-  async updateProblem(problem: Problem): Promise<void> {
+  async updateProblem(problem: Problem): Promise<void> 
+  {
     const documentReference = doc(this.database, 'problems', problem.id!);
     await setDoc(documentReference, problem);
   }
 
-  async deleteProblem(id: string): Promise<void> {
+  async deleteProblem(id: string): Promise<void> 
+  {
     const documentReference = doc(this.database, 'problems', id);
     await deleteDoc(documentReference);
   }
