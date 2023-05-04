@@ -5,23 +5,25 @@ import (
 	"fmt"
 	"io/ioutil"
 
-	firebase "firebase.google.com/go"
 	"github.com/labstack/echo/v4"
 )
 
 type Server struct {
 	Echo   *echo.Echo
 	Config *Config
-	App    *firebase.App
 }
 
-func NewServer(configFile string, app *firebase.App) (*Server, error) {
+func NewServer(configFile string) (*Server, error) {
 	configRaw, err := ioutil.ReadFile(configFile)
+
 	if err != nil {
 		panic(err)
 	}
+
 	config := &Config{}
+
 	err = json.Unmarshal(configRaw, config)
+
 	if err != nil {
 		panic(err)
 	}
@@ -44,7 +46,6 @@ func NewServer(configFile string, app *firebase.App) (*Server, error) {
 	return &Server{
 		Echo:   e,
 		Config: config,
-		App:    app,
 	}, nil
 }
 

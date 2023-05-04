@@ -1,7 +1,10 @@
 package models
 
 import (
+	"context"
+
 	"go.mongodb.org/mongo-driver/bson/primitive"
+	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 type Submission struct {
@@ -16,10 +19,18 @@ type Submission struct {
 }
 
 type SubmissionResult struct {
-	Submission
-	TotalScore  int32   `json:"total_score" bson:"totalScore"`
-	TotalTime   float64 `json:"total_time" bson:"totalTime"`
-	TotalMemory int32   `json:"total_memory" bson:"totalMemory"`
+	ID         primitive.ObjectID `json:"_id,omitempty" bson:"_id,omitempty"`
+	LanguageID int                `json:"language_id" bson:"languageID"`
+	Code       string             `json:"code" bson:"code"`
+	Evaluated  bool               `json:"evaluated" bson:"evaluated"`
+	Score      int32              `json:"score" bson:"score"`
+	CreateAt   int64              `json:"create_at" bson:"createAt"`
+	ProblemID  primitive.ObjectID `json:"problem_id" bson:"problemID"`
+	UID        string             `json:"uid" bson:"uid"`
+
+	TotalScore  int32   `json:"total_score" bson:"total_score"`
+	TotalTime   float64 `json:"time" bson:"time"`
+	TotalMemory int32   `json:"memory" bson:"memory"`
 }
 
 type JudgeStatus struct {
@@ -56,4 +67,32 @@ type JudgeSubmissionResponse struct {
 	Message       string      `json:"message"`
 	Status        JudgeStatus `json:"status" bson:"status"`
 	CompileOutput string      `json:"compile_output"`
+}
+
+type JudgeRequestChannel struct {
+	Submission *SubmissionResult `json:"submission"`
+	TestCase   *TestCase         `json:"testcase"`
+}
+
+type JudgeResponseChannel struct {
+	JudgeSubmissionResponse *JudgeSubmissionResponse `json:"judge_submission_response"`
+	TestCase                *TestCase                `json:"testcase"`
+}
+
+type SubmissionService interface {
+	GetSubmissionByUID(c context.Context, uid string, pid string) ([]SubmissionResult, error)
+	GetSubmissionByID(c context.Context, id string) (SubmissionResult, error)
+	CreateSubmission(c context.Context, submission *Submission) (primitive.ObjectID, error)
+	UpdateSubmissionResult(c context.Context, submission *SubmissionResult) error
+}
+
+type JudgeCEService interface {
+	RequestEvaluation(c context.Context, submission *SubmissionResult) error
+}
+
+type SubmissionRepository interface {
+	Fetch(c context.Context, collection string, filter primitive.D, option *options.FindOptions) ([]SubmissionResult, error)
+	GetByID(c context.Context, collection string, filter primitive.D) (SubmissionResult, error)
+	InsertOne(c context.Context, collection string, document *Submission) (primitive.ObjectID, error)
+	UpdateOne(c context.Context, collection string, filter primitive.D, update primitive.D) error
 }
