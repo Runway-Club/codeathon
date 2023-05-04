@@ -12,14 +12,11 @@ import {
   doc,
   limit,
   query,
-  Query,
   startAt,
   where,
-  DocumentSnapshot,
-  orderBy,
-  DocumentData,
-  OrderByDirection
+  DocumentSnapshot
 } from "@angular/fire/firestore";
+import { Observable } from 'rxjs';
 
 
 @Injectable({
@@ -29,41 +26,15 @@ import {
 export class ProblemService {
   constructor(private database: Firestore) { }
 
-  async getProblems(
-    previousDocument?: DocumentSnapshot,
-    difficulty?: string,
-    status?: string,
-    sort?: {
-      field: string,
-      direction: "desc" | "asc"
-    }
-  ): Promise<Problem[]> {
-    const limitation = 20;
-
+  async getProblems(previousDocument: DocumentSnapshot | undefined): Promise<Problem[]> {
     let problems: Problem[] = [];
+    let q: any;
 
-    let q: Query<DocumentData> = query(
-      collection(this.database, 'problems'),
-      limit(limitation)
-    );
-
-    if (previousDocument) {
-      q = query(q, startAt(previousDocument));
+    if (previousDocument == undefined) {
+      q = query(collection(this.database, 'problems'), limit(20));
+    } else {
+      q = query(collection(this.database, 'problems'), startAt(previousDocument), limit(20));
     }
-
-    if (difficulty) {
-      q = query(q, where('difficulty', "==", difficulty));
-    }
-
-    if (status) {
-      q = query(q, where('status', "==", status));
-    }
-
-    if (sort) {
-      const { field, direction } = sort;
-      q = query(q, orderBy(field, direction));
-    }
-
 
     const querySnapshot = await getDocs(q);
 
@@ -77,7 +48,8 @@ export class ProblemService {
     return problems;
   }
 
-  async getProblem(id: string): Promise<Problem> {
+  async getProblem(id: string): Promise<Problem> 
+  {
     const documentReference = doc(this.database, 'problems', id);
     const documentSnapshot = await getDoc(documentReference);
 
@@ -85,22 +57,25 @@ export class ProblemService {
       id: documentSnapshot.id,
       ...<Problem>documentSnapshot.data()
     };
-
   }
 
-  async createProblem(problem: Problem): Promise<string> {
+  async createProblem(problem: Problem): Promise<string> 
+  {
     const documentReference = await addDoc(collection(this.database, 'problems'), problem);
     return documentReference.id;
   }
 
-  async updateProblem(problem: Problem): Promise<void> {
+  async updateProblem(problem: Problem): Promise<void> 
+  {
     const documentReference = doc(this.database, 'problems', problem.id!);
     await setDoc(documentReference, problem);
   }
 
-  async deleteProblem(id: string): Promise<void> {
+  async deleteProblem(id: string): Promise<void> 
+  {
     const documentReference = doc(this.database, 'problems', id);
     await deleteDoc(documentReference);
   }
 
 }
+

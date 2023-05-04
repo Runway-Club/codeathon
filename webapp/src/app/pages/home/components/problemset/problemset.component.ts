@@ -1,3 +1,4 @@
+
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
@@ -20,10 +21,7 @@ export class ProblemsetComponent implements OnInit {
   ) { }
 
   selectedDifficulty: string = 'All';
-
-  sort: any = undefined;
-  difficulty: string | undefined = undefined;
-  status: string | undefined = undefined;
+  selectedStatus: string = 'All';
 
   problems$ = this.store.select('problem').pipe(map((problemState) => problemState.problems))
   loading$ = this.store.select('problem').pipe(map((problemState) => problemState.isLoading))
@@ -33,28 +31,10 @@ export class ProblemsetComponent implements OnInit {
     this.store.dispatch(ProblemActions.getProblems({ previousDocument: this.previousDocument }));
   }
 
-  handleDifficultyChange(difficulty: string) {
-    this.difficulty = difficulty;
-    this.getProblems();
-  }
-
-  handleSortChange(sort: any) {
-    this.sort = sort;
-    this.getProblems();
-  }
-
-  getProblems() {
-    this.store.dispatch(ProblemActions.getProblems({
-      previousDocument: this.previousDocument,
-      difficulty: this.difficulty,
-      status: this.status,
-      sort: this.sort
-    }));
-  }
-
-  viewProblem(problem: Problem) {
-    // console.log(problem);
+  viewProblem(problem: Problem) 
+  {
     this.router.navigate(['/problem', problem.id]);
   }
 
 }
+

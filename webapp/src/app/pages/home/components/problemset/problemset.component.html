@@ -1,16 +1,16 @@
+
 <app-spinkit *ngIf="(loading$ | async); else content"></app-spinkit>
 <ng-template #content>
     <div class="container">
         <nb-card class="card">
             <nb-card-body class="select-container">
                 <div class="select">
-                    <nb-select placeholder="Select Difficulty" [(selected)]="selectedDifficulty"
-                        (selectedChange)="handleDifficultyChange($event)" shape="round">
-                        <nb-option value="easy">Easy</nb-option>
-                        <nb-option value="medium">Medium</nb-option>
-                        <nb-option value="hard">Hard</nb-option>
+                    <nb-select placeholder="Select Difficulty" [(selected)]="selectedDifficulty" shape="round">
+                        <nb-option value="1">Easy</nb-option>
+                        <nb-option value="2">Medium</nb-option>
+                        <nb-option value="3">Hard</nb-option>
                     </nb-select>
-                    <nb-select placeholder="Select Status" shape="round">
+                    <nb-select placeholder="Select Status" [(selected)]="selectedStatus" shape="round">
                         <nb-option value="1">To do</nb-option>
                         <nb-option value="2">Solved</nb-option>
                         <nb-option value="3">Attempted</nb-option>
@@ -26,7 +26,7 @@
             <nb-card-header style="padding: 16px;" class="problem-header">
                 <div class="problem">
                     <span class="status">Status</span>
-                    <span class="title">Title<span></span></span>
+                    <span class="title">Title</span>
                     <span class="difficulty">Difficulty</span>
                 </div>
             </nb-card-header>
@@ -40,7 +40,7 @@
                         <a (click)="viewProblem(problem)">{{problem.title}}</a>
                     </div>
                     <div class="difficulty">
-                        <span>{{ (problem.difficulty | titlecase)}}</span>
+                        <span>{{ problem.difficulty }}</span>
                     </div>
                 </nb-list-item>
             </nb-list>

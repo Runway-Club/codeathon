@@ -8,11 +8,10 @@ import { SharedNebularModule } from 'src/app/modules/nebular/nebular.module';
 import { ProblemsetComponent } from './components/problemset/problemset.component';
 import { SharedModule } from 'src/app/modules/shared.module';
 
-
 @NgModule({
   declarations: [
     HomeComponent,
-    ProblemsetComponent,
+    ProblemsetComponent
   ],
   imports: [
     CommonModule,
