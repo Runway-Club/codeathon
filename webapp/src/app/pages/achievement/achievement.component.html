@@ -1,0 +1,33 @@
+<nb-layout>
+  <nb-layout-header fixed>
+    <app-navbar [user]="userStorage" style="width: 100%"></app-navbar>
+  </nb-layout-header>
+  <nb-layout-column class="achievement-body">
+    <div class="achievement-left">
+      <span class="achievement-left-title">Your Achievement</span>
+      <div class="achievement-left-main-content">
+        <app-content></app-content>
+      </div>
+    </div>
+    <div class="achievement-right">
+      <div class="achievement-right-ranking">
+        <div class="achievement-right-total-score">
+          <div>
+            <nb-icon
+              icon="award-outline"
+              class="achievement-right-total-score-icon"
+            ></nb-icon>
+          </div>
+          <div class="achievement-right-total-score-child">
+            <span><strong>15,737</strong></span>
+            <span>Total Score</span>
+          </div>
+        </div>
+        <app-ranking></app-ranking>
+      </div>
+      <div class="achievement-right-calendar">
+        <app-calendar></app-calendar>
+      </div>
+    </div>
+  </nb-layout-column>
+</nb-layout>

@@ -1,0 +1,24 @@
+<nb-card class="card">
+  <nb-card-header>
+    <p class="title">{{ title }}</p>
+    <nb-tag-list *ngIf="tagArray.length != 0">
+      <nb-tag
+        *ngFor="let tag of tagArray"
+        status="basic"
+        appearance="filled"
+        [text]="tag"
+      ></nb-tag>
+    </nb-tag-list>
+  </nb-card-header>
+  <nb-card-body>
+    {{ description }}
+  </nb-card-body>
+  <nb-card-body>
+    <hr />
+    <p><strong>Problem statement:</strong></p>
+    <markdown [data]="problemStatement"></markdown>
+  </nb-card-body>
+</nb-card>
+<button nbButton status="primary" id="submit" class="submit">
+  Create problem
+</button>

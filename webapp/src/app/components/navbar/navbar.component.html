@@ -1,12 +1,21 @@
 <div class="container">
-    <span class="logo" [routerLink]="['/home']">CODEATHON</span>
-    <span class="anchors">
-        <a href="/home">Problems</a>
-        <a href="/about">About</a>
-    </span>
-    <span class="user">
-        <button class="profile" nbButton [nbContextMenu]="menuItems" shape="round">
-            <img *ngIf="user" [src]="user.photoURL" alt="user photo">
-        </button>
-    </span>
+  <span class="logo" [routerLink]="['/home']">CODEATHON</span>
+  <span class="anchors">
+    <a href="/home">Problems</a>
+    <a href="/community">Community</a>
+    <a href="/about">About</a>
+    <a href="/contactus">Contact Us</a>
+  </span>
+  <span class="user">
+    <button
+      class="profile"
+      #menu
+      nbButton
+      [nbContextMenu]="menuItems"
+      shape="round"
+    >
+      <img *ngIf="user" [src]="user.photoURL" alt="user photo" />
+    </button>
+    <span class="user-name" *ngIf="user">{{ user.displayName }}</span>
+  </span>
 </div>

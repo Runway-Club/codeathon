@@ -1,0 +1,47 @@
+.submit {
+  display: block;
+  padding: 15px;
+  box-sizing: border-box;
+  margin: 0 auto;
+  outline: none;
+  margin-top: 20px;
+}
+
+#submit {
+  background-color: #cccccc;
+  color: black;
+  border: none;
+  transition: 0.6s;
+}
+
+#submit:hover {
+  background-color: #0f9d58;
+  color: #ffffff;
+  transition: 0.6s;
+}
+
+.card {
+  width: 95%;
+  margin-top: 1em;
+  background-color: black;
+}
+
+.input-testcase {
+  margin: 5px;
+}
+
+.testcase-parent {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1em;
+}
+
+#markdown {
+  width: 200px;
+  height: 200px;
+}
+
+.title {
+  font-weight: bold;
+  font-size: 1.3rem;
+}
