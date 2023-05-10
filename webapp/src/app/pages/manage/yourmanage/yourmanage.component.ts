@@ -12,13 +12,12 @@ import { ProblemActions } from 'src/app/ngrx/actions/problems.action';
   templateUrl: './yourmanage.component.html',
   styleUrls: ['./yourmanage.component.scss']
 })
-export class YourmanageComponent implements OnInit 
-{
+export class YourmanageComponent implements OnInit {
   constructor
-  (
-    private store: Store<{ problem: ProblemState }>,
-    private router: Router
-  ) { }
+    (
+      private store: Store<{ problem: ProblemState }>,
+      private router: Router
+    ) { }
 
   selectedDifficulty: string = 'All';
   selectedStatus: string = 'All';
@@ -28,9 +27,9 @@ export class YourmanageComponent implements OnInit
   previousDocument: DocumentSnapshot | undefined = undefined;
 
   ngOnInit(): void {
-    this.store.dispatch(ProblemActions.getProblems({ previousDocument: this.previousDocument }));
+    this.store.dispatch(ProblemActions.getProblems({}));
   }
 
-  viewProblem(problem: Problem) { this.router.navigate(['/problem', problem.id]); }
+  viewProblem(problem: Problem) { this.router.navigate(['/problem', problem._id]); }
 
 }

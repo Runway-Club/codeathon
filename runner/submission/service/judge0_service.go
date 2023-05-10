@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"net/http"
 	"strconv"
@@ -109,10 +110,14 @@ func (js *judgeService) RequestEvaluation(c context.Context, submission *models.
 		return err
 	}
 
-	jReqChannel := make(chan *models.JudgeRequestChannel, len(tcs))
-	jResChannel := make(chan *models.JudgeResponseChannel, len(tcs))
+	ntc := len(tcs)
 
-	go js.judgeWorker(jReqChannel, jResChannel)
+	jReqChannel := make(chan *models.JudgeRequestChannel, ntc)
+	jResChannel := make(chan *models.JudgeResponseChannel, ntc)
+
+	for i := 1; i <= ntc; i++ {
+		go js.judgeWorker(i, jReqChannel, jResChannel)
+	}
 
 	for k := range tcs {
 		jur := &models.JudgeRequestChannel{
@@ -166,8 +171,9 @@ func (js *judgeService) RequestEvaluation(c context.Context, submission *models.
 	return nil
 }
 
-func (js *judgeService) judgeWorker(req <-chan *models.JudgeRequestChannel, res chan<- *models.JudgeResponseChannel) {
+func (js *judgeService) judgeWorker(id int, req <-chan *models.JudgeRequestChannel, res chan<- *models.JudgeResponseChannel) {
 	for jur := range req {
+		fmt.Println("Worker", id, "is evaluating testcase", jur.TestCase.ID)
 		judgeSubmissionRequest := &models.JudgeSubmissionRequest{
 			SourceCode:   jur.Submission.Code,
 			LanguageId:   jur.Submission.LanguageID,
@@ -188,8 +194,7 @@ func (js *judgeService) judgeWorker(req <-chan *models.JudgeRequestChannel, res 
 			TestCase:                jur.TestCase,
 		}
 
+		fmt.Println("Worker", id, "finished evaluating testcase", jur.TestCase.ID)
 		res <- judgeResponseChannel
 	}
-
-	close(res)
 }

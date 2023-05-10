@@ -1,14 +1,8 @@
 import { createAction, props } from "@ngrx/store"
-import { Problem } from "src/models/problem.model"
-import { DocumentSnapshot } from "@angular/fire/firestore"
-
-type Sort = {
-    field: string,
-    direction: "desc" | "asc"
-}
+import { Problem, Sort, ProblemSetPagination } from "src/models/problem.model"
 
 export const ProblemActions = {
-    getProblems: createAction('[Problem] Get Problems', props<{ previousDocument: DocumentSnapshot | undefined, difficulty?: string, status?: string, sort?: Sort }>()),
+    getProblems: createAction('[Problem] Get Problems', props<{ paginate?: ProblemSetPagination, sort?: Sort }>()),
     getProblemsSuccess: createAction('[Problem] Get Problems Success', props<{ problems: Problem[] }>()),
     getProblemsFailure: createAction('[Problem] Get Problems Failure', props<{ error: string }>()),
 

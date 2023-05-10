@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { Problem } from 'src/models/problem.model';
+import { ProblemService } from 'src/app/services/problem.service';
+import { Problem, TestCase } from 'src/models/problem.model';
 import { Submission } from 'src/models/submission';
 
 @Component({
@@ -8,13 +9,15 @@ import { Submission } from 'src/models/submission';
   styleUrls: ['./info.component.scss']
 })
 export class InfoComponent implements OnInit {
-
-  constructor() { }
+  constructor(private problemService: ProblemService) { }
 
   @Input() problem: Problem = {} as Problem;
   @Input() submissions?: Submission[] | null = [];
 
+  samples: TestCase[] = [];
+
   ngOnInit(): void {
+    this.getAllSample(this.problem._id);
   }
 
   checkSubmission = (submission: Submission): string => {
@@ -28,6 +31,14 @@ export class InfoComponent implements OnInit {
     }
 
     return result;
+  }
+
+  getAllSample = async (id: string | undefined) => {
+    if (id == undefined) {
+      return;
+    }
+    const samples = await this.problemService.getSamples(id);
+    this.samples = samples;
   }
 
 }

@@ -26,6 +26,7 @@ func NewProblemHandler(ep string, e *echo.Echo, ps models.ProblemService) {
 	api := e.Group(ep)
 
 	api.GET("/", handler.GetAllProblem)
+	api.GET("/count", handler.GetProblemQuantity)
 	api.GET("/:id", handler.GetProblem)
 	api.POST("/", handler.CreateProblem)
 	api.PUT("/", handler.UpdateProblem)
@@ -46,9 +47,14 @@ func (ph *ProblemHandler) GetAllProblem(c echo.Context) error {
 	limitS := c.QueryParam("limit")
 	limit, _ := strconv.ParseInt(limitS, 10, 64)
 
+	sortS := c.QueryParam("sort")
+	sortOrderS := c.QueryParam("order")
+
 	args := map[string]interface{}{
 		"page":  page,
 		"limit": limit,
+		"sort":  sortS,
+		"order": sortOrderS,
 		"uid":   body.UID,
 		"owner": body.Owner,
 	}
@@ -74,8 +80,56 @@ func (ph *ProblemHandler) GetProblem(c echo.Context) error {
 	return c.JSON(http.StatusOK, res)
 }
 
+func (ph *ProblemHandler) GetProblemQuantity(c echo.Context) error {
+	body := &struct {
+		Owner string `json:"owner"`
+	}{}
+
+	c.Bind(body)
+
+	args := map[string]interface{}{
+		"owner": body.Owner,
+	}
+
+	res, err := ph.PService.Count(c.Request().Context(), args)
+
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, ResponseError{Message: err.Error()})
+	}
+
+	return c.JSON(http.StatusOK, res)
+}
+
 func (ph *ProblemHandler) CreateProblem(c echo.Context) error {
-	return nil
+	problem := &models.Problem{}
+
+	if err := c.Bind(problem); err != nil {
+		return c.JSON(http.StatusBadRequest, ResponseError{Message: err.Error()})
+	}
+
+	if problem.Title == "" {
+		return c.JSON(http.StatusBadRequest, ResponseError{Message: "title cannot be empty"})
+	}
+
+	if problem.Content == "" {
+		return c.JSON(http.StatusBadRequest, ResponseError{Message: "content cannot be empty"})
+	}
+
+	if problem.Difficulty == "" {
+		return c.JSON(http.StatusBadRequest, ResponseError{Message: "difficulty cannot be empty"})
+	}
+
+	if problem.UID == "" {
+		return c.JSON(http.StatusBadRequest, ResponseError{Message: "uid cannot be empty"})
+	}
+
+	err := ph.PService.Store(c.Request().Context(), problem)
+
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, ResponseError{Message: err.Error()})
+	}
+
+	return c.JSON(http.StatusOK, ResponseError{Message: "success"})
 }
 
 func (ph *ProblemHandler) UpdateProblem(c echo.Context) error {

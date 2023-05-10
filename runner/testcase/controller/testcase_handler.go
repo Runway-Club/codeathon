@@ -25,6 +25,7 @@ func NewTestCaseHandler(ep string, e *echo.Echo, tcs models.TestCaseService) {
 	api := e.Group(ep)
 
 	api.GET("/", handler.GetAllTestCase)
+	api.GET("/sample", handler.GetAllSampleTestCase)
 	api.GET("/:id", handler.GetTestCase)
 	api.POST("/", handler.CreateTestCase)
 	api.PUT("/", handler.UpdateTestCase)
@@ -38,6 +39,22 @@ func (tch *TestCaseHandler) GetAllTestCase(c echo.Context) error {
 	}
 
 	testcases, err := tch.TCService.Fetch(c.Request().Context(), problem_id)
+
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, ResponseError{Message: err.Error()})
+	}
+
+	return c.JSON(http.StatusOK, testcases)
+}
+
+func (tch *TestCaseHandler) GetAllSampleTestCase(c echo.Context) error {
+	problem_id := c.QueryParam("problem")
+
+	if problem_id == "" {
+		return c.JSON(http.StatusBadRequest, ResponseError{Message: "Invalid problem id"})
+	}
+
+	testcases, err := tch.TCService.FetchSample(c.Request().Context(), problem_id)
 
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, ResponseError{Message: err.Error()})

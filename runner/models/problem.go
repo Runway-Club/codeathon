@@ -13,6 +13,7 @@ type Problem struct {
 	Title      string             `json:"title" bson:"title"`
 	Content    string             `json:"content" bson:"content"`
 	Difficulty string             `json:"difficulty" bson:"difficulty"`
+	CreateAt   int64              `json:"create_at" bson:"create_at"`
 	UID        string             `json:"uid" bson:"uid"`
 }
 
@@ -21,6 +22,7 @@ type ProblemStatus struct {
 	Title      string             `json:"title" bson:"title"`
 	Content    string             `json:"content" bson:"content"`
 	Difficulty string             `json:"difficulty" bson:"difficulty"`
+	CreateAt   int64              `json:"create_at" bson:"create_at"`
 	UID        string             `json:"uid" bson:"uid"`
 	Status     string             `json:"status" bson:"status"`
 }
@@ -32,6 +34,7 @@ type ProblemService interface {
 	Store(c context.Context, problem *Problem) error
 	Update(c context.Context, problem *Problem) error
 	Delete(c context.Context, id string) error
+	Count(c context.Context, args map[string]interface{}) (int64, error)
 }
 
 // ProblemRepository represent the probleme's repository contract
@@ -42,4 +45,5 @@ type ProblemRepository interface {
 	InsertOne(c context.Context, collection string, document *Problem) (primitive.ObjectID, error)
 	UpdateOne(c context.Context, collection string, filter primitive.D, update primitive.D) error
 	DeleteOne(c context.Context, collection string, filter primitive.D) error
+	CountDocuments(c context.Context, collection string, filter primitive.D) (int64, error)
 }

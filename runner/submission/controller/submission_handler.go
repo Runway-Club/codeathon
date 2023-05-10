@@ -1,6 +1,8 @@
 package controller
 
 import (
+	"fmt"
+
 	"github.com/labstack/echo/v4"
 	"runwayclub.dev/codeathon/v2/models"
 )
@@ -27,6 +29,8 @@ func NewSubmissionHandler(ep string, e *echo.Echo, ss models.SubmissionService, 
 	api.GET("/", handler.FetchSubmission)
 	api.GET("/:id", handler.GetSubmission)
 	api.POST("/", handler.CreateSubmission)
+
+	go fmt.Println("Submission handler is ready")
 }
 
 func (sh *SubmissionHandler) FetchSubmission(c echo.Context) error {

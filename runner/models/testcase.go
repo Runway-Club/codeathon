@@ -15,11 +15,13 @@ type TestCase struct {
 	MemoryLimit    int32              `json:"memory_limit" bson:"memory_limit"`
 	Score          int32              `json:"score" bson:"score"`
 	ViewOnFailure  bool               `json:"allow_view_on_failed" bson:"allow_view_on_failed"`
+	IsSample       bool               `json:"is_sample" bson:"is_sample"`
 	ProblemID      primitive.ObjectID `json:"problem_id,omitempty" bson:"problem_id,omitempty"`
 }
 
 type TestCaseService interface {
 	Fetch(ctx context.Context, uid string) ([]TestCase, error)
+	FetchSample(ctx context.Context, uid string) ([]TestCase, error)
 	GetByID(ctx context.Context, id string) (TestCase, error)
 	Store(ctx context.Context, tc *TestCase) error
 	StoreResult(ctx context.Context, tc *TestcaseResult) error

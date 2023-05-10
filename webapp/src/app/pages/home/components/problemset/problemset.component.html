@@ -1,4 +1,3 @@
-
 <app-spinkit *ngIf="(loading$ | async); else content"></app-spinkit>
 <ng-template #content>
     <div class="container">
@@ -44,6 +43,13 @@
                     </div>
                 </nb-list-item>
             </nb-list>
+            <nb-card-footer>
+                <div *ngFor="let page of totalPages">
+                    <div (click)="changePage(page)">
+                        {{ page }}
+                    </div>
+                </div>
+            </nb-card-footer>
         </nb-card>
     </div>
 </ng-template>

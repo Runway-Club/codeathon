@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	"errors"
+	"time"
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -76,9 +77,84 @@ func (ps *problemService) getPipelineOwner(uid string) []bson.M {
 	return pipeline
 }
 
+func (ps *problemService) getPipelineDifficultySort(order string) []bson.M {
+	pipeline := []bson.M{}
+
+	tempOrder := 1
+
+	if order == "desc" {
+		tempOrder = -1
+	}
+
+	pipeline = append(pipeline, bson.M{
+		"$addFields": bson.M{
+			"difficulty_order": bson.M{
+				"$switch": bson.M{
+					"branches": []bson.M{
+						{
+							"case": bson.M{
+								"$eq": bson.A{"$difficulty", "easy"},
+							},
+							"then": 1,
+						},
+						{
+							"case": bson.M{
+								"$eq": bson.A{"$difficulty", "medium"},
+							},
+							"then": 2,
+						},
+						{
+							"case": bson.M{
+								"$eq": bson.A{"$difficulty", "hard"},
+							},
+							"then": 3,
+						},
+					},
+					"default": 0,
+				},
+			},
+		},
+	})
+
+	pipeline = append(pipeline, bson.M{
+		"$sort": bson.M{
+			"difficulty_order": tempOrder,
+		},
+	})
+
+	pipeline = append(pipeline, bson.M{
+		"$unset": "difficulty_order",
+	})
+
+	return pipeline
+}
+
+func (ps *problemService) addSort(field string, order string) []bson.M {
+	pipeline := []bson.M{}
+
+	if order == "asc" {
+		pipeline = append(pipeline, bson.M{
+			"$sort": bson.M{
+				field: 1,
+			},
+		})
+	} else if order == "desc" {
+		pipeline = append(pipeline, bson.M{
+			"$sort": bson.M{
+				field: -1,
+			},
+		})
+	}
+
+	return pipeline
+}
+
 func (ps *problemService) Fetch(c context.Context, args map[string]interface{}) ([]models.ProblemStatus, error) {
 	page := args["page"].(int64)
 	limit := args["limit"].(int64)
+
+	sort := args["sort"].(string)
+	order := args["order"].(string)
 
 	uid := args["uid"].(string)
 	owner := args["owner"].(string)
@@ -93,6 +169,12 @@ func (ps *problemService) Fetch(c context.Context, args map[string]interface{}) 
 		pipeline = append(pipeline, ps.getPipelineUID(uid)...)
 	} else if owner != "" {
 		pipeline = append(pipeline, ps.getPipelineOwner(owner)...)
+	}
+
+	if sort == "difficulty" {
+		pipeline = append(pipeline, ps.getPipelineDifficultySort(order)...)
+	} else if sort != "" {
+		pipeline = append(pipeline, ps.addSort(sort, order)...)
 	}
 
 	if page > 0 {
@@ -133,6 +215,8 @@ func (ps *problemService) GetByID(c context.Context, id string) (models.ProblemS
 }
 
 func (ps *problemService) Store(c context.Context, problem *models.Problem) error {
+	problem.CreateAt = time.Now().UnixMilli()
+
 	_, err := ps.problemRepo.InsertOne(c, "problem", problem)
 
 	if err != nil {
@@ -166,4 +250,16 @@ func (ps *problemService) Delete(c context.Context, id string) error {
 	filter := bson.D{{Key: "_id", Value: _id}}
 
 	return ps.problemRepo.DeleteOne(c, "problem", filter)
+}
+
+func (ps *problemService) Count(c context.Context, args map[string]interface{}) (int64, error) {
+	owner := args["owner"].(string)
+
+	filter := bson.D{}
+
+	if owner != "" {
+		filter = bson.D{{Key: "uid", Value: owner}}
+	}
+
+	return ps.problemRepo.CountDocuments(c, "problem", filter)
 }

@@ -30,6 +30,21 @@ func (tcs *testCaseService) Fetch(c context.Context, pid string) ([]models.TestC
 	return tcs.testCaseRepo.Find(c, "testcase", filter)
 }
 
+func (tcs *testCaseService) FetchSample(c context.Context, pid string) ([]models.TestCase, error) {
+	_pid, err := primitive.ObjectIDFromHex(pid)
+
+	if err != nil {
+		return nil, err
+	}
+
+	filter := bson.D{
+		{Key: "problem_id", Value: _pid},
+		{Key: "is_sample", Value: true},
+	}
+
+	return tcs.testCaseRepo.Find(c, "testcase", filter)
+}
+
 func (tcs *testCaseService) GetByID(c context.Context, id string) (models.TestCase, error) {
 	_id, err := primitive.ObjectIDFromHex(id)
 
