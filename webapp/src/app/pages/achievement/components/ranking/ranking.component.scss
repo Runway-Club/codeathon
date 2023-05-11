@@ -1,0 +1,23 @@
+// :host nb-tab {
+//   padding: 1.25rem;
+// }
+
+.achievement-right-ranking {
+  width: 18.75rem;
+  height: 20rem;
+  border-radius: 6px;
+  margin-bottom: 0.5rem;
+}
+
+.ranking-top {
+  display: flex;
+  flex-direction: column;
+}
+.ranking-top > span {
+  margin-top: 1rem;
+}
+
+.icon {
+  margin-right: 1rem;
+  margin-left: 1rem;
+}

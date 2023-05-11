@@ -5,15 +5,14 @@ import {
   GoogleAuthProvider,
   onAuthStateChanged,
   signInWithPopup,
-  signInWithRedirect
+  signInWithRedirect,
 } from '@angular/fire/auth';
 import { Subject } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthService {
-
   user$ = new Subject<User | null>();
   user: User | null = null;
 
@@ -23,8 +22,11 @@ export class AuthService {
 
   updateUser = (user: User | null) => {
     this.user = user;
+    if (this.user != null) {
+      localStorage.setItem('userStorage', JSON.stringify(this.user));
+    }
     this.user$.next(user);
-  }
+  };
 
   login() {
     let provider = new GoogleAuthProvider();
@@ -34,5 +36,4 @@ export class AuthService {
   logout() {
     this.auth.signOut();
   }
-
 }
