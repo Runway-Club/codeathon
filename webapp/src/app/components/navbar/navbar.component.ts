@@ -4,20 +4,20 @@ import { User } from '@angular/fire/auth';
 @Component({
   selector: 'app-navbar',
   templateUrl: './navbar.component.html',
-  styleUrls: ['./navbar.component.scss']
+  styleUrls: ['./navbar.component.scss'],
 })
 export class NavbarComponent implements OnInit {
-
-  constructor() { }
+  constructor() {}
 
   @Input() user: User | null = null;
 
   menuItems = [
-    { title: 'Profile', link: 'profile' },
+    { title: 'Profile' },
     { title: 'Manage', link: 'manage' },
-    { title: 'Log out' }
+    { title: 'New Problem', link: '/newproblem' },
+    { title: 'Achievement', link: '/achievement' },
+    { title: 'Log out' },
   ];
 
-  ngOnInit(): void { }
-
+  ngOnInit(): void {}
 }

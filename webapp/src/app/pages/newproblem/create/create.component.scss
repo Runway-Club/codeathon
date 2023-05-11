@@ -1,0 +1,140 @@
+#body {
+  display: flex;
+}
+
+h1 {
+  text-align: center;
+}
+
+.left {
+  width: 60%;
+}
+
+.right {
+  width: 40%;
+}
+
+input[type="text"] {
+  padding: 15px;
+  display: block;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-sizing: border-box;
+  margin: 0 auto;
+  outline: none;
+}
+
+select {
+  width: 100%;
+  padding: 15px;
+  display: block;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-sizing: border-box;
+  margin: 0 auto;
+  outline: none;
+}
+
+.submit {
+  display: block;
+  padding: 15px;
+  box-sizing: border-box;
+  margin: 0 auto;
+  outline: none;
+  margin-top: 20px;
+}
+
+.input {
+  width: 90%;
+  margin: 0 auto;
+  margin-top: 1em;
+  display: block;
+}
+
+.card {
+  width: 95%;
+  margin-top: 1em;
+}
+
+nb-select {
+  display: block;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-sizing: border-box;
+  margin: 0 auto;
+  outline: none;
+  margin-top: 1em;
+}
+
+.input-testcase {
+  margin-right: 1rem;
+}
+
+.testcase-parent {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1em;
+  margin-bottom: 2rem;
+}
+
+#markdown {
+  width: 200px;
+  height: 200px;
+}
+
+.title {
+  font-weight: bold;
+  font-size: 1.3rem;
+}
+
+.input > label {
+  font-size: 1.25rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+  margin-right: 2rem;
+}
+
+.input-place:hover {
+  background-color: #343a40;
+  transition: 0.6s;
+}
+.input-testcase:hover {
+  background-color: #343a40;
+  transition: 0.6s;
+}
+#remove {
+  background-color: #ef233c;
+  border: none;
+  color: #ffffff;
+  transition: 0.6s;
+}
+#remove:hover {
+  color: #ffffff;
+  background-color: #ff3d71;
+  transition: 0.6s;
+}
+
+#add {
+  color: #000000;
+  border: none;
+  background-color: #ccc;
+  transition: 0.6s;
+}
+#add:hover {
+  background-color: #0f9d58;
+  color: #ffffff;
+  transition: 0.6s;
+}
+
+#add-new-test {
+  color: #000000;
+  border: none;
+  background-color: #ccc;
+  transition: 0.6s;
+}
+
+#add-new-test:hover {
+  background-color: #0f9d58;
+  color: #ffffff;
+  transition: 0.6s;
+}

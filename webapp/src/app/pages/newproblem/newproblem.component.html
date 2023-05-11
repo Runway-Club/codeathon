@@ -1,0 +1,16 @@
+<nb-layout>
+  <nb-layout-header fixed>
+    <app-navbar [user]="userStorage" style="width: 100%"></app-navbar>
+  </nb-layout-header>
+  <nb-layout-column *ngIf="isLoading$ | async; else problem">
+    <app-spinkit></app-spinkit>
+  </nb-layout-column>
+  <ng-template #problem>
+    <nb-layout-column class="column problem">
+      <app-create></app-create>
+    </nb-layout-column>
+    <nb-layout-column class="column editor">
+      <app-preview></app-preview>
+    </nb-layout-column>
+  </ng-template>
+</nb-layout>

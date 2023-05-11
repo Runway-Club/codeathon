@@ -1,0 +1,62 @@
+.achievement-body {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+}
+.achievement-left {
+  width: 80%;
+  height: fit-content;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.achievement-left-title {
+  width: fit-content;
+  height: 2.75rem;
+  font-size: 3rem;
+  margin-top: 1rem;
+  border-bottom: 0.5px solid white;
+}
+
+.achievement-left-main-content {
+  width: 100%;
+  margin-top: 2.3rem;
+}
+
+.achievement-right {
+  width: 20%;
+  height: fit-content;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.achievement-right-ranking {
+  width: 18.75rem;
+  height: 21.875rem;
+}
+
+.achievement-right-total-score {
+  width: 18.75rem;
+  height: 5rem;
+  background-color: #313131;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  border-radius: 6px;
+  margin-bottom: 1rem;
+}
+.achievement-right-total-score-icon {
+  width: 3rem;
+  height: 3rem;
+  margin-right: 1rem;
+}
+.achievement-right-total-score-child {
+  display: flex;
+  flex-direction: column;
+  font-size: 1rem;
+}

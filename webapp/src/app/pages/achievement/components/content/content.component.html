@@ -1,0 +1,98 @@
+<nb-card>
+  <nb-card-body>
+    <nb-tabset>
+      <nb-tab tabTitle="Daily Record">
+        <div class="content-dailyrecord">
+          <div class="content-daily-record">
+            <span class="content-daily-record-change">Change</span>
+            <div class="content-daily-record-circle">67%</div>
+            <span class="content-daily-record-title"
+              ><strong>Your Daily Goal</strong>
+            </span>
+            <span>1347/2500</span>
+          </div>
+          <div class="content-monthly-record">
+            <div
+              *ngFor="let a of numberOfDay"
+              class="content-monthly-record-calendar"
+            >
+              {{ a }}
+            </div>
+          </div>
+        </div>
+      </nb-tab>
+      <nb-tab tabTitle="In Progress">
+        <div class="content-inprogress">
+          <div
+            *ngFor="let a of this.listOfProblem"
+            class="content-inprogress-child"
+          >
+            <span
+              ><strong>{{ a.title }}</strong>
+            </span>
+            <span>{{ a.timeAccess | date : "yyyy/MM/dd HH:mm:ss" }}</span>
+            <div class="content-inprogress-child-cirle">90%</div>
+          </div>
+        </div>
+      </nb-tab>
+      <nb-tab tabTitle="Events">
+        <div class="content-event">
+          <!-- <div class="content-event-current"></div> -->
+          <div class="content-event-upcoming">
+            <div class="content-event-upcoming-header">
+              <span><strong>Upcoming event</strong></span>
+              <nb-icon icon="more-horizontal-outline"></nb-icon>
+            </div>
+            <div class="content-event-upcoming-content">
+              <div class="content-event-upcoming-content-title">
+                <span class="content-event-upcoming-content-title-name"
+                  >Two Sum
+                </span>
+                <span
+                  >Given an array of integers nums and an integer target, return
+                  indices of the two numbers such that they add up to target.
+                  You may assume that each input would have exactly one
+                  solution, and you may not use the same element twice. You can
+                  return the answer in any order.</span
+                >
+              </div>
+              <div class="content-event-upcoming-content-time">
+                <span class="content-event-upcoming-content-time-day">
+                  {{ this.upcomingTime | date : "dd" }}
+                </span>
+                <span>{{ parseMonth() }}</span>
+              </div>
+            </div>
+            <div class="content-event-upcoming-detail">
+              <span class="content-event-upcoming-detail-title">Detail</span>
+              <div class="content-event-upcoming-detail-task">
+                <nb-icon
+                  icon="keypad-outline"
+                  class="content-event-upcoming-detail-task-icon"
+                ></nb-icon>
+                <span>Task: Practice</span>
+              </div>
+              <div class="content-event-upcoming-detail-date">
+                <nb-icon
+                  icon="calendar-outline"
+                  class="content-event-upcoming-detail-date-icon"
+                ></nb-icon>
+                <span
+                  >Date: {{ this.upcomingTime | date : "dd//MM" }} -
+                  {{ this.upcomingTime | date : "dd//MM" }}
+                </span>
+              </div>
+            </div>
+            <div class="content-event-upcoming-footer">
+              <button nbButton shape="round" size="small">
+                <nb-icon icon="checkmark-outline"></nb-icon>
+                Take part
+              </button>
+              <nb-icon icon="heart"></nb-icon>
+            </div>
+          </div>
+        </div>
+      </nb-tab>
+    </nb-tabset>
+  </nb-card-body>
+</nb-card>
