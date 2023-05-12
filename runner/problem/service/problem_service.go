@@ -47,10 +47,19 @@ func (ps *problemService) getPipelineUID(uid string) []bson.M {
 		},
 	})
 
+	//add status field if status is found else add status field with value "todo"
 	pipeline = append(pipeline, bson.M{
 		"$addFields": bson.M{
 			"status": bson.M{
-				"$arrayElemAt": bson.A{"$fstatus.status", 0},
+				"$cond": bson.M{
+					"if": bson.M{
+						"$eq": bson.A{"$fstatus", bson.A{}},
+					},
+					"then": "todo",
+					"else": bson.M{
+						"$arrayElemAt": bson.A{"$fstatus.status", 0},
+					},
+				},
 			},
 		},
 	})
@@ -153,6 +162,9 @@ func (ps *problemService) Fetch(c context.Context, args map[string]interface{}) 
 	page := args["page"].(int64)
 	limit := args["limit"].(int64)
 
+	status := args["status"].(string)
+	difficulty := args["difficulty"].(string)
+
 	sort := args["sort"].(string)
 	order := args["order"].(string)
 
@@ -169,6 +181,22 @@ func (ps *problemService) Fetch(c context.Context, args map[string]interface{}) 
 		pipeline = append(pipeline, ps.getPipelineUID(uid)...)
 	} else if owner != "" {
 		pipeline = append(pipeline, ps.getPipelineOwner(owner)...)
+	}
+
+	if status != "" {
+		pipeline = append(pipeline, bson.M{
+			"$match": bson.M{
+				"status": status,
+			},
+		})
+	}
+
+	if difficulty != "" {
+		pipeline = append(pipeline, bson.M{
+			"$match": bson.M{
+				"difficulty": difficulty,
+			},
+		})
 	}
 
 	if sort == "difficulty" {
@@ -193,10 +221,6 @@ func (ps *problemService) Fetch(c context.Context, args map[string]interface{}) 
 
 	if err != nil {
 		return nil, err
-	}
-
-	if res == nil {
-		return nil, errors.New("no problem found")
 	}
 
 	return res, nil

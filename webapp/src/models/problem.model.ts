@@ -40,4 +40,10 @@ export type Sort = {
 export type ProblemSetPagination = {
     page: number,
     limit: number,
+    totalPages: number
+}
+
+export type ProblemSetFilter = {
+    status?: string,
+    difficulty?: string,
 }

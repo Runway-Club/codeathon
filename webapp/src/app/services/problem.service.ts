@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Problem, ProblemSetPagination, Sort, TestCase } from 'src/models/problem.model';
+import { Problem, ProblemSetFilter, ProblemSetPagination, Sort, TestCase } from 'src/models/problem.model';
 import { lastValueFrom } from 'rxjs';
 import { environment } from 'src/environments/environment'
 import { HttpClient } from '@angular/common/http';
@@ -15,10 +15,24 @@ export class ProblemService {
 
   api = environment.api;
 
-  async getProblems(paginate?: ProblemSetPagination, sort?: Sort): Promise<Problem[]> {
+  async getProblems(paginate?: ProblemSetPagination, sort?: Sort, filter?: ProblemSetFilter): Promise<Problem[]> {
     let problems: Problem[] = [];
+    let tempAPI = this.api + '/problem/?';
+
+    if (paginate) {
+      tempAPI += `page=${paginate?.page === undefined ? 1 : paginate.page}&limit=${paginate?.limit === undefined ? 10 : paginate.limit}`;
+    }
+
+    if (sort) {
+      tempAPI += `&sort=${sort?.field}&order=${sort?.direction}`;
+    }
+
+    if (filter) {
+      tempAPI += `&status=${filter?.status}&difficulty=${filter?.difficulty}`;
+    }
+
     let response = await <any>lastValueFrom(
-      this.httpClient.get(`${this.api}/problem/?sort=${sort?.field}&order=${sort?.direction}&page=${paginate?.page === undefined ? 1 : paginate.page}&limit=${paginate?.limit === undefined ? 10 : paginate.limit}`));
+      this.httpClient.get(tempAPI));
 
     for (let problem of response) {
       problems.push(<Problem>problem);
@@ -30,8 +44,6 @@ export class ProblemService {
   async getProblem(id: string): Promise<Problem> {
     let response = await <any>lastValueFrom(this.httpClient.get(this.api + '/problem/' + id));
     let problem = <Problem>response;
-
-    console.log(problem)
 
     return problem;
   }

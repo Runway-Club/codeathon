@@ -3,13 +3,16 @@ import { CommonModule } from '@angular/common';
 
 import { SpinkitComponent } from '../components/spinkit/spinkit.component';
 import { NavbarComponent } from '../components/navbar/navbar.component';
+import { PaginateComponent } from '../components/paginate/paginate.component';
+
 import { RouterModule } from '@angular/router';
 import { SharedNebularModule } from './nebular/nebular.module';
 
 @NgModule({
   declarations: [
     SpinkitComponent,
-    NavbarComponent
+    NavbarComponent,
+    PaginateComponent
   ],
   imports: [
     CommonModule,
@@ -18,7 +21,8 @@ import { SharedNebularModule } from './nebular/nebular.module';
   ],
   exports: [
     SpinkitComponent,
-    NavbarComponent
+    NavbarComponent,
+    PaginateComponent
   ]
 })
 

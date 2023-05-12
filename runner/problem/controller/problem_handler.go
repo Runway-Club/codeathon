@@ -2,6 +2,7 @@ package controller
 
 import (
 	"net/http"
+	"reflect"
 	"strconv"
 
 	"github.com/labstack/echo/v4"
@@ -47,14 +48,22 @@ func (ph *ProblemHandler) GetAllProblem(c echo.Context) error {
 	limitS := c.QueryParam("limit")
 	limit, _ := strconv.ParseInt(limitS, 10, 64)
 
+	statusS := c.QueryParam("status")
+	difficultyS := c.QueryParam("difficulty")
+
 	sortS := c.QueryParam("sort")
 	sortOrderS := c.QueryParam("order")
 
 	args := map[string]interface{}{
 		"page":  page,
 		"limit": limit,
+
+		"status":     statusS,
+		"difficulty": difficultyS, // "easy", "medium", "hard
+
 		"sort":  sortS,
 		"order": sortOrderS,
+
 		"uid":   body.UID,
 		"owner": body.Owner,
 	}
@@ -63,6 +72,10 @@ func (ph *ProblemHandler) GetAllProblem(c echo.Context) error {
 
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, ResponseError{Message: err.Error()})
+	}
+
+	if res == nil {
+		return c.JSON(http.StatusOK, []models.Problem{})
 	}
 
 	return c.JSON(http.StatusOK, res)
@@ -107,26 +120,20 @@ func (ph *ProblemHandler) CreateProblem(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, ResponseError{Message: err.Error()})
 	}
 
-	if problem.Title == "" {
-		return c.JSON(http.StatusBadRequest, ResponseError{Message: "title cannot be empty"})
-	}
+	//ilterate the problem struct and check if any field is empty except ID and CreatedAt
+	problemValue := reflect.ValueOf(problem).Elem()
+	problemType := problemValue.Type()
 
-	if problem.Content == "" {
-		return c.JSON(http.StatusBadRequest, ResponseError{Message: "content cannot be empty"})
-	}
+	for i := 0; i < problemValue.NumField(); i++ {
+		fieldName := problemType.Field(i).Name
 
-	if problem.Difficulty == "" {
-		return c.JSON(http.StatusBadRequest, ResponseError{Message: "difficulty cannot be empty"})
-	}
+		if fieldName == "ID" || fieldName == "CreatedAt" {
+			continue
+		}
 
-	if problem.UID == "" {
-		return c.JSON(http.StatusBadRequest, ResponseError{Message: "uid cannot be empty"})
-	}
-
-	err := ph.PService.Store(c.Request().Context(), problem)
-
-	if err != nil {
-		return c.JSON(http.StatusInternalServerError, ResponseError{Message: err.Error()})
+		if problemValue.Field(i).Interface() == "" {
+			return c.JSON(http.StatusBadRequest, ResponseError{Message: "field " + fieldName + " must not be empty"})
+		}
 	}
 
 	return c.JSON(http.StatusOK, ResponseError{Message: "success"})

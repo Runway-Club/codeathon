@@ -1,8 +1,8 @@
 import { createAction, props } from "@ngrx/store"
-import { Problem, Sort, ProblemSetPagination } from "src/models/problem.model"
+import { Problem, Sort, ProblemSetPagination, ProblemSetFilter } from "src/models/problem.model"
 
 export const ProblemActions = {
-    getProblems: createAction('[Problem] Get Problems', props<{ paginate?: ProblemSetPagination, sort?: Sort }>()),
+    getProblems: createAction('[Problem] Get Problems', props<{ paginate?: ProblemSetPagination, sort?: Sort, filter?: ProblemSetFilter }>()),
     getProblemsSuccess: createAction('[Problem] Get Problems Success', props<{ problems: Problem[] }>()),
     getProblemsFailure: createAction('[Problem] Get Problems Failure', props<{ error: string }>()),
 
