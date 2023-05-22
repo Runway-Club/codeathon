@@ -1,33 +1,62 @@
-
 <app-spinkit *ngIf="(loading$ | async); else content"></app-spinkit>
 <ng-template #content>
     <div class="container">
         <nb-card class="card">
             <nb-card-body class="select-container">
                 <div class="select">
-                    <nb-select placeholder="Select Difficulty" [(selected)]="selectedDifficulty" shape="round">
-                        <nb-option value="1">Easy</nb-option>
-                        <nb-option value="2">Medium</nb-option>
-                        <nb-option value="3">Hard</nb-option>
+                    <nb-select placeholder="Select Difficulty" shape="round"
+                        (selectedChange)="handleChangeDifficulty($event)">
+                        <nb-option value="">Not selected</nb-option>
+                        <nb-option value="easy">Easy</nb-option>
+                        <nb-option value="medium">Medium</nb-option>
+                        <nb-option value="hard">Hard</nb-option>
                     </nb-select>
-                    <nb-select placeholder="Select Status" [(selected)]="selectedStatus" shape="round">
-                        <nb-option value="1">To do</nb-option>
-                        <nb-option value="2">Solved</nb-option>
-                        <nb-option value="3">Attempted</nb-option>
+                    <nb-select placeholder="Select Status" shape="round" (selectedChange)="handleChangeStatus($event)">
+                        <nb-option value="">Not selected</nb-option>
+                        <nb-option value="todo">To do</nb-option>
+                        <nb-option value="solved">Solved</nb-option>
+                        <nb-option value="attempted">Attempted</nb-option>
                     </nb-select>
                     <label class="search-label" for="search">
                         <nb-icon icon="search"></nb-icon>
                     </label>
-                    <input nbInput id="search" placeholder="Search...." class="search-input" shape="round">
+                    <div class="search-input">
+                        <input nbInput id="search" placeholder="Search...." shape="round" (input)="handleSearch()"
+                            [(ngModel)]="searchInput">
+                        <div class="popover">
+                            <div *ngFor="let suggestion of sugguestions">
+                                {{suggestion.value}}
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
             </nb-card-body>
         </nb-card>
         <nb-card class="card">
             <nb-card-header style="padding: 16px;" class="problem-header">
                 <div class="problem">
-                    <span class="status">Status</span>
-                    <span class="title">Title</span>
-                    <span class="difficulty">Difficulty</span>
+                    <span class="status" (click)="changeSort('status')">
+                        <span>Status</span>
+                        <nb-icon *ngIf="sort.field == 'status' && sort.direction == 'desc'"
+                            icon="arrow-down-outline"></nb-icon>
+                        <nb-icon *ngIf="sort.field == 'status' && sort.direction == 'asc'"
+                            icon="arrow-up-outline"></nb-icon>
+                    </span>
+                    <span class="title" (click)="changeSort('title')">
+                        <span>Title</span>
+                        <nb-icon *ngIf="sort.field == 'title' && sort.direction == 'desc'"
+                            icon="arrow-down-outline"></nb-icon>
+                        <nb-icon *ngIf="sort.field == 'title' && sort.direction == 'asc'"
+                            icon="arrow-up-outline"></nb-icon>
+                    </span>
+                    <span class="difficulty" (click)="changeSort('difficulty')">
+                        <span>Difficulty</span>
+                        <nb-icon *ngIf="sort.field == 'difficulty' && sort.direction == 'desc'"
+                            icon="arrow-down-outline"></nb-icon>
+                        <nb-icon *ngIf="sort.field == 'difficulty' && sort.direction == 'asc'"
+                            icon="arrow-up-outline"></nb-icon>
+                    </span>
                 </div>
             </nb-card-header>
             <nb-list>
@@ -44,6 +73,14 @@
                     </div>
                 </nb-list-item>
             </nb-list>
+            <nb-card-footer>
+                <div class="paginate">
+                    <ng-container *ngIf="totalProblems != 0">
+                        <app-paginate [page]="paginate.page" [totalPages]="paginate.totalPages"
+                            (changePage)="handleChangePage($event)"></app-paginate>
+                    </ng-container>
+                </div>
+            </nb-card-footer>
         </nb-card>
     </div>
 </ng-template>

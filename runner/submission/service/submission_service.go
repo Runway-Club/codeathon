@@ -28,13 +28,13 @@ func (ss *submissionService) GetSubmissionByUID(c context.Context, uid string, p
 	}
 
 	filter := bson.D{
-		{Key: "uid", Value: uid},
 		{Key: "problemID", Value: _pid},
+		{Key: "uid", Value: uid},
 	}
 
 	option := options.Find()
 
-	option.SetSort(bson.D{{Key: "created_at", Value: -1}})
+	option.SetSort(bson.D{{Key: "createAt", Value: -1}})
 	option.SetLimit(5)
 
 	result, err := ss.submissionRepo.Fetch(c, "submissions", filter, option)
@@ -79,6 +79,7 @@ func (ss *submissionService) UpdateSubmissionResult(c context.Context, submissio
 			{Key: "total_time", Value: submission.TotalTime},
 			{Key: "total_memory", Value: submission.TotalMemory},
 			{Key: "total_score", Value: submission.TotalScore},
+			{Key: "result", Value: submission.Result},
 		}},
 	}
 

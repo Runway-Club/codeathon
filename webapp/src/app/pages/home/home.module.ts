@@ -7,6 +7,7 @@ import { HomeComponent } from './home.component';
 import { SharedNebularModule } from 'src/app/modules/nebular/nebular.module';
 import { ProblemsetComponent } from './components/problemset/problemset.component';
 import { SharedModule } from 'src/app/modules/shared.module';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -16,6 +17,8 @@ import { SharedModule } from 'src/app/modules/shared.module';
   imports: [
     CommonModule,
     HomeRoutingModule,
+    FormsModule,
+
     SharedModule,
     SharedNebularModule
   ]

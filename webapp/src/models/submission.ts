@@ -3,17 +3,16 @@ export interface Submission {
     problem_id: string;
     language_id: number;
     code: string;
-    source: string;
-    user_id: string;
-
+    uid: string;
     evaluated: boolean;
+
     score: number;
-    testcases?: TestCaseResult[];
+    result: string;
 
     total_memory: number;
     total_time: number;
     total_score: number;
-    time: number
+    createAt: number
 }
 
 export interface TestCaseResult {

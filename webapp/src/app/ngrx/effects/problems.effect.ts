@@ -18,7 +18,7 @@ export class ProblemEffects {
     getProblems$ = createEffect(() => this.actions$.pipe(
         ofType(ProblemActions.getProblems),
         switchMap((action) => {
-            return this.problemService.getProblems(action.previousDocument, action.difficulty, action.status, action.sort)
+            return this.problemService.getProblems(action.paginate, action.sort, action.filter)
         }),
         map((problems: Problem[]) => {
             return ProblemActions.getProblemsSuccess({ problems })
@@ -41,44 +41,44 @@ export class ProblemEffects {
         }),
     ))
 
-    createProblem$ = createEffect(() => this.actions$.pipe(
-        ofType(ProblemActions.createProblem),
-        switchMap((action) => {
-            return this.problemService.createProblem(action.problem)
-        }),
-        map(() => {
-            return ProblemActions.createProblemSuccess()
-        }),
-        catchError((error: string) => {
-            return of(ProblemActions.createProblemFailure({ error }))
-        })
-    ))
+    // createProblem$ = createEffect(() => this.actions$.pipe(
+    //     ofType(ProblemActions.createProblem),
+    //     switchMap((action) => {
+    //         return this.problemService.createProblem(action.problem)
+    //     }),
+    //     map(() => {
+    //         return ProblemActions.createProblemSuccess()
+    //     }),
+    //     catchError((error: string) => {
+    //         return of(ProblemActions.createProblemFailure({ error }))
+    //     })
+    // ))
 
-    updateProblem$ = createEffect(() => this.actions$.pipe(
-        ofType(ProblemActions.updateProblem),
-        switchMap((action) => {
-            return this.problemService.updateProblem(action.problem)
-        }),
-        map(() => {
-            return ProblemActions.updateProblemSuccess()
-        }),
-        catchError((error: string) => {
-            return of(ProblemActions.updateProblemFailure({ error }))
-        })
-    ))
+    // updateProblem$ = createEffect(() => this.actions$.pipe(
+    //     ofType(ProblemActions.updateProblem),
+    //     switchMap((action) => {
+    //         return this.problemService.updateProblem(action.problem)
+    //     }),
+    //     map(() => {
+    //         return ProblemActions.updateProblemSuccess()
+    //     }),
+    //     catchError((error: string) => {
+    //         return of(ProblemActions.updateProblemFailure({ error }))
+    //     })
+    // ))
 
-    deleteProblem$ = createEffect(() => this.actions$.pipe(
-        ofType(ProblemActions.deleteProblem),
-        switchMap((action) => {
-            return this.problemService.deleteProblem(action.id)
-        }),
-        map(() => {
-            return ProblemActions.deleteProblemSuccess()
-        }),
-        catchError((error: string) => {
-            return of(ProblemActions.deleteProblemFailure({ error }))
-        })
-    ))
+    // deleteProblem$ = createEffect(() => this.actions$.pipe(
+    //     ofType(ProblemActions.deleteProblem),
+    //     switchMap((action) => {
+    //         return this.problemService.deleteProblem(action.id)
+    //     }),
+    //     map(() => {
+    //         return ProblemActions.deleteProblemSuccess()
+    //     }),
+    //     catchError((error: string) => {
+    //         return of(ProblemActions.deleteProblemFailure({ error }))
+    //     })
+    // ))
 
 }
 

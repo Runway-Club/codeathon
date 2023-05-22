@@ -1,80 +1,97 @@
 import { Injectable } from '@angular/core';
-import { Problem } from 'src/models/problem.model';
-import {
-  addDoc,
-  setDoc,
-  getDoc,
-  getDocs,
-  deleteDoc,
-
-  Firestore,
-  collection,
-  doc,
-  limit,
-  query,
-  startAt,
-  where,
-  DocumentSnapshot
-} from "@angular/fire/firestore";
-import { Observable } from 'rxjs';
-
+import { Problem, ProblemSetFilter, ProblemSetPagination, Sort, TestCase } from 'src/models/problem.model';
+import { lastValueFrom } from 'rxjs';
+import { environment } from 'src/environments/environment'
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
 })
 
 export class ProblemService {
-  constructor(private database: Firestore) { }
+  constructor(
+    private httpClient: HttpClient
+  ) { }
 
-  async getProblems(previousDocument: DocumentSnapshot | undefined): Promise<Problem[]> {
+  api = environment.api;
+
+  async getProblems(paginate?: ProblemSetPagination, sort?: Sort, filter?: ProblemSetFilter): Promise<Problem[]> {
     let problems: Problem[] = [];
-    let q: any;
+    let tempAPI = this.api + '/problem/?';
 
-    if (previousDocument == undefined) {
-      q = query(collection(this.database, 'problems'), limit(20));
-    } else {
-      q = query(collection(this.database, 'problems'), startAt(previousDocument), limit(20));
+    if (paginate) {
+      tempAPI += `page=${paginate?.page === undefined ? 1 : paginate.page}&limit=${paginate?.limit === undefined ? 10 : paginate.limit}`;
     }
 
-    const querySnapshot = await getDocs(q);
+    if (sort) {
+      tempAPI += `&sort=${sort?.field}&order=${sort?.direction}`;
+    }
 
-    querySnapshot.forEach((doc: any) => {
-      problems.push({
-        id: doc.id,
-        ...<Problem>doc.data()
-      });
-    });
+    if (filter) {
+      tempAPI += `&status=${filter?.status}&difficulty=${filter?.difficulty}`;
+    }
+
+    let response = await <any>lastValueFrom(
+      this.httpClient.get(tempAPI));
+
+    for (let problem of response) {
+      problems.push(<Problem>problem);
+    }
 
     return problems;
   }
 
-  async getProblem(id: string): Promise<Problem> 
-  {
-    const documentReference = doc(this.database, 'problems', id);
-    const documentSnapshot = await getDoc(documentReference);
+  async getProblem(id: string): Promise<Problem> {
+    let response = await <any>lastValueFrom(this.httpClient.get(this.api + '/problem/' + id));
+    let problem = <Problem>response;
 
-    return {
-      id: documentSnapshot.id,
-      ...<Problem>documentSnapshot.data()
-    };
+    return problem;
   }
 
-  async createProblem(problem: Problem): Promise<string> 
-  {
-    const documentReference = await addDoc(collection(this.database, 'problems'), problem);
-    return documentReference.id;
+  // async createProblem(problem: Problem): Promise<string> {
+  //   const documentReference = await addDoc(collection(this.database, 'problems'), problem);
+  //   return documentReference.id;
+  // }
+
+  // async updateProblem(problem: Problem): Promise<void> {
+  //   const documentReference = doc(this.database, 'problems', problem.id!);
+  //   await setDoc(documentReference, problem);
+  // }
+
+  // async deleteProblem(id: string): Promise<void> {
+  //   const documentReference = doc(this.database, 'problems', id);
+  //   await deleteDoc(documentReference);
+  // }
+
+  async getSamples(id: string): Promise<TestCase[]> {
+    let response = await <any>lastValueFrom(this.httpClient.get(this.api + '/testcase/sample?problem=' + id));
+    let samples = <TestCase[]>response;
+
+    return samples;
   }
 
-  async updateProblem(problem: Problem): Promise<void> 
-  {
-    const documentReference = doc(this.database, 'problems', problem.id!);
-    await setDoc(documentReference, problem);
+  async getTotalProblems(filter?: ProblemSetFilter): Promise<number> {
+    let tempAPI = this.api + '/problem/count?';
+
+    if (filter) {
+      tempAPI += `status=${filter.status}&difficulty=${filter.difficulty}`;
+    }
+
+    let response = await <any>lastValueFrom(this.httpClient.get(tempAPI));
+    let totalProblems = <number>response;
+
+    return totalProblems;
   }
 
-  async deleteProblem(id: string): Promise<void> 
-  {
-    const documentReference = doc(this.database, 'problems', id);
-    await deleteDoc(documentReference);
+  async getProblemSuggestions(text: string): Promise<string[]> {
+    if (text.length === 0) {
+      return [];
+    }
+
+    let response = await <any>lastValueFrom(this.httpClient.get(this.api + '/problem/suggest?q=' + text));
+    let suggestions = <string[]>response;
+
+    return suggestions;
   }
 
 }

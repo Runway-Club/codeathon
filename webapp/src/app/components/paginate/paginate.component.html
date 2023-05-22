@@ -1,0 +1,66 @@
+<div>
+    <span>
+        <button nbButton size="small" appearance="outline" (click)="changePageEvent(page - 1)"
+            [disabled]="page == 1">&#60;</button>
+    </span>
+
+    <ng-container *ngIf="totalPages <= _maxPages; else lessMax">
+        <span *ngFor="let p of _totalPages">
+            <button nbButton size="small" [appearance]="p == page ? 'filled' : 'outline'"
+                (click)="changePageEvent(p)">{{p}}
+            </button>
+        </span>
+    </ng-container>
+
+    <ng-template #lessMax>
+
+        <ng-container *ngIf="page < _maxPages; else currentGreaterMax">
+            <span *ngFor="let p of [1, 2, 3]">
+                <button nbButton size="small" [appearance]="p == page ? 'filled' : 'outline'"
+                    (click)="changePageEvent(p)">{{p}}</button>
+            </span>
+            <span>
+                <button nbButton size="small" appearance="outline">...</button>
+            </span>
+            <span>
+                <button nbButton size="small" appearance="outline"
+                    (click)="changePageEvent(totalPages)">{{totalPages}}</button>
+            </span>
+        </ng-container>
+
+        <ng-template #currentGreaterMax>
+            <span>
+                <button nbButton size="small" appearance="outline" (click)="changePageEvent(1)">1</button>
+            </span>
+            <span>
+                <button nbButton size="small" appearance="outline">...</button>
+            </span>
+            <span>
+                <button nbButton size="small" appearance="outline" (click)="changePageEvent(page - 1)">
+                    {{page -1}}
+                </button>
+                <button nbButton size="small">
+                    {{page}}
+                </button>
+                <button nbButton size="small" appearance="outline" *ngIf="page < totalPages"
+                    (click)="changePageEvent(page + 1)">
+                    {{page + 1}}
+                </button>
+            </span>
+            <ng-container *ngIf="page + 1 <= totalPages - 1">
+                <span>
+                    <button nbButton size="small" appearance="outline">...</button>
+                </span>
+                <span>
+                    <button nbButton size="small" appearance="outline"
+                        (click)="changePageEvent(totalPages)">{{totalPages}}</button>
+                </span>
+            </ng-container>
+
+        </ng-template>
+
+    </ng-template>
+
+    <button nbButton size="small" appearance="outline" (click)="changePageEvent(page + 1)"
+        [disabled]="page == totalPages">&#62;</button>
+</div>

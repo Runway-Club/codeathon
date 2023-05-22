@@ -11,7 +11,7 @@ import { ProblemActions } from 'src/app/ngrx/actions/problems.action';
 
 import { SubmissionState } from 'src/app/ngrx/states/submission.state';
 import { SubmissionActions } from 'src/app/ngrx/actions/submission.action';
-import { Firestore, onSnapshot, collection } from '@angular/fire/firestore';
+import { Submission } from 'src/models/submission';
 
 @Component({
   selector: 'app-problem',
@@ -27,11 +27,11 @@ export class ProblemComponent {
     }>,
     private activatedRoute: ActivatedRoute,
     private authService: AuthService,
-    private database: Firestore
   ) { }
 
   user = this.authService.user;
   problemID?: string;
+  intervalSubmission?: any;
 
   isLoading$ = this.store.select('problem').pipe(map(state => state.isLoading));
   problem$ = this.store.select('problem').pipe(map(state => state.problem));
@@ -40,11 +40,7 @@ export class ProblemComponent {
 
   ngOnInit(): void {
     this.activatedRoute.params.subscribe(this.processProblem);
-
-    //wait for new snapshot
-    onSnapshot(collection(this.database, 'submissions'), (snapshot) => {
-      this.store.dispatch(SubmissionActions.getSubmissions({ userID: this.user?.uid!, problemID: this.problemID! }));
-    });
+    this.submissions$.subscribe(this.handleIntervalSubmission);
   }
 
   processProblem = (params: any) => {
@@ -53,9 +49,22 @@ export class ProblemComponent {
     this.store.dispatch(SubmissionActions.getSubmissions({ userID: this.user?.uid!, problemID: params.id }));
   }
 
+  handleIntervalSubmission = (submissions: Submission[]) => {
+    if (submissions === null) return;
+    if (submissions.length === 0) return;
+
+    const submission = submissions.find(submission => submission.evaluated !== true);
+
+    if (!submission) {
+      clearInterval(this.intervalSubmission);
+    }
+  }
 
   handleSubmitCode = (code: any) => {
     this.store.dispatch(SubmissionActions.createSubmission({ submission: code }));
+    this.intervalSubmission = setInterval(() => {
+      this.store.dispatch(SubmissionActions.getSubmissions({ userID: this.user?.uid!, problemID: this.problemID! }));
+    }, 3000);
   }
 
 }

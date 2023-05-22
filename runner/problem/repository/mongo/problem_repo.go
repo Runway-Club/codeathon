@@ -96,3 +96,13 @@ func (m *mongoProblemRepository) DeleteOne(c context.Context, collection string,
 
 	return nil
 }
+
+func (m *mongoProblemRepository) CountDocuments(c context.Context, collection string, filter primitive.D) (int64, error) {
+	count, err := m.db.Collection(collection).CountDocuments(context.Background(), filter)
+
+	if err != nil {
+		return 0, err
+	}
+
+	return count, nil
+}

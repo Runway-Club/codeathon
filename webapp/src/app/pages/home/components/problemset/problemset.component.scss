@@ -40,6 +40,10 @@ $select-margin: 1rem;
     }
 }
 
+.spacer {
+    flex: 1 0 auto;
+}
+
 .problem {
     display: flex;
     flex-direction: row;
@@ -50,7 +54,7 @@ $select-margin: 1rem;
     $title: 180;
     $difficulty: 84;
     $unit: px;
-    
+
 
     border: none;
 
@@ -89,4 +93,19 @@ $select-margin: 1rem;
 
 .nobg {
     background-color: transparent;
+}
+
+.paginate {
+    width: 100%;
+    margin-top: 1rem;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.popover {
+    position: fixed;
+    background-color: black;
 }

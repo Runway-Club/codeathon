@@ -1,5 +1,5 @@
 export interface Problem {
-    id?: string;
+    _id?: string;
     title: string;
     description: string;
     content: string;
@@ -11,10 +11,9 @@ export interface Problem {
 
     samples: ProblemSample[];
     testcases: TestCase[];
-    createdAt: number;
+    create_at: number;
 
     score: number;
-
 }
 
 export interface TestCase {
@@ -31,5 +30,20 @@ export interface TestCase {
 export interface ProblemSample {
     input: string;
     output: string;
+}
 
+export type Sort = {
+    field: string,
+    direction: "desc" | "asc"
+}
+
+export type ProblemSetPagination = {
+    page: number,
+    limit: number,
+    totalPages: number
+}
+
+export type ProblemSetFilter = {
+    status?: string,
+    difficulty?: string,
 }

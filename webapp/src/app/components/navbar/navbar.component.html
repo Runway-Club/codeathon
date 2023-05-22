@@ -7,15 +7,8 @@
     <a href="/contactus">Contact Us</a>
   </span>
   <span class="user">
-    <button
-      class="profile"
-      #menu
-      nbButton
-      [nbContextMenu]="menuItems"
-      shape="round"
-    >
+    <button class="profile" #menu nbButton [nbContextMenu]="menuItems" shape="round">
       <img *ngIf="user" [src]="user.photoURL" alt="user photo" />
     </button>
-    <span class="user-name" *ngIf="user">{{ user.displayName }}</span>
   </span>
 </div>

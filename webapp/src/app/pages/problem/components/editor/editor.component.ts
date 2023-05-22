@@ -145,23 +145,17 @@ export class EditorComponent implements OnInit {
   }
 
   createSubmission() {
-    const { currentLanguageID, currentCode, codes } = this.currentCodeTab!;
+    const { currentLanguageID, currentCode } = this.currentCodeTab!;
     const { uid } = this.user!;
-    const { id, testcases } = this.problem!;
+    const { _id } = this.problem!;
 
     return {
-      problem_id: id || '',
+      problem_id: _id || '',
       code: currentCode || '',
       language_id: currentLanguageID || 71,
-      user_id: uid || '',
-      source: currentCode || '',
+      uid: uid || '',
       evaluated: false,
       score: 0,
-      total_memory: 0,
-      total_time: 0,
-      total_score: 0,
-      testcases: testcases || [],
-      time: 0
     }
   }
 

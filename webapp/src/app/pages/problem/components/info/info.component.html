@@ -3,7 +3,7 @@
         <div class="tab-problem">
             <div class="header">
                 <h1><strong>{{problem.title}}</strong></h1>
-                <p class="date">{{problem.createdAt | date: "medium"}}</p>
+                <p class="date">{{problem.create_at | date: "medium"}}</p>
                 <div class="tags">
                     <nb-tag *ngFor="let tag of problem.tags" class="tag" size="small" status="primary"
                         appearance="outline" [text]="tag"></nb-tag>
@@ -11,11 +11,11 @@
             </div>
             <div class="description">
                 <h3><strong>Description: </strong></h3>
-                <p>{{problem.description}}</p>
+                <p>{{problem.content}}</p>
             </div>
             <div class="samples">
                 <h3><strong>Samples:</strong></h3>
-                <div *ngFor="let sample of problem.samples, index as i">
+                <div *ngFor="let sample of samples, index as i">
                     <p style="margin-top: 10px; font-weight: bold;">Case: {{i + 1}}</p>
                     <div class="case">
                         <p class="case-line">
@@ -24,7 +24,7 @@
                         </p>
                         <p class="case-line">
                             <strong>Output:</strong>
-                            <code>{{sample.output}}</code>
+                            <code>{{sample.expected_output}}</code>
                         </p>
                     </div>
                 </div>
@@ -41,10 +41,10 @@
                     <ng-template #sub>
                         <span class="detail">
                             <span class="header">
-                                <strong [ngClass]="checkSubmission(submission)==='ACCEPTED' ? 'green' : 'red'">
-                                    {{checkSubmission(submission)}}
+                                <strong [ngClass]="submission.result==='ACCEPTED' ? 'green' : 'red'">
+                                    {{submission.result}}
                                 </strong>
-                                <span>{{submission.time | date: "medium"}}</span>
+                                <span>{{submission.createAt | date: "medium"}}</span>
                             </span>
                             <span>{{(submission.total_time * 1000).toFixed(0)}} ms</span>
                             <span>{{(submission.total_memory / 1024).toFixed(0)}} KB</span>

@@ -36,6 +36,11 @@
                 "glob": "**/*",
                 "input": "node_modules/monaco-editor",
                 "output": "assets/monaco-editor/"
+              },
+              {
+                "glob": "{*loader.js,bundles/*.js}",
+                "input": "node_modules/@webcomponents/webcomponentsjs",
+                "output": "node_modules/@webcomponents/webcomponentsjs"
               }
             ],
             "styles": [
@@ -53,7 +58,8 @@
               "node_modules/prismjs/components/prism-css.min.js",
               "node_modules/prismjs/plugins/line-numbers/prism-line-numbers.js",
               "node_modules/ngx-markdown-editor/assets/highlight.js/highlight.min.js",
-              "node_modules/ngx-markdown-editor/assets/marked.min.js"
+              "node_modules/ngx-markdown-editor/assets/marked.min.js",
+              "node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"
             ]
           },
           "configurations": {

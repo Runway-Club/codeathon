@@ -2,6 +2,7 @@ package controller
 
 import (
 	"net/http"
+	"reflect"
 	"strconv"
 
 	"github.com/labstack/echo/v4"
@@ -26,7 +27,9 @@ func NewProblemHandler(ep string, e *echo.Echo, ps models.ProblemService) {
 	api := e.Group(ep)
 
 	api.GET("/", handler.GetAllProblem)
+	api.GET("/count", handler.GetProblemQuantity)
 	api.GET("/:id", handler.GetProblem)
+	api.GET("/suggest", handler.SuggestProblem)
 	api.POST("/", handler.CreateProblem)
 	api.PUT("/", handler.UpdateProblem)
 	api.DELETE("/:id", handler.DeleteProblem)
@@ -46,9 +49,22 @@ func (ph *ProblemHandler) GetAllProblem(c echo.Context) error {
 	limitS := c.QueryParam("limit")
 	limit, _ := strconv.ParseInt(limitS, 10, 64)
 
+	statusS := c.QueryParam("status")
+	difficultyS := c.QueryParam("difficulty")
+
+	sortS := c.QueryParam("sort")
+	sortOrderS := c.QueryParam("order")
+
 	args := map[string]interface{}{
 		"page":  page,
 		"limit": limit,
+
+		"status":     statusS,
+		"difficulty": difficultyS, // "easy", "medium", "hard
+
+		"sort":  sortS,
+		"order": sortOrderS,
+
 		"uid":   body.UID,
 		"owner": body.Owner,
 	}
@@ -57,6 +73,10 @@ func (ph *ProblemHandler) GetAllProblem(c echo.Context) error {
 
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, ResponseError{Message: err.Error()})
+	}
+
+	if res == nil {
+		return c.JSON(http.StatusOK, []models.Problem{})
 	}
 
 	return c.JSON(http.StatusOK, res)
@@ -74,14 +94,107 @@ func (ph *ProblemHandler) GetProblem(c echo.Context) error {
 	return c.JSON(http.StatusOK, res)
 }
 
+func (ph *ProblemHandler) GetProblemQuantity(c echo.Context) error {
+	statusS := c.QueryParam("status")
+	difficultyS := c.QueryParam("difficulty")
+
+	body := &struct {
+		Owner string `json:"owner"`
+	}{}
+
+	c.Bind(body)
+
+	args := map[string]interface{}{
+		"owner":      body.Owner,
+		"status":     statusS,
+		"difficulty": difficultyS, // "easy", "medium", "hard
+	}
+
+	res, err := ph.PService.Count(c.Request().Context(), args)
+
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, ResponseError{Message: err.Error()})
+	}
+
+	return c.JSON(http.StatusOK, res)
+}
+
 func (ph *ProblemHandler) CreateProblem(c echo.Context) error {
-	return nil
+	problem := &models.Problem{}
+
+	if err := c.Bind(problem); err != nil {
+		return c.JSON(http.StatusBadRequest, ResponseError{Message: err.Error()})
+	}
+
+	//ilterate the problem struct and check if any field is empty except ID and CreatedAt
+	problemValue := reflect.ValueOf(problem).Elem()
+	problemType := problemValue.Type()
+
+	for i := 0; i < problemValue.NumField(); i++ {
+		fieldName := problemType.Field(i).Name
+
+		if fieldName == "ID" || fieldName == "CreatedAt" {
+			continue
+		}
+
+		if problemValue.Field(i).Interface() == "" {
+			return c.JSON(http.StatusBadRequest, ResponseError{Message: "field " + fieldName + " must not be empty"})
+		}
+	}
+
+	//create problem
+	err := ph.PService.Store(c.Request().Context(), problem)
+
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, ResponseError{Message: err.Error()})
+	}
+
+	return c.JSON(http.StatusOK, ResponseError{Message: "success"})
 }
 
 func (ph *ProblemHandler) UpdateProblem(c echo.Context) error {
-	return nil
+	problem := &models.Problem{}
+
+	if err := c.Bind(problem); err != nil {
+		return c.JSON(http.StatusBadRequest, ResponseError{Message: err.Error()})
+	}
+
+	problemValue := reflect.ValueOf(problem).Elem()
+	problemType := problemValue.Type()
+
+	for i := 0; i < problemValue.NumField(); i++ {
+		fieldName := problemType.Field(i).Name
+
+		if fieldName == "CreatedAt" {
+			continue
+		}
+
+		if problemValue.Field(i).Interface() == "" {
+			return c.JSON(http.StatusBadRequest, ResponseError{Message: "field " + fieldName + " must not be empty"})
+		}
+	}
+
+	err := ph.PService.Update(c.Request().Context(), problem)
+
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, ResponseError{Message: err.Error()})
+	}
+
+	return c.JSON(http.StatusOK, ResponseError{Message: "success"})
 }
 
 func (ph *ProblemHandler) DeleteProblem(c echo.Context) error {
 	return nil
+}
+
+func (ph *ProblemHandler) SuggestProblem(c echo.Context) error {
+	q := c.QueryParam("q")
+
+	res, err := ph.PService.Suggest(c.Request().Context(), q)
+
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, ResponseError{Message: err.Error()})
+	}
+
+	return c.JSON(http.StatusOK, res)
 }
