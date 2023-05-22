@@ -35,6 +35,7 @@ type ProblemService interface {
 	Update(c context.Context, problem *Problem) error
 	Delete(c context.Context, id string) error
 	Count(c context.Context, args map[string]interface{}) (int64, error)
+	Suggest(c context.Context, t string) ([]string, error)
 }
 
 // ProblemRepository represent the probleme's repository contract

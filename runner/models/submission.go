@@ -29,8 +29,10 @@ type SubmissionResult struct {
 	UID        string             `json:"uid" bson:"uid"`
 
 	TotalScore  int32   `json:"total_score" bson:"total_score"`
-	TotalTime   float64 `json:"time" bson:"time"`
-	TotalMemory int32   `json:"memory" bson:"memory"`
+	TotalTime   float64 `json:"total_time" bson:"total_time"`
+	TotalMemory int32   `json:"total_memory" bson:"total_memory"`
+
+	Result string `json:"result" bson:"result"`
 }
 
 type JudgeStatus struct {
@@ -75,8 +77,8 @@ type JudgeRequestChannel struct {
 }
 
 type JudgeResponseChannel struct {
-	JudgeSubmissionResponse *JudgeSubmissionResponse `json:"judge_submission_response"`
-	TestCase                *TestCase                `json:"testcase"`
+	TestCaseResult *TestcaseResult `json:"testcase_result"`
+	TestCase       *TestCase       `json:"testcase"`
 }
 
 type SubmissionService interface {

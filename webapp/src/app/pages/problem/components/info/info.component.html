@@ -41,10 +41,10 @@
                     <ng-template #sub>
                         <span class="detail">
                             <span class="header">
-                                <strong [ngClass]="checkSubmission(submission)==='ACCEPTED' ? 'green' : 'red'">
-                                    {{checkSubmission(submission)}}
+                                <strong [ngClass]="submission.result==='ACCEPTED' ? 'green' : 'red'">
+                                    {{submission.result}}
                                 </strong>
-                                <span>{{submission.time | date: "medium"}}</span>
+                                <span>{{submission.createAt | date: "medium"}}</span>
                             </span>
                             <span>{{(submission.total_time * 1000).toFixed(0)}} ms</span>
                             <span>{{(submission.total_memory / 1024).toFixed(0)}} KB</span>

@@ -70,13 +70,29 @@ export class ProblemService {
     return samples;
   }
 
-  async getTotalProblems(): Promise<number> {
-    let response = await <any>lastValueFrom(this.httpClient.get(this.api + '/problem/count'));
+  async getTotalProblems(filter?: ProblemSetFilter): Promise<number> {
+    let tempAPI = this.api + '/problem/count?';
+
+    if (filter) {
+      tempAPI += `status=${filter.status}&difficulty=${filter.difficulty}`;
+    }
+
+    let response = await <any>lastValueFrom(this.httpClient.get(tempAPI));
     let totalProblems = <number>response;
 
     return totalProblems;
   }
 
+  async getProblemSuggestions(text: string): Promise<string[]> {
+    if (text.length === 0) {
+      return [];
+    }
+
+    let response = await <any>lastValueFrom(this.httpClient.get(this.api + '/problem/suggest?q=' + text));
+    let suggestions = <string[]>response;
+
+    return suggestions;
+  }
 
 }
 

@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"strconv"
 	"strings"
+	"time"
 
 	"runwayclub.dev/codeathon/v2/models"
 )
@@ -27,14 +28,14 @@ func NewJudgeService(tcs models.TestCaseService, ss models.SubmissionService, ju
 	}
 }
 
-func (js *judgeService) request(jReq *models.JudgeSubmissionRequest, tc *models.TestCase) (*models.JudgeSubmissionResponse, error) {
+func (js *judgeService) request(jReq *models.JudgeSubmissionRequest, tc *models.TestCase) (*string, error) {
 	req, err := json.Marshal(jReq)
 
 	if err != nil {
 		return nil, err
 	}
 
-	resp, err := http.Post(js.Judge0+"/submissions/?wait=true", "application/json", bytes.NewBuffer(req))
+	resp, err := http.Post(js.Judge0+"/submissions/", "application/json", bytes.NewBuffer(req))
 
 	if err != nil {
 		return nil, err
@@ -46,16 +47,47 @@ func (js *judgeService) request(jReq *models.JudgeSubmissionRequest, tc *models.
 		return nil, err
 	}
 
+	token := &struct {
+		Token string `json:"token"`
+	}{}
+
+	if err := json.Unmarshal(resData, token); err != nil {
+		return nil, err
+	}
+
+	return &token.Token, nil
+}
+
+func (js *judgeService) getJudgeSubmissionResponse(token *string) (*models.JudgeSubmissionResponse, error) {
 	judgeSubmissionResponse := &models.JudgeSubmissionResponse{}
 
-	if err := json.Unmarshal(resData, judgeSubmissionResponse); err != nil {
-		return nil, err
+	statusID := 0
+
+	for statusID <= 2 {
+		resp, err := http.Get(js.Judge0 + "/submissions/" + *token)
+
+		if err != nil {
+			return nil, err
+		}
+
+		resData, err := ioutil.ReadAll(resp.Body)
+
+		if err != nil {
+			return nil, err
+		}
+
+		if err := json.Unmarshal(resData, judgeSubmissionResponse); err != nil {
+			return nil, err
+		}
+
+		statusID = judgeSubmissionResponse.Status.ID
+		time.Sleep(2 * time.Second)
 	}
 
 	return judgeSubmissionResponse, nil
 }
 
-func (js *judgeService) receive(jRes *models.JudgeSubmissionResponse, tc *models.TestCase) (*models.TestcaseResult, error) {
+func (js *judgeService) generateTestCaseResult(jRes *models.JudgeSubmissionResponse, tc *models.TestCase) (*models.TestcaseResult, error) {
 	tcr := &models.TestcaseResult{}
 
 	time, _ := strconv.ParseFloat(jRes.Time, 64)
@@ -100,7 +132,6 @@ func (js *judgeService) receive(jRes *models.JudgeSubmissionResponse, tc *models
 	tcr.Memory = memory
 
 	return tcr, nil
-
 }
 
 func (js *judgeService) RequestEvaluation(c context.Context, submission *models.SubmissionResult) error {
@@ -115,8 +146,8 @@ func (js *judgeService) RequestEvaluation(c context.Context, submission *models.
 	jReqChannel := make(chan *models.JudgeRequestChannel, ntc)
 	jResChannel := make(chan *models.JudgeResponseChannel, ntc)
 
-	for i := 1; i <= ntc; i++ {
-		go js.judgeWorker(i, jReqChannel, jResChannel)
+	for i := 0; i < ntc; i++ {
+		go js.judgeWorker(jReqChannel, jResChannel)
 	}
 
 	for k := range tcs {
@@ -131,13 +162,17 @@ func (js *judgeService) RequestEvaluation(c context.Context, submission *models.
 	close(jReqChannel)
 
 	actualScore := int32(0)
+	result := "ACCEPTED"
 
 	totalScore := int32(0)
 	totalTime := float64(0)
 	totalMemory := int32(0)
 
-	for jRes := range jResChannel {
-		tcr, err := js.receive(jRes.JudgeSubmissionResponse, jRes.TestCase)
+	for i := 0; i < ntc; i++ {
+		jRes := <-jResChannel
+
+		tcr := jRes.TestCaseResult
+		tc := jRes.TestCase
 
 		if err != nil {
 			println(err.Error())
@@ -146,6 +181,18 @@ func (js *judgeService) RequestEvaluation(c context.Context, submission *models.
 
 		if tcr.Message == "PASS" {
 			actualScore += jRes.TestCase.Score
+		}
+
+		if tcr.Message != "PASS" {
+			if tcr.Memory >= tc.MemoryLimit {
+				result = "Memory Limit Exceeded"
+			} else if tcr.Time >= float64(tc.TimeLimit) {
+				result = "Time Limit Exceeded"
+			} else if tcr.Stderr != "" {
+				result = "Runtime Error " + tcr.Stderr
+			} else if tcr.Message != "PASS" {
+				result = "FAIL"
+			}
 		}
 
 		totalScore += jRes.TestCase.Score
@@ -158,11 +205,14 @@ func (js *judgeService) RequestEvaluation(c context.Context, submission *models.
 		}
 	}
 
+	fmt.Println("Finished evaluating submission", submission.ID.Hex())
+
 	submission.Score = actualScore
 	submission.Evaluated = true
 	submission.TotalTime = totalTime
 	submission.TotalMemory = totalMemory
 	submission.TotalScore = totalScore
+	submission.Result = result
 
 	if err := js.SService.UpdateSubmissionResult(c, submission); err != nil {
 		return err
@@ -171,9 +221,26 @@ func (js *judgeService) RequestEvaluation(c context.Context, submission *models.
 	return nil
 }
 
-func (js *judgeService) judgeWorker(id int, req <-chan *models.JudgeRequestChannel, res chan<- *models.JudgeResponseChannel) {
+func (js *judgeService) Evaluation(token *string, tc *models.TestCase, res chan<- *models.JudgeResponseChannel) {
+	judgeResponseChannel := &models.JudgeResponseChannel{
+		TestCaseResult: &models.TestcaseResult{},
+		TestCase:       tc,
+	}
+
+	jRes, _ := js.getJudgeSubmissionResponse(token)
+
+	tcr, _ := js.generateTestCaseResult(jRes, tc)
+
+	judgeResponseChannel.TestCaseResult = tcr
+
+	fmt.Println("Worker finished evaluating testcase", tc.ID)
+	res <- judgeResponseChannel
+}
+
+func (js *judgeService) judgeWorker(req <-chan *models.JudgeRequestChannel, res chan<- *models.JudgeResponseChannel) {
 	for jur := range req {
-		fmt.Println("Worker", id, "is evaluating testcase", jur.TestCase.ID)
+		fmt.Println("Worker is evaluating testcase", jur.TestCase.ID)
+
 		judgeSubmissionRequest := &models.JudgeSubmissionRequest{
 			SourceCode:   jur.Submission.Code,
 			LanguageId:   jur.Submission.LanguageID,
@@ -182,19 +249,13 @@ func (js *judgeService) judgeWorker(id int, req <-chan *models.JudgeRequestChann
 			MemoryLimit:  jur.TestCase.MemoryLimit,
 		}
 
-		jRes, err := js.request(judgeSubmissionRequest, jur.TestCase)
+		token, err := js.request(judgeSubmissionRequest, jur.TestCase)
 
 		if err != nil {
 			println(err.Error())
 			continue
 		}
 
-		judgeResponseChannel := &models.JudgeResponseChannel{
-			JudgeSubmissionResponse: jRes,
-			TestCase:                jur.TestCase,
-		}
-
-		fmt.Println("Worker", id, "finished evaluating testcase", jur.TestCase.ID)
-		res <- judgeResponseChannel
+		go js.Evaluation(token, jur.TestCase, res)
 	}
 }

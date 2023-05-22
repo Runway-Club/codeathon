@@ -1,5 +1,15 @@
 {
   "host": "0.0.0.0",
   "port": 8080,
-  "judge0": "http://14.187.55.49:2358"
+  "judge0": "http://14.187.55.49:2358",
+  "mongouri": "mongodb+srv://quockhanh19142:nEN2jtl9Szvx9XoN@codeathonclone.vutxca7.mongodb.net/test",
+  "elastic": {
+    "addresses": [
+      "https://14.187.55.49:9200",
+      "https://14.187.55.49:9201"
+    ],
+    "username": "elastic",
+    "password": "gn8-X*YG5sUtMMAbspeB",
+    "certificate_fingerprint": "b5f53ecba5afe2f84ad0e7d8342af8141307244a07d7f5d8afa24fc421e8da8e"
+  }
 }

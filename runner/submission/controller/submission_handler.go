@@ -35,24 +35,17 @@ func NewSubmissionHandler(ep string, e *echo.Echo, ss models.SubmissionService, 
 
 func (sh *SubmissionHandler) FetchSubmission(c echo.Context) error {
 	pid := c.QueryParam("problem_id")
+	uid := c.QueryParam("uid")
 
 	if pid == "" {
 		return c.JSON(400, ResponseError{Message: "problem_id is required"})
 	}
 
-	body := struct {
-		UID string `json:"uid"`
-	}{}
-
-	if err := c.Bind(&body); err != nil {
-		return c.JSON(400, ResponseError{Message: err.Error()})
-	}
-
-	if body.UID == "" {
+	if uid == "" {
 		return c.JSON(400, ResponseError{Message: "uid is required"})
 	}
 
-	result, err := sh.SService.GetSubmissionByUID(c.Request().Context(), body.UID, pid)
+	result, err := sh.SService.GetSubmissionByUID(c.Request().Context(), uid, pid)
 
 	if err != nil {
 		return c.JSON(500, ResponseError{Message: err.Error()})
@@ -104,6 +97,8 @@ func (sh *SubmissionHandler) CreateSubmission(c echo.Context) error {
 		TotalScore:  int32(0),
 		TotalTime:   float64(0),
 		TotalMemory: int32(0),
+
+		Result: "Evaluating",
 	}
 
 	go sh.JService.RequestEvaluation(c.Request().Context(), submissionResult)

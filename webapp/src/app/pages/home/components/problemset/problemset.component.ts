@@ -7,7 +7,7 @@ import { Problem, ProblemSetFilter, ProblemSetPagination, Sort } from 'src/model
 import { ProblemActions } from 'src/app/ngrx/actions/problems.action';
 import { ProblemState } from 'src/app/ngrx/states/problems.state';
 import { DocumentSnapshot } from '@angular/fire/firestore';
-import { Subject, map } from 'rxjs';
+import { Subject, lastValueFrom, map } from 'rxjs';
 import { ProblemService } from 'src/app/services/problem.service';
 
 @Component({
@@ -24,6 +24,9 @@ export class ProblemsetComponent implements OnInit {
 
   selectedDifficulty: string = 'All';
   selectedStatus: string = 'All';
+
+  sugguestions: any[] = [];
+  searchInput: string = '';
 
   sort: Sort = {
     field: '_id',
@@ -52,7 +55,11 @@ export class ProblemsetComponent implements OnInit {
   }
 
   async initialize() {
-    this.totalProblems = await this.problemService.getTotalProblems();
+    this.updatePagination();
+  }
+
+  async updatePagination() {
+    this.totalProblems = await this.problemService.getTotalProblems(this.filter);
     this.paginate = {
       ...this.paginate,
       totalPages: Math.ceil(this.totalProblems / this.paginate.limit)
@@ -78,6 +85,7 @@ export class ProblemsetComponent implements OnInit {
       status: status
     }
 
+    this.updatePagination();
     this.store.dispatch(ProblemActions.getProblems({ paginate: this.paginate, sort: this.sort, filter: this.filter }));
   }
 
@@ -87,7 +95,13 @@ export class ProblemsetComponent implements OnInit {
       difficulty: difficulty
     }
 
+    this.updatePagination();
     this.store.dispatch(ProblemActions.getProblems({ paginate: this.paginate, sort: this.sort, filter: this.filter }));
+  }
+
+  async handleSearch() {
+    let tempSuggest = await this.problemService.getProblemSuggestions(this.searchInput);
+    this.sugguestions = tempSuggest.map((doc: string) => { return { value: doc } })
   }
 
   updateSort(field: string, direction: "asc" | "desc") {

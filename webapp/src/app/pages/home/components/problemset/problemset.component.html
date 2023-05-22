@@ -20,7 +20,16 @@
                     <label class="search-label" for="search">
                         <nb-icon icon="search"></nb-icon>
                     </label>
-                    <input nbInput id="search" placeholder="Search...." class="search-input" shape="round">
+                    <div class="search-input">
+                        <input nbInput id="search" placeholder="Search...." shape="round" (input)="handleSearch()"
+                            [(ngModel)]="searchInput">
+                        <div class="popover">
+                            <div *ngFor="let suggestion of sugguestions">
+                                {{suggestion.value}}
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
             </nb-card-body>
         </nb-card>

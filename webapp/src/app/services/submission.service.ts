@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import {
   limit,
@@ -13,7 +13,7 @@ import {
 } from '@angular/fire/firestore';
 import { Observable, lastValueFrom, map } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { Submission } from 'src/models/submission';
+import { Submission, TestCaseResult } from 'src/models/submission';
 
 @Injectable({
   providedIn: 'root'
@@ -25,23 +25,12 @@ export class SubmissionService {
   ) { }
 
   async getSubmissions(problemId: string, userId: string): Promise<Submission[]> {
-    const q = query(
-      collection(this.db, 'submissions'),
-      where('problem_id', '==', problemId),
-      where('user_id', '==', userId),
-      orderBy('time', 'desc'),
-      limit(5)
-    );
+    let tempAPI = environment.api + '/submission/?problem_id=' + problemId + '&uid=' + userId;
 
-    const querySnapshot = await getDocs(q);
-    let submissions: Submission[] = [];
 
-    querySnapshot.forEach((doc: any) => {
-      submissions.push({
-        id: doc.id,
-        ...<Submission>doc.data()
-      });
-    });
+    let res = <any>lastValueFrom(this.http.get(tempAPI))
+
+    let submissions = <Submission[]>res;
 
     return submissions;
   }
@@ -55,7 +44,7 @@ export class SubmissionService {
 
   async createSubmission(submission: Submission): Promise<any> {
     return lastValueFrom(
-      this.http.post(environment.api + '/execution/', submission, { observe: "response" })
+      this.http.post(environment.api + '/submission/', submission, { observe: "response" })
     )
       .then((res) => {
         console.log()

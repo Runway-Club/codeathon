@@ -20,19 +20,6 @@ export class InfoComponent implements OnInit {
     this.getAllSample(this.problem._id);
   }
 
-  checkSubmission = (submission: Submission): string => {
-    let result: string = "ACCEPTED";
-
-    for (let i = 0; i < submission.testcases?.length!; i++) {
-      if (submission.testcases![i].Message !== "PASS") {
-        result = submission.testcases![i].Stderr || submission.testcases![i].Message;
-        break;
-      }
-    }
-
-    return result;
-  }
-
   getAllSample = async (id: string | undefined) => {
     if (id == undefined) {
       return;

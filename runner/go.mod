@@ -3,6 +3,8 @@ module runwayclub.dev/codeathon/v2
 go 1.18
 
 require (
+	github.com/elastic/go-elasticsearch v0.0.0
+	github.com/elastic/go-elasticsearch/v8 v8.7.1
 	github.com/labstack/echo/v4 v4.10.2
 	go.mongodb.org/mongo-driver v1.11.4
 )
@@ -20,6 +22,7 @@ require (
 )
 
 require (
+	github.com/elastic/elastic-transport-go/v8 v8.2.0 // indirect
 	github.com/google/go-cmp v0.5.9 // indirect
 	github.com/labstack/gommon v0.4.0 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
